@@ -31,6 +31,7 @@ export class Image extends Struct<RawImage> implements RawImage {
       fullName
     })
   }
+
   private static fork = new Map<string, string>()
   public static setFork(plugin: string, namespace: string, fork: string) {
     const key = `${plugin}:${namespace}`

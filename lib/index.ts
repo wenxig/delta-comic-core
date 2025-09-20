@@ -36,3 +36,9 @@ export * from './utils/layout'
 export * from './utils/request'
 
 export { useTemp } from './stores/temp'
+
+
+import { uni } from './struct/index'
+import { symbol } from './symbol'
+import Layout from './layout/layout.vue'
+uni.item.Item.setViewLayout(symbol.thisNamespace, 'default', Layout)

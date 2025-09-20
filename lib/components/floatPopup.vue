@@ -2,7 +2,6 @@
 import { useZIndex } from '@/utils/layout'
 import { useWindowSize } from '@vueuse/core'
 import { isArray, noop } from 'lodash-es'
-import { FloatingPanel, Overlay } from 'vant'
 import { computed, shallowReadonly, shallowRef, StyleValue, watch } from 'vue'
 import { onBeforeRouteLeave, useRouter } from 'vue-router'
 const $router = useRouter()
@@ -60,16 +59,16 @@ defineSlots<{
 
 <template>
   <Teleport to="#popups">
-    <Overlay :zIndex :show @click="show = false" v-if="overlay" />
+    <VanOverlay :zIndex :show @click="show = false" v-if="overlay" />
     <Transition @after-leave="height = 0" name="van-slide-up">
-      <FloatingPanel v-show="show" @height-change="({ height }) => (height <= 0) && (show = false)" :anchors
+      <VanFloatingPanel v-show="show" @height-change="({ height }) => (height <= 0) && (show = false)" :anchors
         v-model:height="height" :content-draggable="false" :lock-scroll :style="[style, { zIndex }]" :class
         class="overflow-hidden border-0 border-t border-solid border-(--van-border-color)">
         <div class="bg-(--van-background) w-full"
           :style="{ height: `calc(${height}px - var(--van-floating-panel-header-height))` }">
           <slot v-if="height != 0" :height="height!"></slot>
         </div>
-      </FloatingPanel>
+      </VanFloatingPanel>
     </Transition>
   </Teleport>
 </template>

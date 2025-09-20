@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { isNumber } from 'lodash-es'
-import { LoadingProps, Loading } from 'vant'
+import { LoadingProps } from 'vant'
 import { computed } from 'vue'
 
 const $props = withDefaults(defineProps<Partial<LoadingProps>>(), {
@@ -10,9 +10,9 @@ const fontSize = computed(() => isNumber($props.size) ? `${$props.size}px` : $pr
 </script>
 
 <template>
-  <Loading :="$props">
+  <VanLoading :="$props">
     <slot></slot>
-  </Loading>
+  </VanLoading>
 </template>
 <style scoped lang='scss'>
 :deep(.van-loading__text) {

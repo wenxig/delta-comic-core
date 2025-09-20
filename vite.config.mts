@@ -36,7 +36,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./lib', import.meta.url)),
-    }
+    },
+    extensions: ['.ts', '.tsx', '.json', '.mjs', '.js', '.jsx', '.mts']
   },
   css: {
     transformer: 'lightningcss',
@@ -54,10 +55,15 @@ export default defineConfig({
       fileName: 'bundle'
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'axios', 'lodash-es', 'naive-ui', 'vant', "motion-v"],
       output: {
         globals: {
-          vue: 'Vue'
+          vue: 'Vue',
+          vant: 'vant',
+          'naive-ui': 'naive',
+          "motion-v": 'Motion',
+          axios: 'axios',
+          'lodash-es': '_'
         }
       }
     }

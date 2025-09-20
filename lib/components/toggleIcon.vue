@@ -2,7 +2,6 @@
 import { Component as _Component, watch } from 'vue'
 import { onLongPress } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
-import { NIcon } from 'naive-ui';
 
 const $props = defineProps<{
   icon: _Component

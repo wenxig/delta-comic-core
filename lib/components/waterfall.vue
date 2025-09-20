@@ -9,7 +9,6 @@ import { IfAny, useResizeObserver, useScroll } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
 import { useTemp } from '@/stores/temp'
 import { isArray } from 'lodash-es'
-import { PullRefresh } from 'vant'
 type Source = {
   data: RPromiseContent<any, T[]>
   isEnd?: boolean
@@ -149,7 +148,7 @@ defineExpose({
 </script>
 
 <template>
-  <PullRefresh v-model="isRefreshing" :class="['relative h-full', $props.class]" v-if="reloadController"
+  <VanPullRefresh v-model="isRefreshing" :class="['relative h-full', $props.class]" v-if="reloadController"
     :disabled="unReloadable || unionSource.isRequesting || (!!contentScrollTop && !isPullRefreshHold)"
     @refresh="handleRefresh" @change="({ distance }) => isPullRefreshHold = !!distance" :style>
     <Content retriable :source="Stream.isStream(source) ? source : source.data" class-loading="mt-2 !h-[24px]"
@@ -162,5 +161,5 @@ defineExpose({
         <slot :item :index :height="sizeMapTemp.get(item)" :length="unionSource.length" :minHeight />
       </VirtualWaterfall>
     </Content>
-  </PullRefresh>
+  </VanPullRefresh>
 </template>

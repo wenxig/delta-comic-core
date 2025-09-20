@@ -2,7 +2,7 @@
   name: string,
   title: string
 }">
-import { TabsInstance, Tabs, Tab } from 'vant'
+import { TabsInstance } from 'vant'
 import { onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const $props = defineProps<{
@@ -56,7 +56,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Tabs ref="tab" shrink v-model:active="select" :beforeChange class="w-full">
+  <VanTabs ref="tab" shrink v-model:active="select" :beforeChange class="w-full">
     <template #nav-left>
       <slot name="left"></slot>
     </template>
@@ -66,8 +66,8 @@ onUnmounted(() => {
     <template #nav-bottom>
       <slot name="bottom"></slot>
     </template>
-    <Tab v-for="item of items" :title="item.title" @click="select = item.name" :name="item.name">
+    <VanTab v-for="item of items" :title="item.title" @click="select = item.name" :name="item.name">
 
-    </Tab>
-  </Tabs>
+    </VanTab>
+  </VanTabs>
 </template>

@@ -1,0 +1,215 @@
+<script setup lang='ts'>
+import { ArrowBackRound, ArrowForwardIosOutlined, DrawOutlined, KeyboardArrowDownRound, PlayArrowRound, PlusRound } from '@vicons/material'
+import { motion } from 'motion-v'
+import { computed, nextTick, shallowRef, useTemplateRef } from 'vue'
+import { createReusableTemplate, useCssVar } from '@vueuse/core'
+import { useRoute, useRouter } from 'vue-router'
+import { isEmpty } from 'lodash-es'
+import Content from '@/components/content.vue'
+import { uni } from '@/struct'
+import Image from '@/components/image.vue'
+import List from '@/components/list.vue'
+const $router = useRouter()
+const $route = useRoute()
+const $props = defineProps<{
+  page: uni.content.ContentPage
+  isR18g?: boolean
+}>()
+const union = computed(() => $props.page.union.value)
+
+const showTitleFull = shallowRef(false)
+const [TitleTemp, TitleComp] = createReusableTemplate()
+const isScrolled = shallowRef(false)
+
+
+const isShowAuthorSelect = shallowRef(false)
+const previewUser = useTemplateRef('previewUser')
+
+
+const scrollbar = useTemplateRef('scrollbar')
+const epSelList = useTemplateRef('epSelList')
+const isShowEpSelectPopup = shallowRef(false)
+const eps = computed(() => $props.page.eps.content.data.value)
+const nowEpId = $route.params.epId.toString()
+const nowEp = computed(() => eps.value?.find(ep => ep.index == nowEpId))
+const openEpSelectPopup = async () => {
+  scrollbar.value?.scrollTo(0, 0)
+  isShowEpSelectPopup.value = true
+  await nextTick()
+  epSelList.value?.listInstance?.scrollTo({
+    index: eps.value?.toReversed().findIndex(ep => ep.index == nowEpId)
+  })
+}
+
+const safeHeightTopCss = useCssVar('--safe-area-inset-top')
+const safeHeightTop = computed(() => Number(safeHeightTopCss.value?.match(/\d+/)?.[0]))
+
+const slots = defineSlots<{
+  userInfo: () => void
+  id: () => void
+  action: () => void
+  searchPopup: (props: { previewUser: typeof previewUser['value'] }) => void
+  commentView: () => void
+  view(): void
+}>()
+
+</script>
+
+<template>
+  <NScrollbar ref="scrollbar" class="*:w-full !h-full bg-(--van-background-2)"
+    :style="{ '--van-background-2': isR18g ? 'color-mix(in oklab, var(--nui-error-color-hover) 5%, transparent)' : 'var(--van-white)' }">
+    <div class="bg-black text-white h-[30vh] relative flex justify-center">
+      <div
+        class="absolute bg-[linear-gradient(rgba(0,0,0,0.9),transparent)] z-3 pointer-events-none *:pointer-events-auto top-0 w-full flex h-14 items-center pt-safe">
+        <VanSticky>
+          <div class="h-[calc(56px+var(--safe-area-inset-top))] pt-safe transition-colors flex items-center w-screen"
+            :class="[isScrolled ? ' bg-(--nui-primary-color)' : 'bg-transparent']">
+            <NIcon color="white" size="1.5rem" class="ml-5" @click="$router.back()">
+              <ArrowBackRound />
+            </NIcon>
+            <NIcon color="white" size="1.5rem" class="ml-5" @click="$router.force.push('/')">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M19 8.71l-5.333-4.148a2.666 2.666 0 0 0-3.274 0L5.059 8.71a2.665 2.665 0 0 0-1.029 2.105v7.2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.2c0-.823-.38-1.6-1.03-2.105">
+                  </path>
+                  <path d="M16 15c-2.21 1.333-5.792 1.333-8 0"></path>
+                </g>
+              </svg>
+            </NIcon>
+            <div @click="scrollbar?.scrollTo({ behavior: 'smooth', top: 0, left: 0 })"
+              class="size-full text-[16px] flex items-center justify-center transition-opacity"
+              :class="[isScrolled || 'opacity-0']">
+              <NIcon size="2.5rem">
+                <PlayArrowRound />
+              </NIcon>
+              返回顶部
+            </div>
+          </div>
+        </VanSticky>
+      </div>
+      <slot name="view" />
+    </div>
+    <VanTabs shrink swipeable sticky :offset-top="56 + safeHeightTop" background="var(--van-background-2)"
+      @scroll="({ isFixed }) => isScrolled = isFixed">
+      <VanTab class="min-h-full relative van-hairline--top bg-(--van-background-2)" title="简介" name="info">
+        <Content :source="page.detail.content">
+          <div class="flex items-center mt-3" @click="isShowAuthorSelect = true"
+            v-if="!isEmpty(union?.$$meta.defaultLayoutAvatar)">
+            <Image class="size-8.5 shrink-0 mx-3" :src="union.$$meta.defaultLayoutAvatar"
+              v-if="union?.$$meta.defaultLayoutAvatar" round />
+            <div class="flex flex-col w-full text-nowrap">
+              <slot name="userInfo" />
+            </div>
+            <NButton round type="primary" class="!absolute right-3" size="small" @click.stop>
+              <template #icon>
+                <NIcon>
+                  <PlusRound />
+                </NIcon>
+              </template>
+              关注
+            </NButton>
+            <Popup v-model:show="isShowAuthorSelect" round class="min-h-1/3" position="bottom">
+              <slot name="searchPopup" :previewUser="previewUser" />
+              <PreviewUser ref="previewUser" />
+              <VanCell v-for="author of union?.author" center :title="author" is-link
+                @click="$router.force.push({ path: `/search`, query: { keyword: encodeURIComponent(author), origin: page.$$plugin } })">
+                <template #icon>
+                  <NIcon size="30px" class="mr-1.5">
+                    <DrawOutlined />
+                  </NIcon>
+                </template>
+              </VanCell>
+            </Popup>
+          </div>
+          <div class="w-[95%] mx-auto mt-2">
+            <div class="flex relative h-fit">
+              <div class="text-[17px] font-medium w-[89%] relative">
+                <TitleTemp>
+                  <div class="text-xs mt-1 font-light flex text-(--van-text-color-2) *:flex *:items-center gap-1">
+                    <slot name="id" />
+                  </div>
+                </TitleTemp>
+                <AnimatePresence>
+                  <motion.div :initial="{ opacity: 0 }" :exit="{ opacity: 0 }" key="info" :animate="{ opacity: 1 }"
+                    v-if="!showTitleFull" class="flex flex-col absolute top-0 van-ellipsis w-full">
+                    <span @click="showTitleFull = !showTitleFull">
+                      {{ union?.title }}
+                    </span>
+                    <TitleComp />
+                  </motion.div>
+                </AnimatePresence>
+                <NCollapseTransition :show="showTitleFull" class="!w-[calc(100%+2rem)]">
+                  <span @click="showTitleFull = !showTitleFull" class="w-[calc(100%-2rem)]">
+                    {{ union?.title }}
+                  </span>
+                  <TitleComp />
+                  <div class="flex  font-light text-(--van-text-color-2) justify-start text-xs mt-0.5">
+                    <div class="mr-2">
+                      {{ page.$$plugin }}{{ page.pid.content.data.value }}
+                    </div>
+                  </div>
+                  <Text class="font-normal  mt-1 text-(--van-text-color-2) justify-start text-xs">
+                    {{ union?.description }}
+                  </Text>
+                  <div class=" mt-6 flex flex-wrap gap-2.5 *:!px-3 **:!text-xs">
+                    <NButton tertiary round
+                      v-for="category of union?.categories.toSorted((a, b) => b.length - a.length).filter(Boolean)"
+                      class="!text-(--van-gray-7)" size="small"
+                      @click="$router.force.push({ path: `/search`, query: { keyword: encodeURIComponent(category), origin: page.$$plugin } })">
+                      {{ category }}
+                    </NButton>
+                  </div>
+                </NCollapseTransition>
+              </div>
+              <NIcon size="2rem" color="var(--van-text-color-3)" class="absolute -top-0.5 -right-1 transition-transform"
+                :class="[showTitleFull && '!rotate-180']" @click="showTitleFull = !showTitleFull">
+                <KeyboardArrowDownRound />
+              </NIcon>
+            </div>
+            <!-- action bar -->
+            <div class="mt-8 mb-4 flex justify-around" v-if="union">
+              <slot name="action" />
+            </div>
+            <!-- ep select -->
+            <div class="relative mb-4 w-full flex items-center rounded pl-3 py-2 van-haptics-feedback"
+              :class="[isR18g ? 'bg-(--van-gray-1)/70' : 'bg-(--van-gray-2)']" v-if="eps && eps.length > 1"
+              @click="openEpSelectPopup">
+              <span>选集</span>
+              <span class="mx-0.5">·</span>
+              <span class="max-w-1/2 van-ellipsis">{{ nowEp?.name || `第${nowEp?.index}话` }}</span>
+              <span class="absolute right-2 text-xs text-(--van-text-color-2) flex items-center">
+                <span>{{ nowEp?.index }}/{{ eps.length }}</span>
+                <NIcon size="12px" class="ml-1">
+                  <ArrowForwardIosOutlined />
+                </NIcon>
+              </span>
+            </div>
+            <Popup round position="bottom" class="h-[70vh] flex flex-col" v-model:show="isShowEpSelectPopup">
+              <div class="w-full h-10 pt-2 pl-8 flex items-center font-bold text-lg">选集</div>
+              <List class="w-full h-full" :source="{ data: page.eps.content, isEnd: true }" :itemHeight="40"
+                v-slot="{ data: { item: ep }, height }" :data-processor="v => v.toReversed()" ref="epSelList">
+                <VanCell clickable @click="nowEpId = ep.index" :title="ep.name || `第${ep.index}话`"
+                  :title-class="[nowEpId == ep.index && 'font-bold !text-(--nui-primary-color)']"
+                  class="w-full flex items-center " :style="{ height: `${height}px !important` }">
+                </VanCell>
+              </List>
+            </Popup>
+          </div>
+          <!-- recommend -->
+          <div class="van-hairline--top w-full *:bg-transparent" v-if="page.recommends.content.data.value">
+            <!-- <ComicCard v-for="comic of nowPage.recommendComics.content.data.value" :comic :height="140" /> -->
+          </div>
+        </Content>
+      </VanTab>
+
+      <VanTab class="min-h-full van-hairline--top" title="评论" name="comment">
+        <template #title>
+          <span>评论</span>
+          <span class="!text-xs ml-0.5 font-light">{{ union?.commentNumber ?? '' }}</span>
+        </template>
+        <slot name="commentView" />
+      </VanTab>
+    </VanTabs>
+  </NScrollbar>
+</template>

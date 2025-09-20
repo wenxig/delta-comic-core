@@ -1,13 +1,11 @@
 <script setup lang='ts' generic="T extends NonNullable<VirtualListProps['items']>[number],PF extends ((d: T[])=>any[])">
-import { NVirtualList, VirtualListProps } from 'naive-ui'
+import {  VirtualListProps } from 'naive-ui'
 import { ceil, debounce, isArray, isEmpty } from 'lodash-es'
 import { StyleValue, shallowRef, useTemplateRef, watch } from 'vue'
 import { IfAny, useScroll } from '@vueuse/core'
 import { callbackToPromise, RPromiseContent, Stream } from '@/utils/data'
-import Content from './content.vue'
 import { computed } from 'vue'
-import { PullRefresh } from 'vant'
-import Var from './var.vue'
+import Content from './content.vue'
 type Source = {
   data: RPromiseContent<any, T[]>
   isEnd?: boolean
@@ -111,7 +109,7 @@ defineExpose({
 </script>
 
 <template>
-  <PullRefresh v-model="isRefreshing" :class="['relative', $props.class]" @refresh="handleRefresh"
+  <VanPullRefresh v-model="isRefreshing" :class="['relative', $props.class]" @refresh="handleRefresh"
     :disabled="(Stream.isStream(source) ? false : (isArray(source) ? true : (source.reloadable ?? true))) || (unionSource.isError || unionSource.isRequesting || (!!listScrollTop && !isPullRefreshHold))"
     @change="({ distance }) => isPullRefreshHold = !!distance" :style>
     <Content retriable :source="Stream.isStream(source) ? source : (isArray(source) ? source : source.data)"
@@ -125,5 +123,5 @@ defineExpose({
         </NVirtualList>
       </Var>
     </Content>
-  </PullRefresh>
+  </VanPullRefresh>
 </template>

@@ -1,12 +1,11 @@
 <script setup lang='ts'>
 import { ImgHTMLAttributes, StyleValue, computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
-import { ImageProps, NImage } from 'naive-ui'
+import { ImageProps } from 'naive-ui'
 import { isString } from 'lodash-es'
 import { showImagePreview } from '@/utils/image'
 import { useTemp } from '@/stores/temp'
 import { computedAsync } from '@vueuse/core'
-import { uni } from '@/structure'
-import { Icon } from 'vant'
+import { uni } from '@/struct'
 import Loading from './loading.vue'
 const $props = withDefaults(defineProps<{
   src?: uni.image.Image_
@@ -130,7 +129,7 @@ defineExpose({
     }" v-else :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]">
       <slot name="loading" v-if="$slots.loading"></slot>
       <template v-else>
-        <Icon name="warning-o" size="2.5rem" color="var(--van-text-color-2)" />
+        <VanIcon name="warning-o" size="2.5rem" color="var(--van-text-color-2)" />
         <div class="text-sm text-(--van-text-color-2)">点击重试</div>
       </template>
     </div>

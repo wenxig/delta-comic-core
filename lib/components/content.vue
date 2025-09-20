@@ -3,8 +3,8 @@ import { PromiseContent, Stream } from '@/utils/data'
 import { ReloadOutlined } from '@vicons/antd'
 import { WifiTetheringErrorRound } from '@vicons/material'
 import { isEmpty } from 'lodash-es'
-import { AnimatePresence, motion, VariantType } from 'motion-v'
-import { NButton, NEmpty, NIcon, NResult, useThemeVars } from 'naive-ui'
+import { motion, VariantType } from 'motion-v'
+import { useThemeVars } from 'naive-ui'
 import { StyleValue, computed, useTemplateRef } from 'vue'
 import Loading from './loading.vue'
 const $props = defineProps<{
@@ -162,7 +162,7 @@ defineExpose({
 
     </div>
     <AnimatePresence>
-      <motion.div layout :initial="{ opacity: 0, translateY: '-100%',  left: '50%', translateX: '-50%' }"
+      <motion.div layout :initial="{ opacity: 0, translateY: '-100%', left: '50%', translateX: '-50%' }"
         :variants="loadingVariants" :animate="animateOn"
         class="rounded-full shadow flex justify-center items-center scale-100 absolute whitespace-nowrap">
         <Transition name="van-fade">

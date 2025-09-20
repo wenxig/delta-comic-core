@@ -1,6 +1,5 @@
 <script setup lang='ts'>
 import { isNumber } from 'lodash-es'
-import { NButton } from 'naive-ui';
 import { computed } from 'vue'
 
 const $props = withDefaults(defineProps<{
