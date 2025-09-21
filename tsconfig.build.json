@@ -1,8 +1,33 @@
 {
   "compilerOptions": {
+    // "jsx": "preserve",
+    // "lib": [
+    //   "ESNext",
+    //   "DOM",
+    //   "DOM.Iterable"
+    // ],
+    // "target": "ESNext",
+    // "useDefineForClassFields": true,
+    // "module": "ESNext",
+    // "moduleResolution": "bundler",
+    // "allowImportingTsExtensions": true,
+    // "resolveJsonModule": true,
+    // "isolatedModules": true,
     "noCheck": true,
+    // "jsxImportSource": "vue",
+    // "paths": {
+    //   "@/*": [
+    //     "./lib/*"
+    //   ]
+    // },
+    // "types": [
+    //   "./env.d.ts",
+    //   "./lib/global.d.ts",
+    //   "./components.d.ts",
+    //   "vue-component-type-helpers",
+    // ],
   },
   "include": [
-    "./dist/**/*"
+    "./lib/**/*"
   ]
 }

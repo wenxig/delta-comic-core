@@ -16,6 +16,7 @@ import MotionResolver from 'motion-v/resolver'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   plugins: [
+    dts({ include: ['./lib'], tsconfigPath: './tsconfig.build.json' }),
     vue(),
     vueJsx(),
     Components({
@@ -27,7 +28,6 @@ export default defineConfig({
       ],
     }),
     tailwindcss(),
-    dts({ include: ['./lib'], tsconfigPath: './tsconfig.build.json' }),
 
   ],
   experimental: {

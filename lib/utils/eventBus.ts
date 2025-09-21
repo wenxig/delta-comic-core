@@ -6,4 +6,4 @@ export type EventBus = {
   networkError_emptyData: any
   networkError_request: any
 }
-export default mitt<EventBus>()
+export const eventBus = mitt<EventBus>()

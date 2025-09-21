@@ -34,6 +34,7 @@
     "types": [
       "./env.d.ts",
       "./lib/global.d.ts",
+      "./components.d.ts",
       "vue-component-type-helpers",
     ],
   },

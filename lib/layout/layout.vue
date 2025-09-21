@@ -7,8 +7,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { isEmpty } from 'lodash-es'
 import Content from '@/components/content.vue'
 import { uni } from '@/struct'
-import Image from '@/components/image.vue'
 import List from '@/components/list.vue'
+import Popup from '@/components/popup.vue'
+import { UserOutlined } from '@vicons/antd'
+import { createDateString } from '@/utils/translate'
 const $router = useRouter()
 const $route = useRoute()
 const $props = defineProps<{
@@ -21,9 +23,6 @@ const showTitleFull = shallowRef(false)
 const [TitleTemp, TitleComp] = createReusableTemplate()
 const isScrolled = shallowRef(false)
 
-
-const isShowAuthorSelect = shallowRef(false)
-const previewUser = useTemplateRef('previewUser')
 
 
 const scrollbar = useTemplateRef('scrollbar')
@@ -63,7 +62,7 @@ const slots = defineSlots<{
         class="absolute bg-[linear-gradient(rgba(0,0,0,0.9),transparent)] z-3 pointer-events-none *:pointer-events-auto top-0 w-full flex h-14 items-center pt-safe">
         <VanSticky>
           <div class="h-[calc(56px+var(--safe-area-inset-top))] pt-safe transition-colors flex items-center w-screen"
-            :class="[isScrolled ? ' bg-(--nui-primary-color)' : 'bg-transparent']">
+            :class="[isScrolled ? ' bg-(--p-color)' : 'bg-transparent']">
             <NIcon color="white" size="1.5rem" class="ml-5" @click="$router.back()">
               <ArrowBackRound />
             </NIcon>
@@ -94,40 +93,60 @@ const slots = defineSlots<{
       @scroll="({ isFixed }) => isScrolled = isFixed">
       <VanTab class="min-h-full relative van-hairline--top bg-(--van-background-2)" title="简介" name="info">
         <Content :source="page.detail.content">
-          <div class="flex items-center mt-3" @click="isShowAuthorSelect = true"
-            v-if="!isEmpty(union?.$$meta.defaultLayoutAvatar)">
-            <Image class="size-8.5 shrink-0 mx-3" :src="union.$$meta.defaultLayoutAvatar"
-              v-if="union?.$$meta.defaultLayoutAvatar" round />
-            <div class="flex flex-col w-full text-nowrap">
-              <slot name="userInfo" />
-            </div>
-            <NButton round type="primary" class="!absolute right-3" size="small" @click.stop>
-              <template #icon>
-                <NIcon>
-                  <PlusRound />
-                </NIcon>
-              </template>
-              关注
-            </NButton>
-            <Popup v-model:show="isShowAuthorSelect" round class="min-h-1/3" position="bottom">
-              <slot name="searchPopup" :previewUser="previewUser" />
-              <PreviewUser ref="previewUser" />
-              <VanCell v-for="author of union?.author" center :title="author" is-link
-                @click="$router.force.push({ path: `/search`, query: { keyword: encodeURIComponent(author), origin: page.$$plugin } })">
+          <div class="flex items-center mt-3" v-if="!isEmpty(union?.$$meta.defaultLayoutAvatar)">
+            <template v-if="union?.author.length == 1">
+              <div class="flex flex-col w-full text-nowrap">
+                <div class="-mt-0.5 van-ellipsis max-w-2/3 text-(--p-color) text-[16px] flex items-center pl-2">
+                  <span v-for="author of union?.author" class="mr-0.5 flex items-center">
+                    <NIcon class="mr-0.5 not-first:ml-1" size="25px">
+                      <DrawOutlined />
+                    </NIcon>
+                    <span>{{ author }}</span>
+                  </span>
+                </div>
+              </div>
+              <NButton round type="primary" class="!absolute right-3" size="small" @click.stop>
                 <template #icon>
-                  <NIcon size="30px" class="mr-1.5">
-                    <DrawOutlined />
+                  <NIcon>
+                    <PlusRound />
                   </NIcon>
                 </template>
-              </VanCell>
-            </Popup>
+                关注
+              </NButton>
+            </template>
+            <div v-else class="flex overflow-x-scroll overflow-y-hidden">
+              <div class="flex w-full text-nowrap gap-3" v-for="author of union?.author">
+                <div class="-mt-0.5 van-ellipsis max-w-2/3 text-(--p-color) text-[16px] flex items-center pl-2"
+                  @click="$router.force.push({ name: 'search', query: { keyword: encodeURIComponent(author), origin: page.plugin } })">
+                  <NIcon class="mr-0.5 not-first:ml-1" size="25px">
+                    <UserOutlined />
+                  </NIcon>
+                  <span>{{ author }}</span>
+                </div>
+                <NButton round type="primary" class="!px-1" size="small" @click.stop>
+                  <template #icon>
+                    <NIcon>
+                      <PlusRound />
+                    </NIcon>
+                  </template>
+                </NButton>
+              </div>
+            </div>
           </div>
           <div class="w-[95%] mx-auto mt-2">
             <div class="flex relative h-fit">
               <div class="text-[17px] font-medium w-[89%] relative">
                 <TitleTemp>
                   <div class="text-xs mt-1 font-light flex text-(--van-text-color-2) *:flex *:items-center gap-1">
-                    <slot name="id" />
+                    <div class="text-(--van-text-color-2) text-xs flex gap-1 items-center ">
+                      <span>
+                        <VanIcon class="mr-0.5 " name="eye-o" size="14px" />
+                        <span>{{ union?.viewNumber }}</span>
+                      </span>
+                      <span>
+                        <span>{{ createDateString(union?.$updateTime) }}</span>
+                      </span>
+                    </div>
                   </div>
                 </TitleTemp>
                 <AnimatePresence>
@@ -146,7 +165,7 @@ const slots = defineSlots<{
                   <TitleComp />
                   <div class="flex  font-light text-(--van-text-color-2) justify-start text-xs mt-0.5">
                     <div class="mr-2">
-                      {{ page.$$plugin }}{{ page.pid.content.data.value }}
+                      {{ page.plugin }}{{ page.pid.content.data.value }}
                     </div>
                   </div>
                   <Text class="font-normal  mt-1 text-(--van-text-color-2) justify-start text-xs">
@@ -156,7 +175,7 @@ const slots = defineSlots<{
                     <NButton tertiary round
                       v-for="category of union?.categories.toSorted((a, b) => b.length - a.length).filter(Boolean)"
                       class="!text-(--van-gray-7)" size="small"
-                      @click="$router.force.push({ path: `/search`, query: { keyword: encodeURIComponent(category), origin: page.$$plugin } })">
+                      @click="$router.force.push({ path: `/search`, query: { keyword: encodeURIComponent(category), origin: page.plugin } })">
                       {{ category }}
                     </NButton>
                   </div>
@@ -190,7 +209,7 @@ const slots = defineSlots<{
               <List class="w-full h-full" :source="{ data: page.eps.content, isEnd: true }" :itemHeight="40"
                 v-slot="{ data: { item: ep }, height }" :data-processor="v => v.toReversed()" ref="epSelList">
                 <VanCell clickable @click="nowEpId = ep.index" :title="ep.name || `第${ep.index}话`"
-                  :title-class="[nowEpId == ep.index && 'font-bold !text-(--nui-primary-color)']"
+                  :title-class="[nowEpId == ep.index && 'font-bold !text-(--p-color)']"
                   class="w-full flex items-center " :style="{ height: `${height}px !important` }">
                 </VanCell>
               </List>

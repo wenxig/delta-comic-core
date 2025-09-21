@@ -42,3 +42,5 @@ import { uni } from './struct/index'
 import { symbol } from './symbol'
 import Layout from './layout/layout.vue'
 uni.item.Item.setViewLayout(symbol.thisNamespace, 'default', Layout)
+
+import './index.css'
