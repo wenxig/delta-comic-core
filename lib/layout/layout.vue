@@ -44,11 +44,6 @@ const safeHeightTopCss = useCssVar('--safe-area-inset-top')
 const safeHeightTop = computed(() => Number(safeHeightTopCss.value?.match(/\d+/)?.[0]))
 
 const slots = defineSlots<{
-  userInfo: () => void
-  id: () => void
-  action: () => void
-  searchPopup: (props: { previewUser: typeof previewUser['value'] }) => void
-  commentView: () => void
   view(): void
 }>()
 
