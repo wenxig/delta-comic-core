@@ -28,7 +28,7 @@ export class FavouriteDB extends AppDB {
   constructor() {
     super()
     this.version(AppDB.createVersion()).stores({
-      favouriteItemBase: 'addtime, *belongTo, itemKey -> itemBase.key',
+      favouriteItemBase: 'addtime, *belongTo, itemKey -> itemBase.key, ep',
       favouriteCardBase: 'createAt, title, private, description'
     })
   }
@@ -61,7 +61,7 @@ export class FavouriteDB extends AppDB {
     fItem?: FavouriteItem,
     item: SaveItem_,
     aims: FavouriteItem['belongTo'],
-    ep: uni.ep.Ep
+    ep: uni.ep.RawEp
   })[]) {
     return PromiseContent.fromPromise(
       favouriteDB.transaction('readwrite', [favouriteDB.itemBase, favouriteDB.favouriteItemBase], async tran => {
@@ -73,7 +73,7 @@ export class FavouriteDB extends AppDB {
             addtime: fItem?.addtime ?? Date.now(),
             belongTo,
             itemKey: AppDB.createSaveItem(item).key,
-            ep: ep.toJSON()
+            ep
           })
         }))
       })
