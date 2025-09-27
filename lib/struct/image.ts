@@ -37,7 +37,7 @@ export class Image extends Struct<RawImage> implements RawImage {
     const key = `${plugin}:${namespace}`
     this.fork.set(key, fork)
   }
-  constructor(v: RawImage) {
+  constructor(v: RawImage, public aspect?: { width: number, height: number }) {
     super(v)
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta

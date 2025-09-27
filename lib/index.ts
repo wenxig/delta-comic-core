@@ -11,7 +11,13 @@ import Var from './components/var.vue'
 import Waterfall from './components/waterfall.vue'
 import Content from './components/content.vue'
 
-export {
+import UserFavouriteSelect from './components/user/favouriteSelect.vue'
+import UserCreateFavouriteCard from './components/user/createFavouriteCard.vue'
+import UserPreviewUser from './components/user/previewUser.vue'
+
+import ContentUnitCard from './components/content/unitCard.vue'
+
+export const Comp = {
   Await,
   Loading,
   Content,
@@ -24,23 +30,50 @@ export {
   ToggleIcon,
   Var,
   Waterfall,
+  user: {
+    FavouriteSelect: UserFavouriteSelect,
+    CreateFavouriteCard: UserCreateFavouriteCard,
+    PreviewUser: UserPreviewUser
+  },
+  content: {
+    UnitCard: ContentUnitCard
+  }
 }
+
 
 export { uni } from './struct/index'
 
-export * from './utils/data'
-export * from './utils/delay'
-export * from './utils/eventBus'
-export * from './utils/image'
-export * from './utils/layout'
-export * from './utils/request'
+import * as uData from './utils/data'
+import * as uDelay from './utils/delay'
+import * as uEventBus from './utils/eventBus'
+import * as uImage from './utils/image'
+import * as uLayout from './utils/layout'
+import * as uRequest from './utils/request'
+import * as uDb from './utils/db'
+import * as uTranslate from './utils/translate'
 
-export { useTemp } from './stores/temp'
+export const Utils = {
+  data: uData,
+  delay: uDelay,
+  eventBus: uEventBus,
+  image: uImage,
+  layout: uLayout,
+  request: uRequest,
+  translate: uTranslate,
+  db: uDb
+}
 
+import { useTemp } from './stores/temp'
+export const Store = {
+  useTemp
+}
+
+export { Db } from './db'
 
 import { uni } from './struct/index'
 import { symbol } from './symbol'
 import Layout from './layout/layout.vue'
-uni.item.Item.setViewLayout(symbol.thisNamespace, 'default', Layout)
+uni.content.ContentPage.setViewLayout(symbol.thisNamespace, 'default', Layout)
 
 import './index.css'
+

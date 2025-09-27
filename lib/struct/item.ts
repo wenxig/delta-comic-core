@@ -1,27 +1,7 @@
 import * as image from "./image"
 import { Struct, type MetaData } from "@/utils/data"
 import dayjs from "dayjs"
-import { isString } from "lodash-es"
-import { shallowReactive, type Component } from "vue"
-
-export interface ViewLayout {
-  plugin: string
-  name: string
-  componentPointer: string
-}
-export type ViewLayout_ = string | ViewLayout
-
-export interface ContentType {
-  plugin: string
-  name: string
-  layout: ViewLayout
-}
-/** 
- * @example "bika:comic$core:default"
- * "91video:video$core:default"
- * "bika:comic$jm:comic"
- */
-export type ContentType_ = ContentType | string
+import { ContentPage, type ContentType, type ContentType_ } from "./content"
 
 export interface RawItem {
   cover: image.RawImage
@@ -40,51 +20,8 @@ export interface RawItem {
   $$plugin: string
   $$meta: MetaData
 }
+
 export class Item extends Struct<RawItem> implements RawItem {
-  private static viewLayout = shallowReactive(new Map<string, Component>())
-  public static setViewLayout(plugin: string, name: string, component: Component): ViewLayout {
-    const fullName = `${plugin}:${name}`
-    this.viewLayout.set(fullName, component)
-    return {
-      componentPointer: fullName,
-      name,
-      plugin
-    }
-  }
-  public static getViewLayout(vl_: ViewLayout_) {
-    const vl = this.toViewLayout(vl_)
-    12345
-    return this.viewLayout.get(vl.componentPointer)
-  }
-  public static toViewLayout(vl: ViewLayout_): ViewLayout {
-    if (isString(vl)) {
-      const [plugin, name] = vl.split(':')
-      return {
-        name, plugin,
-        componentPointer: `${plugin}:${name}`
-      }
-    }
-    return vl
-  }
-  public static toViewLayoutString(vl: ViewLayout_): string {
-    if (isString(vl)) return vl
-    return `${vl.plugin}:${vl.name}`
-  }
-  public static toContentType(ct: ContentType_): ContentType {
-    if (isString(ct)) {
-      const [c, v] = ct.split('$')
-      const [plugin, name] = c.split(':')
-      return {
-        name, plugin,
-        layout: this.toViewLayout(v)
-      }
-    }
-    return ct
-  }
-  public static toContentTypeString(ct: ContentType_): string {
-    if (isString(ct)) return ct
-    return `${ct.plugin}:${ct.name}$${this.toViewLayoutString(ct.layout)}`
-  }
 
   public static is(value: unknown): value is Item {
     return value instanceof this
@@ -125,7 +62,7 @@ export class Item extends Struct<RawItem> implements RawItem {
     this.commentNumber = v.commentNumber
     this.isLiked = v.isLiked
     this.customIsAI = v.customIsAI
-    this.contentType = Item.toContentType(v.contentType)
+    this.contentType = ContentPage.toContentType(v.contentType)
   }
 
   public customIsAI?: boolean

@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ArrowBackRound, ArrowForwardIosOutlined, DrawOutlined, KeyboardArrowDownRound, PlayArrowRound, PlusRound } from '@vicons/material'
+import { ArrowBackRound, ArrowForwardIosOutlined, DrawOutlined, KeyboardArrowDownRound, PlayArrowRound, PlusRound, ReportGmailerrorredRound, ShareSharp } from '@vicons/material'
 import { motion } from 'motion-v'
 import { computed, nextTick, shallowRef, useTemplateRef } from 'vue'
 import { createReusableTemplate, useCssVar } from '@vueuse/core'
@@ -9,8 +9,10 @@ import Content from '@/components/content.vue'
 import { uni } from '@/struct'
 import List from '@/components/list.vue'
 import Popup from '@/components/popup.vue'
-import { UserOutlined } from '@vicons/antd'
+import { FolderOutlined, LikeFilled, UserOutlined } from '@vicons/antd'
 import { createDateString } from '@/utils/translate'
+import ToggleIcon from '@/components/toggleIcon.vue'
+import FavouriteSelect from '@/components/user/favouriteSelect.vue'
 const $router = useRouter()
 const $route = useRoute()
 const $props = defineProps<{
@@ -23,7 +25,9 @@ const showTitleFull = shallowRef(false)
 const [TitleTemp, TitleComp] = createReusableTemplate()
 const isScrolled = shallowRef(false)
 
-
+const $emit = defineEmits<{
+  changeLike: [to: boolean]
+}>()
 
 const scrollbar = useTemplateRef('scrollbar')
 const epSelList = useTemplateRef('epSelList')
@@ -183,7 +187,20 @@ const slots = defineSlots<{
             </div>
             <!-- action bar -->
             <div class="mt-8 mb-4 flex justify-around" v-if="union">
-              <slot name="action" />
+              <ToggleIcon padding size="27px" v-model="union.isLiked" @click="$emit('changeLike', $event)"
+                :icon="LikeFilled">
+                {{ union.likeNumber ?? '喜欢' }}
+              </ToggleIcon>
+              <ToggleIcon padding size="27px" :icon="FolderOutlined" dis-changed>
+                缓存
+              </ToggleIcon>
+              <ToggleIcon padding size="27px" dis-changed :icon="ReportGmailerrorredRound">
+                举报
+              </ToggleIcon>
+              <FavouriteSelect :item="union" />
+              <ToggleIcon padding size="27px" :icon="ShareSharp" dis-changed>
+                分享
+              </ToggleIcon>
             </div>
             <!-- ep select -->
             <div class="relative mb-4 w-full flex items-center rounded pl-3 py-2 van-haptics-feedback"
@@ -222,7 +239,7 @@ const slots = defineSlots<{
           <span>评论</span>
           <span class="!text-xs ml-0.5 font-light">{{ union?.commentNumber ?? '' }}</span>
         </template>
-        <slot name="commentView" />
+        <!-- <slot name="commentView" /> -->
       </VanTab>
     </VanTabs>
   </NScrollbar>

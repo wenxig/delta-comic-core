@@ -20,6 +20,9 @@ importers:
       '@lhlyu/vue-virtual-waterfall':
         specifier: ^1.0.8
         version: 1.0.8(vue@3.5.21(typescript@5.8.2))
+      '@types/crypto-js':
+        specifier: ^4.2.2
+        version: 4.2.2
       '@vant/use':
         specifier: ^1.6.0
         version: 1.6.0(vue@3.5.21(typescript@5.8.2))
@@ -38,9 +41,18 @@ importers:
       capacitor-plugin-safe-area:
         specifier: ^4.0.0
         version: 4.0.0(@capacitor/core@7.4.3)
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       dayjs:
         specifier: ^1.11.18
         version: 1.11.18
+      dexie:
+        specifier: ^4.2.0
+        version: 4.2.0
+      dexie-relationships:
+        specifier: ^1.2.11
+        version: 1.2.11(dexie@4.2.0)
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -56,6 +68,9 @@ importers:
       pinia:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.8.2)(vue@3.5.21(typescript@5.8.2))
+      tailwindcss:
+        specifier: ^4.1.13
+        version: 4.1.13
       tailwindcss-safe-area-capacitor:
         specifier: ^0.5.1
         version: 0.5.1(tailwindcss@4.1.13)
@@ -805,6 +820,9 @@ packages:
   '@types/argparse@1.0.38':
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
 
+  '@types/crypto-js@4.2.2':
+    resolution: {integrity: sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==}
+
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
@@ -1109,6 +1127,9 @@ packages:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
 
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+
   css-render@0.15.14:
     resolution: {integrity: sha512-9nF4PdUle+5ta4W5SyZdLCCmFd37uVimSjg1evcTqKJCyvCEEj12WKzOSBNak6r4im4J4iYXKH1OWpUV5LBYFg==}
 
@@ -1153,6 +1174,14 @@ packages:
   detect-libc@2.1.0:
     resolution: {integrity: sha512-vEtk+OcP7VBRtQZ1EJ3bdgzSfBjgnEalLTp5zjJrS+2Z1w2KZly4SBdac/WDU3hhsNAZ9E8SC96ME4Ey8MZ7cg==}
     engines: {node: '>=8'}
+
+  dexie-relationships@1.2.11:
+    resolution: {integrity: sha512-dptIUMiCiEPnSPyZno6yOrmFo+xf0Y1PVC4LX2HO/VgPAYIoaf/wMcC7mbna+RMZ6wRIOEb4T+lgR5v21q2EnA==}
+    peerDependencies:
+      dexie: ^2.0.0-beta.10
+
+  dexie@4.2.0:
+    resolution: {integrity: sha512-OSeyyWOUetDy9oFWeddJgi83OnRA3hSFh3RrbltmPgqHszE9f24eUCVLI4mPg0ifsWk0lQTdnS+jyGNrPMvhDA==}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -2725,6 +2754,8 @@ snapshots:
 
   '@types/argparse@1.0.38': {}
 
+  '@types/crypto-js@4.2.2': {}
+
   '@types/estree@1.0.8': {}
 
   '@types/katex@0.16.7': {}
@@ -3075,6 +3106,8 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
+  crypto-js@4.2.0: {}
+
   css-render@0.15.14:
     dependencies:
       '@emotion/hash': 0.8.0
@@ -3104,6 +3137,12 @@ snapshots:
     optional: true
 
   detect-libc@2.1.0: {}
+
+  dexie-relationships@1.2.11(dexie@4.2.0):
+    dependencies:
+      dexie: 4.2.0
+
+  dexie@4.2.0: {}
 
   dunder-proto@1.0.1:
     dependencies:

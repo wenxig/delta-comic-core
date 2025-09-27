@@ -7,3 +7,7 @@ export type EventBus = {
   networkError_request: any
 }
 export const eventBus = mitt<EventBus>()
+
+export type SharedFunction = {
+  
+}

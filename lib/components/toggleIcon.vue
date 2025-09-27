@@ -12,13 +12,13 @@ const $props = defineProps<{
 }>()
 const $emit = defineEmits<{
   change: [mode: boolean]
-  click: []
+  click: [to: boolean]
   longClick: []
 }>()
 const mode = defineModel<boolean>({ default: false })
 watch(mode, mode => $emit('change', mode))
 const handleClick = () => {
-  $emit('click')
+  $emit('click', !mode.value)
   if (!$props.disChanged) mode.value = !mode.value
 }
 
