@@ -51,6 +51,7 @@ import * as uLayout from './utils/layout'
 import * as uRequest from './utils/request'
 import * as uDb from './utils/db'
 import * as uTranslate from './utils/translate'
+import * as uMessage from './utils/message'
 
 export const Utils = {
   data: uData,
@@ -60,7 +61,8 @@ export const Utils = {
   layout: uLayout,
   request: uRequest,
   translate: uTranslate,
-  db: uDb
+  db: uDb,
+  message: uMessage
 }
 
 import { useTemp } from './stores/temp'
@@ -77,3 +79,4 @@ uni.content.ContentPage.setViewLayout(symbol.thisNamespace, 'default', Layout)
 
 import './index.css'
 
+export { User } from './layout/user'

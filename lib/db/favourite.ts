@@ -1,14 +1,16 @@
 import { useLocalStorage } from "@vueuse/core"
-import { AppDB,  type SaveItem, type SaveItem_ } from "./app"
+import { AppDB, type SaveItem, type SaveItem_ } from "./app"
 import type { Table } from "dexie"
-import { useLiveQueryRef } from "@/utils/db"
-import { defaults, uniq } from "lodash-es"
+import { useLiveQueryRef, type LiveQueryRef } from "@/utils/db"
+import { defaults, isEmpty, uniq } from "lodash-es"
 import { PromiseContent } from "@/utils/data"
+import type { uni } from "@/struct"
 
 export interface FavouriteItem {
   itemKey: string
   addtime: number
   belongTo: (FavouriteCard['createAt'])[]
+  ep: uni.ep.RawEp
 }
 
 export interface FavouriteCard {
@@ -30,11 +32,6 @@ export class FavouriteDB extends AppDB {
       favouriteCardBase: 'createAt, title, private, description'
     })
   }
-
-  public favouriteItem = useLiveQueryRef(() => favouriteDB.favouriteItemBase.with({
-    itemBase: 'itemKey'
-  }), [])
-  public favouriteCard = useLiveQueryRef(() => favouriteDB.favouriteCardBase.toArray(), [])
 
   public async $setCards(...cards: (Partial<Omit<FavouriteCard, 'title'>> & Pick<FavouriteCard, 'title'>)[]) {
     return PromiseContent.fromPromise(
@@ -63,16 +60,20 @@ export class FavouriteDB extends AppDB {
   public async $setItems(...items: ({
     fItem?: FavouriteItem,
     item: SaveItem_,
-    aims: FavouriteItem['belongTo']
+    aims: FavouriteItem['belongTo'],
+    ep: uni.ep.Ep
   })[]) {
     return PromiseContent.fromPromise(
       favouriteDB.transaction('readwrite', [favouriteDB.itemBase, favouriteDB.favouriteItemBase], async tran => {
         await tran.itemBase.bulkPut(items.map(v => AppDB.createSaveItem(v.item)))
-        await Promise.all(items.map(async ({ aims, item, fItem }) => {
-          await tran.favouriteItemBase.put({
+        await Promise.all(items.map(async ({ aims, item, fItem, ep }) => {
+          const belongTo = uniq(aims.concat(fItem?.belongTo ?? []))
+          if (isEmpty(belongTo)) fItem && await this.$removeItems(fItem.addtime)
+          else await tran.favouriteItemBase.put({
             addtime: fItem?.addtime ?? Date.now(),
-            belongTo: uniq(aims.concat(fItem?.belongTo ?? [])),
-            itemKey: AppDB.createSaveItem(item).key
+            belongTo,
+            itemKey: AppDB.createSaveItem(item).key,
+            ep: ep.toJSON()
           })
         }))
       })
@@ -85,7 +86,7 @@ export class FavouriteDB extends AppDB {
     )
   }
 
-  public defaultPack = useLiveQueryRef(() => favouriteDB.favouriteCardBase.where('createAt').equals(0).first(), undefined)
+  public defaultPack: LiveQueryRef<FavouriteCard | undefined> = useLiveQueryRef(() => favouriteDB.favouriteCardBase.where('createAt').equals(0).first(), undefined)
 
   public mainFilters = useLocalStorage('app.filter.favourite.main', new Array<string>())
   public infoFilters = useLocalStorage('app.filter.favourite.info', new Array<string>())

@@ -9,13 +9,11 @@ import { IfAny, useResizeObserver, useScroll } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
 import { useTemp } from '@/stores/temp'
 import { isArray } from 'lodash-es'
-type Source = {
-  data: RPromiseContent<any, T[]>
-  isEnd?: boolean
-} | Stream<T>
-type Processed = IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>
 const $props = withDefaults(defineProps<{
-  source: Source
+  source: {
+    data: RPromiseContent<any, T[]>
+    isEnd?: boolean
+  } | Stream<T>
   style?: StyleValue
   class?: any
   col?: [min: number, max: number] | number
@@ -73,7 +71,7 @@ const handleRefresh = async () => {
   isRefreshing.value = false
 }
 defineSlots<{
-  default(props: { item: Processed, index: number, height?: number, minHeight: number, length: number }): any
+  default(props: { item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>, index: number, height?: number, minHeight: number, length: number }): any
 }>()
 const content = useTemplateRef<ComponentExposed<typeof Content>>('content')
 const scrollParent = computed(() => content.value?.cont)

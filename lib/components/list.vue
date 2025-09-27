@@ -1,19 +1,17 @@
 <script setup lang='ts' generic="T extends NonNullable<VirtualListProps['items']>[number],PF extends ((d: T[])=>any[])">
-import {  VirtualListProps } from 'naive-ui'
+import { VirtualListProps } from 'naive-ui'
 import { ceil, debounce, isArray, isEmpty } from 'lodash-es'
 import { StyleValue, shallowRef, useTemplateRef, watch } from 'vue'
 import { IfAny, useScroll } from '@vueuse/core'
 import { callbackToPromise, RPromiseContent, Stream } from '@/utils/data'
 import { computed } from 'vue'
 import Content from './content.vue'
-type Source = {
-  data: RPromiseContent<any, T[]>
-  isEnd?: boolean
-  reloadable?: boolean
-} | Stream<T> | Array<T>
-type Processed = IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>
 const $props = withDefaults(defineProps<{
-  source: Source
+  source: {
+    data: RPromiseContent<any, T[]>
+    isEnd?: boolean
+    reloadable?: boolean
+  } | Stream<T> | Array<T>
   itemHeight: number
   listProp?: Partial<VirtualListProps>
   goBottom?: boolean
@@ -100,7 +98,7 @@ const handleRefresh = async () => {
 
 
 defineSlots<{
-  default(props: { height: number, data: { item: Processed, index: number } }): any
+  default(props: { height: number, data: { item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>, index: number } }): any
 }>()
 defineExpose({
   scrollTop: listScrollTop,
@@ -117,7 +115,8 @@ defineExpose({
       :hide-loading="isPullRefreshHold && unionSource.isRequesting">
       <Var :value="unionSource.data" v-slot="{ value }">
         <NVirtualList :="listProp" :item-resizable :item-size="itemHeight" @scroll="handleScroll"
-          class="overflow-x-hidden h-full" :items="value" v-slot="{ item }: { item: Processed }" ref="vList"
+          class="overflow-x-hidden h-full" :items="value"
+          v-slot="{ item }: { item: (IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>) }" ref="vList"
           :class="[isPullRefreshHold ? 'overflow-y-hidden' : 'overflow-y-auto']">
           <slot :height="itemHeight" :data="{ item: item, index: value.indexOf(item) }" />
         </NVirtualList>

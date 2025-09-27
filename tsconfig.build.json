@@ -15,11 +15,11 @@
     // "isolatedModules": true,
     "noCheck": true,
     // "jsxImportSource": "vue",
-    // "paths": {
-    //   "@/*": [
-    //     "./lib/*"
-    //   ]
-    // },
+    "paths": {
+      "@/*": [
+        "./lib/*"
+      ]
+    },
     // "types": [
     //   "./env.d.ts",
     //   "./lib/global.d.ts",
