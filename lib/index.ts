@@ -80,3 +80,5 @@ uni.content.ContentPage.setViewLayout(symbol.thisNamespace, 'default', Layout)
 import './index.css'
 
 export { User } from './layout/user'
+
+export * from "./plugin"

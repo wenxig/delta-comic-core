@@ -16,6 +16,7 @@ export interface RawItem {
   updateTime?: number
   customIsAI?: boolean
   contentType: ContentType_
+  length: string
 
   $$plugin: string
   $$meta: MetaData
@@ -44,6 +45,7 @@ export class Item extends Struct<RawItem> implements RawItem {
     return dayjs(this.updateTime)
   }
   public contentType: ContentType
+  public length: string
   public $$plugin: string
   public $$meta
   constructor(v: RawItem) {
@@ -63,6 +65,7 @@ export class Item extends Struct<RawItem> implements RawItem {
     this.isLiked = v.isLiked
     this.customIsAI = v.customIsAI
     this.contentType = ContentPage.toContentType(v.contentType)
+    this.length = v.length
   }
 
   public customIsAI?: boolean

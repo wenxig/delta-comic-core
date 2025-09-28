@@ -5,11 +5,11 @@ import { isString } from "lodash-es"
 export interface ProcessInstance {
   fullName: string
   plugin: string
-  callName: string
+  referenceName: string
   func: (nowPath: string, img: Image) => Promise<[path: string, exit: string]>
 }
 export interface ProcessStep {
-  callName: string
+  referenceName: string
   ignoreExit?: boolean
 }
 type ProcessStep_ = ProcessStep | string
@@ -22,12 +22,12 @@ export interface RawImage {
 }
 export class Image extends Struct<RawImage> implements RawImage {
   private static processInstances = new Map<string, ProcessInstance>()
-  public static setProcess(plugin: string, callName: string, func: ProcessInstance['func']) {
-    const fullName = `${plugin}:${callName}`
+  public static setProcess(plugin: string, referenceName: string, func: ProcessInstance['func']) {
+    const fullName = `${plugin}:${referenceName}`
     this.processInstances.set(fullName, {
       func,
       plugin,
-      callName,
+      referenceName,
       fullName
     })
   }
@@ -44,7 +44,7 @@ export class Image extends Struct<RawImage> implements RawImage {
     this.path = v.path
     this.forkNamespace = v.forkNamespace
     this.processSteps = (v.processSteps ?? []).map<ProcessStep>(v => isString(v) ? {
-      callName: v,
+      referenceName: v,
       ignoreExit: false
     } : v)
   }
@@ -57,7 +57,7 @@ export class Image extends Struct<RawImage> implements RawImage {
     let resultPath = this.path
     for (const option of this.processSteps) {
       // preflight
-      const fullName = `${this.$$plugin}:${option.callName}`
+      const fullName = `${this.$$plugin}:${option.referenceName}`
       const instance = Image.processInstances.get(fullName)
       if (!instance) {
         console.warn(`[Image.getUrl] process not found, fullname: "${fullName}"`)

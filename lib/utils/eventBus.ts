@@ -1,3 +1,6 @@
+import type { PluginInstance } from "@/plugin"
+import type { uni } from "@/struct"
+import { random } from "lodash-es"
 import mitt from "mitt"
 
 export type EventBus = {
@@ -10,7 +13,9 @@ export const eventBus = mitt<EventBus>()
 
 export type SharedFunctions = {
  /** 重复调用需缓存(自行实现)(可不缓存) */ getUser(): PromiseLike<object>
-  // registerPlugin(config: any, ...others: any[]): PromiseLike<object>
+  getRandomProvide(signal: AbortSignal): PromiseLike<uni.item.Item[]>
+
+  addPlugin(ins: PluginInstance): void
 }
 
 export class SharedFunction {
@@ -33,5 +38,14 @@ export class SharedFunction {
         ...v
       }
     })
+  }
+  public static callRandom<TKey extends keyof SharedFunctions>(name: TKey, ...args: Parameters<SharedFunctions[TKey]>) {
+    const all = this.sharedFunctions.get(name) ?? []
+    const it = all[random(0, all.length)]
+    const result: ReturnType<SharedFunctions[TKey]> = (<any>it.fn)(...args)
+    return {
+      result,
+      ...it
+    }
   }
 }
