@@ -10,20 +10,20 @@ export class Struct<TRaw extends object> {
   constructor(protected $$raw: TRaw) { }
 }
 export type MetaData = Record<string | number, any>
-
+/**
+ * 扩展内容的`Promise`，可视为普通`Promise`使用
+*/
 export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
   public static isPromiseContent(value: unknown): value is PromiseContent<any> {
     return value instanceof this
   }
-  constructor(private promise: Promise<T>, private processor: (v: T) => TPF = v => <any>v, private isPause = false) {
-    if (!isPause) this.loadPromise(promise)
+  /**
+   * 使用`PromiseContent.fromPromise`或`PromiseContent.fromAsyncFunction`代替`new PromiseContent`
+  */
+  private constructor(private promise: Promise<T>, private processor: (v: T) => TPF = v => <any>v) {
+    this.loadPromise(promise)
   }
-  public resume() {
-    if (this.isPause) return
-    this.isPause = true
-    this.loadPromise(this.promise)
-  }
-  public async loadPromise(promise: Promise<T>) {
+  private async loadPromise(promise: Promise<T>) {
     this.data.value = undefined
     this.isLoading.value = true
     this.isError.value = false
@@ -41,7 +41,10 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
       this.errorCause.value = err
     }
   }
-  public useProcessor<TP>(processor: (val: T) => TP): RPromiseContent<T, TP> {
+  /**
+   * 对`this.data.value`做出处理，多次调用仅最后一次生效
+  */
+  public setProcessor<TP>(processor: (val: T) => TP): RPromiseContent<T, TP> {
     return PromiseContent.fromPromise(this.promise, processor)
   }
   public catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null | undefined): Promise<T | TResult> {
@@ -58,12 +61,12 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
   public isError = shallowRef(false)
   public errorCause = shallowRef<any>()
   public isEmpty = shallowRef(true)
-  public static fromPromise<T, TP = T>(promise: Promise<T>, processor: (val: T) => TP = v => <any>v, isPause = false): RPromiseContent<T, TP> {
-    const v = new this<T, TP>(promise, processor, isPause)
+  public static fromPromise<T, TP = T>(promise: Promise<T>, processor: (val: T) => TP = v => <any>v): RPromiseContent<T, TP> {
+    const v = new this<T, TP>(promise, processor)
     return markRaw(v)
   }
-  public static fromAsyncFunction<T extends (...args: any[]) => Promise<any>>(asyncFunction: T, isPause = false) {
-    return (...args: Parameters<T>): RPromiseContent<Awaited<ReturnType<T>>> => this.fromPromise((() => asyncFunction(...args))(), undefined, isPause)
+  public static fromAsyncFunction<T extends (...args: any[]) => Promise<any>>(asyncFunction: T) {
+    return (...args: Parameters<T>): RPromiseContent<Awaited<ReturnType<T>>> => this.fromPromise((() => asyncFunction(...args))())
   }
   public static resolve<T>(data: T) {
     const pc = this.fromPromise(Promise.resolve(data))
@@ -100,9 +103,18 @@ export type PromiseWithResolvers<T> = {
 export type RPromiseContent<T, PTF = T> = Raw<PromiseContent<T, PTF>>
 type RawGenerator<T> = (abortSignal: AbortSignal, that: Stream<T>) => (IterableIterator<T[], void, Stream<T>> | AsyncIterableIterator<T[], void, Stream<T>>)
 const generatorMap = new Map<Stream<any>, RawGenerator<any>>()
+/**
+ * _(网络)_ 数据流
+*/
 export type RStream<T> = Raw<Stream<T>>
+/**
+ * 可迭代 _(网络)_ 数据流
+*/
 export class Stream<T> implements AsyncIterableIterator<T[], void> {
-  constructor(rawGenerator: RawGenerator<T>) {
+  /** 
+   * 使用`Stream.create`代替`new Stream`
+   */
+  private constructor(rawGenerator: RawGenerator<T>) {
     this.generator = rawGenerator(this.abortController.signal, this)
     generatorMap.set(this, rawGenerator)
     this[Stream.isStreamKey] = true
@@ -120,6 +132,7 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
   private abortController = new SmartAbortController()
   private generator
   private _setupData = new Array<T>()
+  /** 初始存在的数据(置顶) */
   public setupData(data: T[]) {
     this._setupData.push(...data)
     this.data.value.unshift(...data)
@@ -154,6 +167,7 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
   public async throw(e?: any): Promise<IteratorResult<T[], void>> {
     return await this.generator.throw?.(e) ?? { value: undefined, done: true }
   }
+  /** 重置 */
   public reset() {
     const rawGenerator = generatorMap.get(this)!
     this.generator = rawGenerator(this.abortController.signal, this)
@@ -165,10 +179,13 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
     this.isRequesting.value = false
     this.error.value = undefined
   }
+  /** 重试 */
   public async retry() {
-    if (!this.error.value) this.page.value--
+    this.page.value--
     return this.next()
   }
+
+  /** 一次性全部加载 */
   public async nextToDone() {
     if (isNaN(this._pages)) await this.next(true)
     const promises = []
@@ -177,6 +194,8 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
     await Promise.all(promises)
     return this._data
   }
+
+  /** 停止正在进行的请求 */
   public stop() {
     this.abortController.abort()
     this.isRequesting.value = false
@@ -184,9 +203,13 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
   public [Symbol.asyncIterator]() {
     return this
   }
+
+  /** 错误(如果有) */
   public error = shallowRef<void | Error>()
 
+  /** 数据 */
   public data = ref<T[]>([]) as Ref<T[]>
+  /** 数据 */
   public get _data() {
     return this.data.value
   }
@@ -220,19 +243,27 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
   public get _length() {
     return this.data.value.length
   }
+  /** 是否正在网络请求 */
   public isRequesting = shallowRef(false)
+  /** 是否正在网络请求 */
   public get _isRequesting() {
     return this.isRequesting.value
   }
+  /** 是否全部获取完成 */
   public isDone = shallowRef(false)
+  /** 是否全部获取完成 */
   public get _isDone() {
     return this.isDone.value
   }
+  /** 是否无结果 */
   public isNoData = computed(() => this.isDone.value && this.isEmpty.value)
+  /** 是否无结果 */
   public get _isNoData() {
     return this.isNoData.value
   }
+  /** 是否当前为空 */
   public isEmpty = computed(() => this.length.value == 0)
+  /** 是否当前为空 */
   public get _isEmpty() {
     return this.isEmpty.value
   }

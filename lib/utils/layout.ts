@@ -1,18 +1,22 @@
 import { toRef } from "@vueuse/core"
 import { last, remove } from "lodash-es"
-import { computed, onUnmounted, shallowReactive, shallowRef, watch, type MaybeRefOrGetter, type ComputedRef } from "vue"
+import { computed, onUnmounted, shallowReactive, watch, type MaybeRefOrGetter, type ComputedRef } from "vue"
 
-export const allPopups = shallowRef(0)
 const allLayers = shallowReactive<symbol[]>([])
+
+/**
+ * @description 
+ * 对于所有弹出层，使用其确定`z-index`  
+ * 在组件内使用时，卸载组件 _`(onUnmounted)`_ 会自动清理，否则需要主动调用`return[2]`清理
+ * 
+*/
 export const useZIndex = (show: MaybeRefOrGetter<boolean>): [index: ComputedRef<number>, isLast: ComputedRef<boolean>, stopUse: () => void] => {
   const th = Symbol('layer')
   const isShow = toRef(show)
   const stop = watch(isShow, isShow => {
     if (isShow) {
-      allPopups.value++
       allLayers.push(th)
     } else {
-      allPopups.value--
       remove(<any>allLayers, t => t == th)
     }
   }, { immediate: true })

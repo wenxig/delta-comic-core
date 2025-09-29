@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance, isCancel, isAxiosError, type AxiosError, type AxiosResponse, type Axios, type CreateAxiosDefaults, type AxiosRequestConfig } from "axios"
+import axios, { type AxiosInstance, isCancel, isAxiosError, type AxiosError, type AxiosResponse, type CreateAxiosDefaults, type AxiosRequestConfig } from "axios"
 import mitt from "mitt"
 import { eventBus, type EventBus } from "./eventBus"
 import { delay } from "./delay"

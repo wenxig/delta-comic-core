@@ -1,4 +1,4 @@
-import type { PluginInstance } from "@/plugin"
+import type { PluginDefineResult, PluginInstance } from "@/plugin"
 import type { uni } from "@/struct"
 import { random } from "lodash-es"
 import mitt from "mitt"
@@ -15,7 +15,7 @@ export type SharedFunctions = {
  /** 重复调用需缓存(自行实现)(可不缓存) */ getUser(): PromiseLike<object>
   getRandomProvide(signal: AbortSignal): PromiseLike<uni.item.Item[]>
 
-  addPlugin(ins: PluginInstance): void
+  addPlugin<TApiResult>(ins: PluginInstance<TApiResult>): Promise<PluginDefineResult<TApiResult>>
 }
 
 export class SharedFunction {
@@ -23,7 +23,7 @@ export class SharedFunction {
     fn: SharedFunctions[keyof SharedFunctions],
     plugin: string
   }[]>
-  public static registerSharedFunction<TKey extends keyof SharedFunctions>(fn: SharedFunctions[TKey], plugin: string, name: TKey) {
+  public static define<TKey extends keyof SharedFunctions>(fn: SharedFunctions[TKey], plugin: string, name: TKey) {
     this.sharedFunctions.set(name, [...(this.sharedFunctions.get(name) ?? []), {
       fn,
       plugin
@@ -42,6 +42,16 @@ export class SharedFunction {
   public static callRandom<TKey extends keyof SharedFunctions>(name: TKey, ...args: Parameters<SharedFunctions[TKey]>) {
     const all = this.sharedFunctions.get(name) ?? []
     const it = all[random(0, all.length)]
+    const result: ReturnType<SharedFunctions[TKey]> = (<any>it.fn)(...args)
+    return {
+      result,
+      ...it
+    }
+  }
+  public static callWitch<TKey extends keyof SharedFunctions>(name: TKey, plugin: string, ...args: Parameters<SharedFunctions[TKey]>) {
+    const all = this.sharedFunctions.get(name) ?? []
+    const it = all.find(c => c.plugin == plugin)
+    if (!it) throw new Error(`[SharedFunction.callWitch] not found plugin function (plugin: ${plugin}, name: ${name})`)
     const result: ReturnType<SharedFunctions[TKey]> = (<any>it.fn)(...args)
     return {
       result,
