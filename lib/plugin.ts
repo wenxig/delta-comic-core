@@ -1,4 +1,4 @@
-import { ContentPage, type ViewLayoutComp } from "@/struct/content"
+import { ContentPage, type ContentPageLike, type ViewLayoutComp } from "@/struct/content"
 import { entries, isFunction } from "lodash-es"
 import { Image, type ProcessInstance } from "./struct/image"
 import type { Ref } from "vue"
@@ -14,6 +14,15 @@ export interface PluginConfig<TApiTestResult> {
      * 与`ContentPage.setViewLayout(name, key, value)`等价
     */
     layout?: Record<string, ViewLayoutComp>
+
+    /**
+     * @description
+     * key: name 
+     * value: ContentPage  
+     * 与`ContentPage.setContentPage(`${name}:${key}`, value)`等价  
+     * _不需要提供viewLayout_
+    */
+    contentPage?: Record<string, ContentPageLike>
   }
   image?: {
     /** 
@@ -58,6 +67,7 @@ export const definePlugin = <T>(config: PluginConfig<T> | (() => PluginConfig<T>
   } = cfg
   if (content) {
     for (const [name, comp] of entries(content.layout)) ContentPage.setViewLayout(plugin, name, comp)
+    for (const [name, page] of entries(content.contentPage)) ContentPage.setContentPage(`${plugin}:${name}`, page)
   }
   if (image) {
     if (image.forks) for (const [name, url] of entries(image.forks)) Image.setFork(plugin, name, url)

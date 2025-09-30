@@ -5,6 +5,7 @@ import { PromiseContent } from '@/utils/data'
 import { isString } from "lodash-es"
 import { useGlobalVar } from '@/utils/plugin'
 export type PreloadValue = item.Item | undefined
+export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
 export abstract class ContentPage<T extends object = any> {
   private static viewLayout = useGlobalVar(shallowReactive(new Map<string, ViewLayoutComp>()), 'uni/contentPage/viewLayout')
   public static setViewLayout(plugin: string, name: string, component: ViewLayoutComp): ViewLayout {
@@ -34,6 +35,16 @@ export abstract class ContentPage<T extends object = any> {
     if (isString(vl)) return vl
     return `${vl.plugin}:${vl.name}`
   }
+  private static contentPage = useGlobalVar(shallowReactive(new Map<string, ContentPageLike>()), 'uni/contentPage/contentPage')
+  public static setContentPage(contentType: ContentType_, page: ContentPageLike) {
+    this.contentPage.set(this.toContentTypeStringOnly(contentType), page)
+  }
+  public static getContentPage(contentType: ContentType_) {
+    const key = this.toContentTypeStringOnly(contentType)
+    const v = this.contentPage.get(key)
+    if (!v) throw new Error(`[ContentPage.getContentPage] not found ContentPage (contentType: ${contentType})`)
+    return v
+  }
   public static toContentType(ct: ContentType_): ContentType {
     if (isString(ct)) {
       const [c, v] = ct.split('$')
@@ -49,12 +60,15 @@ export abstract class ContentPage<T extends object = any> {
     if (isString(ct)) return ct
     return `${ct.plugin}:${ct.name}$${this.toViewLayoutString(ct.layout)}`
   }
-
-  constructor(preload: PreloadValue, public plugin: string, contentType: ContentType_, public id: string) {
-    this.preload.value = preload
-    this.contentType = ContentPage.toContentType(contentType)
+  /** without viewLayout */
+  public static toContentTypeStringOnly(ct: ContentType_): string {
+    if (isString(ct)) return ct
+    return `${ct.plugin}:${ct.name}`
   }
-  public contentType: ContentType
+  constructor(preload: PreloadValue, public id: string, public ep: string) {
+    this.preload.value = preload
+  }
+  public abstract contentType: ContentType
 
   public pid = PromiseContent.withResolvers<string>(true)
 
