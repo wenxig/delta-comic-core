@@ -5,6 +5,7 @@ import { useLiveQueryRef, type LiveQueryRef } from "@/utils/db"
 import { defaults, isEmpty, uniq } from "lodash-es"
 import { PromiseContent } from "@/utils/data"
 import type { uni } from "@/struct"
+import { useGlobalVar } from "@/utils/plugin"
 
 export interface FavouriteItem {
   itemKey: string
@@ -98,4 +99,4 @@ export class FavouriteDB extends AppDB {
     private: true
   })
 }
-export const favouriteDB: FavouriteDB = window.$api._lib_.FavouriteDB ??= new FavouriteDB()
+export const favouriteDB = useGlobalVar(new FavouriteDB(), 'db/favouriteDB')

@@ -2,6 +2,7 @@ import Dexie, { Table } from 'dexie'
 import relationships from 'dexie-relationships'
 import { enc, MD5 } from 'crypto-js'
 import { uni } from '@/struct'
+import { useGlobalVar } from '@/utils/plugin'
 export interface SaveItem {
   key: string
   item: uni.item.RawItem
@@ -36,4 +37,4 @@ export class AppDB extends Dexie {
     }
   }
 }
-export const appDB: AppDB = window.$api._lib_.AppDB ??= new AppDB()
+export const appDB = useGlobalVar(new AppDB(), 'db/appDb')

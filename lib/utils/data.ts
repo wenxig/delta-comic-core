@@ -1,21 +1,30 @@
 import { until } from "@vueuse/core"
-import { isEmpty } from "lodash-es"
+import { isEmpty, type constant } from "lodash-es"
 import { computed, markRaw, ref, shallowRef, type Raw, type Ref } from "vue"
 import { SmartAbortController } from "./request"
-
+import { useGlobalVar } from "./plugin"
 export class Struct<TRaw extends object> {
   public toJSON() {
     return this.$$raw
   }
   constructor(protected $$raw: TRaw) { }
 }
+
 export type MetaData = Record<string | number, any>
 /**
  * 扩展内容的`Promise`，可视为普通`Promise`使用
 */
 export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
+  private static _this
+  static {
+    this._this = useGlobalVar(this, 'data/PromiseContent')
+  }
   public static isPromiseContent(value: unknown): value is PromiseContent<any> {
-    return value instanceof this
+    return value instanceof this._this
+  }
+  public static fromPromise<T, TP = T>(promise: Promise<T>, processor: (val: T) => TP = v => <any>v): RPromiseContent<T, TP> {
+    const v = new this._this<T, TP>(promise, processor)
+    return markRaw(v)
   }
   /**
    * 使用`PromiseContent.fromPromise`或`PromiseContent.fromAsyncFunction`代替`new PromiseContent`
@@ -61,10 +70,6 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
   public isError = shallowRef(false)
   public errorCause = shallowRef<any>()
   public isEmpty = shallowRef(true)
-  public static fromPromise<T, TP = T>(promise: Promise<T>, processor: (val: T) => TP = v => <any>v): RPromiseContent<T, TP> {
-    const v = new this<T, TP>(promise, processor)
-    return markRaw(v)
-  }
   public static fromAsyncFunction<T extends (...args: any[]) => Promise<any>>(asyncFunction: T) {
     return (...args: Parameters<T>): RPromiseContent<Awaited<ReturnType<T>>> => this.fromPromise((() => asyncFunction(...args))())
   }
@@ -75,7 +80,7 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
   }
   public static withResolvers<T>(isLoading = false): PromiseWithResolvers<T> {
     let withResolvers = Promise.withResolvers<T>()
-    const content = new this<T>(withResolvers.promise)
+    const content = new this._this<T>(withResolvers.promise)
     content.isLoading.value = isLoading
     return {
       content,
@@ -117,15 +122,17 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
   private constructor(rawGenerator: RawGenerator<T>) {
     this.generator = rawGenerator(this.abortController.signal, this)
     generatorMap.set(this, rawGenerator)
-    this[Stream.isStreamKey] = true
     // console.trace('stream new', this)
   }
-  private static isStreamKey = Symbol('stream')
+  private static _this
+  static {
+    this._this = useGlobalVar(this, 'data/Stream')
+  }
   public static isStream(stream: any): stream is Stream<any> {
-    return !!stream[this.isStreamKey]
+    return stream instanceof this._this
   }
   public static create<T>(generator: RawGenerator<T>) {
-    const stream = new this<T>(generator)
+    const stream = new this._this<T>(generator)
     return markRaw(stream)
   }
   [x: symbol]: any

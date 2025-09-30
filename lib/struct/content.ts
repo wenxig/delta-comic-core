@@ -3,9 +3,10 @@ import * as item from './item'
 import * as ep from './ep'
 import { PromiseContent } from '@/utils/data'
 import { isString } from "lodash-es"
+import { useGlobalVar } from '@/utils/plugin'
 export type PreloadValue = item.Item | undefined
 export abstract class ContentPage<T extends object = any> {
-  private static viewLayout = shallowReactive(new Map<string, ViewLayoutComp>())
+  private static viewLayout = useGlobalVar(shallowReactive(new Map<string, ViewLayoutComp>()), 'uni/contentPage/viewLayout')
   public static setViewLayout(plugin: string, name: string, component: ViewLayoutComp): ViewLayout {
     const fullName = `${plugin}:${name}`
     this.viewLayout.set(fullName, component)

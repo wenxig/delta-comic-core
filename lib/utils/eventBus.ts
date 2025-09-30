@@ -2,6 +2,7 @@ import type { PluginDefineResult, PluginInstance } from "@/plugin"
 import type { uni } from "@/struct"
 import { random } from "lodash-es"
 import mitt from "mitt"
+import { useGlobalVar } from "./plugin"
 
 export type EventBus = {
   networkError_unauth: any
@@ -9,7 +10,7 @@ export type EventBus = {
   networkError_emptyData: any
   networkError_request: any
 }
-export const eventBus = mitt<EventBus>()
+export const eventBus = useGlobalVar(mitt<EventBus>(), 'utils/eventBus')
 
 export type SharedFunctions = {
  /** 重复调用需缓存(自行实现)(可不缓存) */ getUser(): PromiseLike<object>
@@ -19,10 +20,10 @@ export type SharedFunctions = {
 }
 
 export class SharedFunction {
-  private static sharedFunctions = new Map<string, {
+  private static sharedFunctions = useGlobalVar(new Map<string, {
     fn: SharedFunctions[keyof SharedFunctions],
     plugin: string
-  }[]>
+  }[]>, 'utils/SharedFunction/sharedFunctions')
   public static define<TKey extends keyof SharedFunctions>(fn: SharedFunctions[TKey], plugin: string, name: TKey) {
     this.sharedFunctions.set(name, [...(this.sharedFunctions.get(name) ?? []), {
       fn,

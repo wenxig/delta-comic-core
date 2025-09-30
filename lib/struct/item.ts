@@ -2,6 +2,7 @@ import * as image from "./image"
 import { Struct, type MetaData } from "@/utils/data"
 import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
+import { useGlobalVar } from "@/utils/plugin"
 
 export interface RawItem {
   cover: image.RawImage
@@ -23,13 +24,19 @@ export interface RawItem {
 }
 
 export class Item extends Struct<RawItem> implements RawItem {
-
+  private static _this
+  static {
+    this._this = useGlobalVar(this, 'uni/Item')
+  }
   public static is(value: unknown): value is Item {
-    return value instanceof this
+    return value instanceof this._this
+  }
+  public static create(v: RawItem) {
+    return new this._this(v)
   }
   public cover: image.RawImage
   public get $cover() {
-    return new image.Image(this.cover)
+    return image.Image.create(this.cover)
   }
   public title: string
   public id: string
@@ -48,7 +55,7 @@ export class Item extends Struct<RawItem> implements RawItem {
   public length: string
   public $$plugin: string
   public $$meta
-  constructor(v: RawItem) {
+  private constructor(v: RawItem) {
     super(v)
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta

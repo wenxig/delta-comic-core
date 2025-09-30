@@ -1,4 +1,5 @@
 import { Struct, type MetaData } from "@/utils/data"
+import { useGlobalVar } from "@/utils/plugin"
 import { isString } from "lodash-es"
 
 
@@ -21,7 +22,7 @@ export interface RawImage {
   processSteps?: ProcessStep_[]
 }
 export class Image extends Struct<RawImage> implements RawImage {
-  private static processInstances = new Map<string, ProcessInstance>()
+  private static processInstances = useGlobalVar(new Map<string, ProcessInstance>(), 'uni/image/processInstances')
   public static setProcess(plugin: string, referenceName: string, func: ProcessInstance['func']) {
     const fullName = `${plugin}:${referenceName}`
     this.processInstances.set(fullName, {
@@ -32,12 +33,22 @@ export class Image extends Struct<RawImage> implements RawImage {
     })
   }
 
-  private static fork = new Map<string, string>()
+  private static fork = useGlobalVar(new Map<string, string>(), 'uni/image/fork')
   public static setFork(plugin: string, namespace: string, fork: string) {
     const key = `${plugin}:${namespace}`
     this.fork.set(key, fork)
   }
-  constructor(v: RawImage, public aspect?: { width: number, height: number }) {
+  private static _this
+  static {
+    this._this = useGlobalVar(this, 'uni/Item')
+  }
+  public static is(value: unknown): value is Image {
+    return value instanceof this._this
+  }
+  public static create(v: RawImage, aspect?: { width: number, height: number }) {
+    return new this._this(v, aspect)
+  }
+  private constructor(v: RawImage, public aspect?: { width: number, height: number }) {
     super(v)
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta

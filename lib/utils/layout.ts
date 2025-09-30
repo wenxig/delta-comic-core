@@ -1,8 +1,9 @@
 import { toRef } from "@vueuse/core"
 import { last, remove } from "lodash-es"
 import { computed, onUnmounted, shallowReactive, watch, type MaybeRefOrGetter, type ComputedRef } from "vue"
+import { useGlobalVar } from "./plugin"
 
-const allLayers = shallowReactive<symbol[]>([])
+const allLayers = useGlobalVar(shallowReactive<symbol[]>([]),'utils/layers')
 
 /**
  * @description 
