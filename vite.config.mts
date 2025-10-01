@@ -8,7 +8,6 @@ import browserslist from 'browserslist'
 import dts from 'vite-plugin-dts'
 import _package from './package.json'
 import { resolve } from 'node:path'
-import copyDtsPlugin from 'vite-plugin-copy-dts'
 
 import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from '@vant/auto-import-resolver'

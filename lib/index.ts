@@ -53,21 +53,22 @@ import * as uDb from './utils/db'
 import * as uTranslate from './utils/translate'
 import * as uMessage from './utils/message'
 
-export const Utils = {
-  data: uData,
-  delay: uDelay,
-  eventBus: uEventBus,
-  image: uImage,
-  layout: uLayout,
-  request: uRequest,
-  translate: uTranslate,
-  db: uDb,
-  message: uMessage
+export namespace Utils {
+  export import data =  uData
+  export import delay = uDelay
+  export import eventBus = uEventBus
+  export import image = uImage
+  export import layout = uLayout
+  export import request = uRequest
+  export import translate = uTranslate
+  export import db = uDb
+  export import message = uMessage
 }
-
 import { useTemp } from './stores/temp'
+import { useConfig } from './config'
 export const Store = {
-  useTemp
+  useTemp,
+  useConfig
 }
 
 export { Db } from './db'
@@ -75,8 +76,7 @@ export { Db } from './db'
 import { uni } from './struct/index'
 import { symbol } from './symbol'
 import Layout from './layout/layout.vue'
-uni.content.ContentPage.setViewLayout(symbol.thisNamespace, 'default', Layout)
-
+export const defaultLayout = uni.content.ContentPage.setViewLayout(symbol.thisNamespace, 'default', Layout)
 import './index.css'
 
 export { User } from './layout/user'

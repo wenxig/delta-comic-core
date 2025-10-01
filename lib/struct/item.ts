@@ -18,7 +18,7 @@ export interface RawItem {
   customIsAI?: boolean
   contentType: ContentType_
   length: string
-
+  epLength: string
   $$plugin: string
   $$meta: MetaData
 }
@@ -53,6 +53,7 @@ export class Item extends Struct<RawItem> implements RawItem {
   }
   public contentType: ContentType
   public length: string
+  public epLength: string
   public $$plugin: string
   public $$meta
   private constructor(v: RawItem) {
@@ -73,6 +74,7 @@ export class Item extends Struct<RawItem> implements RawItem {
     this.customIsAI = v.customIsAI
     this.contentType = ContentPage.toContentType(v.contentType)
     this.length = v.length
+    this.epLength = v.epLength
   }
 
   public customIsAI?: boolean

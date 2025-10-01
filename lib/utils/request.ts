@@ -101,11 +101,16 @@ export namespace utilInterceptors {
     return Promise.reject(err)
   }
 }
-
-export const createAxios = (config: CreateAxiosDefaults = {}, middle?: (axios: AxiosInstance) => AxiosInstance) => {
+export type Requester = ReturnType<typeof createAxios>
+export const createAxios = (fork: () => Promise<string> | string, config: CreateAxiosDefaults = {}, middle?: (axios: AxiosInstance) => AxiosInstance) => {
   const api = axios.create(config)
   middle?.(api)
 
+  api.interceptors.request.use(async requestConfig => {
+    const f = await Promise.try(fork)
+    requestConfig.baseURL = f
+    return requestConfig
+  })
   api.interceptors.response.use(undefined, utilInterceptors.isClientError)
   api.interceptors.response.use(undefined, utilInterceptors.createAutoRetry(api, 10))
   return {

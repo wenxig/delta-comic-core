@@ -87,7 +87,6 @@ export class FavouriteDB extends AppDB {
     )
   }
 
-  public defaultPack: LiveQueryRef<FavouriteCard | undefined> = useLiveQueryRef(() => favouriteDB.favouriteCardBase.where('createAt').equals(0).first(), undefined)
 
   public mainFilters = useLocalStorage('app.filter.favourite.main', new Array<string>())
   public infoFilters = useLocalStorage('app.filter.favourite.info', new Array<string>())
@@ -100,3 +99,4 @@ export class FavouriteDB extends AppDB {
   })
 }
 export const favouriteDB = useGlobalVar(new FavouriteDB(), 'db/favouriteDB')
+export const defaultsFavouriteCard = useLiveQueryRef(() => favouriteDB.favouriteCardBase.where('createAt').equals(0).first(), undefined)

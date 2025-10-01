@@ -131,7 +131,7 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
   public static isStream(stream: any): stream is Stream<any> {
     return stream instanceof this._this
   }
-  public static create<T>(generator: RawGenerator<T>) {
+  public static create<T>(generator: RawGenerator<T>): RStream<T>{
     const stream = new this._this<T>(generator)
     return markRaw(stream)
   }

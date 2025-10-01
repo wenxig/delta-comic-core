@@ -16,7 +16,7 @@ export type SharedFunctions = {
  /** 重复调用需缓存(自行实现)(可不缓存) */ getUser(): PromiseLike<object>
   getRandomProvide(signal: AbortSignal): PromiseLike<uni.item.Item[]>
 
-  addPlugin<TApiResult>(ins: PluginInstance<TApiResult>): Promise<PluginDefineResult<TApiResult>>
+  addPlugin(ins: PluginInstance): Promise<PluginDefineResult>
 }
 
 export class SharedFunction {

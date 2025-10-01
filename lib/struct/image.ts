@@ -33,8 +33,8 @@ export class Image extends Struct<RawImage> implements RawImage {
     })
   }
 
-  private static fork = useGlobalVar(new Map<string, string>(), 'uni/image/fork')
-  public static setFork(plugin: string, namespace: string, fork: string) {
+  private static fork = useGlobalVar(new Map<string, string[]>(), 'uni/image/fork')
+  public static setFork(plugin: string, namespace: string, fork: string[]) {
     const key = `${plugin}:${namespace}`
     this.fork.set(key, fork)
   }

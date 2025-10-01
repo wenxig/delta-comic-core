@@ -4,7 +4,7 @@ import { Image, type ProcessInstance } from "./struct/image"
 import type { Ref } from "vue"
 import { SharedFunction } from "./utils/eventBus"
 
-export interface PluginConfig<TApiTestResult> {
+export interface PluginConfig {
   name: string
   content?: {
     /**
@@ -31,7 +31,7 @@ export interface PluginConfig<TApiTestResult> {
      * value: url  
      * 与`Image.setFork(name, key, value)`等价
     */
-    forks?: Record<string, string>
+    forks?: Record<string, string[]>
     /**
      * @description
      * key: reference name  
@@ -40,14 +40,14 @@ export interface PluginConfig<TApiTestResult> {
     */
     process?: Record<string, ProcessInstance['func']>
   }
-  api?: {
+  api?: Record<string, {
     forks: () => (PromiseLike<string[]> | string[])
     /**
      * error -> 不可用
      * other -> 可用并比对时间
     */
-    test: (fork: string, signal: AbortSignal) => PromiseLike<TApiTestResult>
-  }
+    test: (fork: string, signal: AbortSignal) => PromiseLike<void>
+  }>
   auth?: {
     call: () => PromiseLike<boolean>
   }
@@ -57,7 +57,7 @@ export interface PluginConfig<TApiTestResult> {
   }[]
 }
 
-export const definePlugin = <T>(config: PluginConfig<T> | (() => PluginConfig<T>)) => {
+export const definePlugin = (config: PluginConfig | (() => PluginConfig)) => {
   if (isFunction(config)) var cfg = config()
   else var cfg = config
   const {
@@ -73,7 +73,7 @@ export const definePlugin = <T>(config: PluginConfig<T> | (() => PluginConfig<T>
     if (image.forks) for (const [name, url] of entries(image.forks)) Image.setFork(plugin, name, url)
     if (image.process) for (const [name, fn] of entries(image.process)) Image.setProcess(plugin, name, fn)
   }
-  return <Promise<PluginDefineResult<T>>>SharedFunction.callWitch('addPlugin', 'core', {
+  return <Promise<PluginDefineResult>>SharedFunction.callWitch('addPlugin', 'core', {
     name: cfg.name,
     api: cfg.api,
     auth: cfg.auth,
@@ -81,9 +81,8 @@ export const definePlugin = <T>(config: PluginConfig<T> | (() => PluginConfig<T>
   }).result
 }
 
-export type PluginInstance<TResult> = Pick<PluginConfig<TResult>, 'api' | 'auth' | 'otherProgress' | 'name'>
+export type PluginInstance = Pick<PluginConfig, 'api' | 'auth' | 'otherProgress' | 'name'>
 
-export type PluginDefineResult<TResult> = {
-  api: string | undefined | false
-  apiTestResult?: TResult
+export type PluginDefineResult = {
+  api?: Record<string, string | undefined | false>
 }
