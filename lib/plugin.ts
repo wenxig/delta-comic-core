@@ -57,9 +57,10 @@ export interface PluginConfig {
   }[]
 }
 
-export const definePlugin = (config: PluginConfig | (() => PluginConfig)) => {
-  if (isFunction(config)) var cfg = config()
+export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginConfig)) => {
+  if (isFunction(config)) var cfg = config(window.$$safe$$)
   else var cfg = config
+  console.log('[definePlugin] new plugin defining...', cfg)
   const {
     name: plugin,
     content,

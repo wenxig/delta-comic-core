@@ -45,7 +45,7 @@ export class Image extends Struct<RawImage> implements RawImage {
   public static is(value: unknown): value is Image {
     return value instanceof this._this
   }
-  public static create(v: RawImage, aspect?: { width: number, height: number }) {
+  public static create(v: RawImage, aspect?: { width: number, height: number }): Image {
     return new this._this(v, aspect)
   }
   private constructor(v: RawImage, public aspect?: { width: number, height: number }) {

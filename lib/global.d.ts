@@ -1,12 +1,16 @@
 import type { Style } from '@capacitor/status-bar'
 import { type useMessage, type useLoadingBar, type useDialog } from 'naive-ui'
+import type { Router } from 'vue-router'
+import { ExternalLibKey } from '../external'
+import type { Pinia } from 'pinia'
 declare global {
   interface Window {
     $message: ReturnType<typeof useMessage>
     $loading: ReturnType<typeof useLoadingBar>
     $dialog: ReturnType<typeof useDialog>
     $api: Record<string, any>
-    $router: Router
+    $$lib$$: any
+    $$safe$$: boolean
   }
 }
 export declare module 'axios' {

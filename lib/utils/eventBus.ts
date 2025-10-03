@@ -1,6 +1,6 @@
 import type { PluginDefineResult, PluginInstance } from "@/plugin"
 import type { uni } from "@/struct"
-import { random } from "lodash-es"
+import { random, uniqBy } from "lodash-es"
 import mitt from "mitt"
 import { useGlobalVar } from "./plugin"
 
@@ -25,10 +25,10 @@ export class SharedFunction {
     plugin: string
   }[]>, 'utils/SharedFunction/sharedFunctions')
   public static define<TKey extends keyof SharedFunctions>(fn: SharedFunctions[TKey], plugin: string, name: TKey) {
-    this.sharedFunctions.set(name, [...(this.sharedFunctions.get(name) ?? []), {
+    this.sharedFunctions.set(name, uniqBy([...(this.sharedFunctions.get(name) ?? []), {
       fn,
       plugin
-    }])
+    }], v => v.plugin))
     return fn
   }
   public static call<TKey extends keyof SharedFunctions>(name: TKey, ...args: Parameters<SharedFunctions[TKey]>) {
@@ -42,7 +42,9 @@ export class SharedFunction {
   }
   public static callRandom<TKey extends keyof SharedFunctions>(name: TKey, ...args: Parameters<SharedFunctions[TKey]>) {
     const all = this.sharedFunctions.get(name) ?? []
-    const it = all[random(0, all.length)]
+    const index = random(0, all.length)
+    const it = all[index]
+    console.log(`[SharedFunction.callRandom] call index: ${index} in ${all.length}`, it)
     const result: ReturnType<SharedFunctions[TKey]> = (<any>it.fn)(...args)
     return {
       result,

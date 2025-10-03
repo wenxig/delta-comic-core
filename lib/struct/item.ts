@@ -31,7 +31,7 @@ export class Item extends Struct<RawItem> implements RawItem {
   public static is(value: unknown): value is Item {
     return value instanceof this._this
   }
-  public static create(v: RawItem) {
+  public static create(v: RawItem): Item {
     return new this._this(v)
   }
   public cover: image.RawImage

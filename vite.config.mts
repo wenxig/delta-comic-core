@@ -42,8 +42,6 @@ export default defineConfig({
     transformer: 'lightningcss',
     lightningcss: {
       targets: browserslistToTargets(browserslist('> 1%, last 2 versions, not ie <= 8')),
-      visitor: {
-      }
     }
   },
   base: "/",
@@ -53,16 +51,20 @@ export default defineConfig({
       name: 'Bundle',
       fileName: 'bundle'
     },
+    sourcemap: true,
     rollupOptions: {
-      external: ['vue', 'axios', 'lodash-es', 'naive-ui', 'vant', "motion-v"],
+      external: ['vue', 'axios', 'lodash-es', 'naive-ui', 'vant', "motion-v", 'pinia', 'vue-router', 'crypto-js'],
       output: {
         globals: {
-          vue: 'Vue',
-          vant: 'vant',
-          'naive-ui': 'naive',
-          "motion-v": 'Motion',
-          axios: 'axios',
-          'lodash-es': '_'
+          vue: 'window.$$lib$$.Vue',
+          vant: 'window.$$lib$$.Vant',
+          'naive-ui': 'window.$$lib$$.Naive',
+          "motion-v": 'window.$$lib$$.Motion',
+          axios: 'window.$$lib$$.Axios',
+          'lodash-es': 'window.$$lib$$.Lodash',
+          'pinia': 'window.$$lib$$.Pinia',
+          'vue-router': 'window.$$lib$$.VR',
+          'crypto-js': 'window.$$lib$$.Crypto'
         }
       }
     }

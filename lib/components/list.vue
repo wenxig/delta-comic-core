@@ -6,7 +6,8 @@ import { IfAny, useScroll } from '@vueuse/core'
 import { callbackToPromise, RPromiseContent, Stream } from '@/utils/data'
 import { computed } from 'vue'
 import Content from './content.vue'
-const $props = withDefaults(defineProps<{
+import Var from './var.vue'
+const $props = defineProps<{
   source: {
     data: RPromiseContent<any, T[]>
     isEnd?: boolean
@@ -20,9 +21,7 @@ const $props = withDefaults(defineProps<{
 
   style?: StyleValue
   class?: any
-}>(), {
-  listProp: <any>{}
-})
+}>()
 const $emit = defineEmits<{
   next: [then: () => void]
   reset: []
@@ -114,7 +113,7 @@ defineExpose({
       class-loading="mt-2 !h-[24px]" class-empty="!h-full" class-error="!h-full" @retry="handleRefresh"
       :hide-loading="isPullRefreshHold && unionSource.isRequesting">
       <Var :value="unionSource.data" v-slot="{ value }">
-        <NVirtualList :="listProp" :item-resizable :item-size="itemHeight" @scroll="handleScroll"
+        <NVirtualList :="(listProp ?? {})" :item-resizable :item-size="itemHeight" @scroll="handleScroll"
           class="overflow-x-hidden h-full" :items="value"
           v-slot="{ item }: { item: (IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>) }" ref="vList"
           :class="[isPullRefreshHold ? 'overflow-y-hidden' : 'overflow-y-auto']">

@@ -4,6 +4,7 @@ import type { DialogOptions, DialogReactive } from "naive-ui"
 import { noop } from "@vueuse/core"
 import { delay } from "./delay"
 import { useZIndex } from "./layout"
+import { useRouter } from "vue-router"
 
 export type LoadingInstance = ReturnType<typeof createLoadingMessage>
 export const createLoadingMessage = (text: MaybeRefOrGetter<string> = '加载中', api = window.$message) => {
@@ -130,7 +131,7 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
     dialog.destroy()
     return show.value = false
   }
-  const stopRouterBreak = window.$router.beforeEach(() => {
+  const stopRouterBreak = useRouter().beforeEach(() => {
     if (isLast) return failStop()
     return true
   })

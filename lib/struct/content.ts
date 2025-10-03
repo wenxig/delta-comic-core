@@ -80,11 +80,13 @@ export abstract class ContentPage<T extends object = any> {
 
   public eps = PromiseContent.withResolvers<ep.Ep[]>()
 
-  public abstract loadAll(): Promise<void>
-  public abstract reloadAll(): Promise<void>
+  public abstract loadAll(): Promise<any>
+  public abstract reloadAll(): Promise<any>
+  
+  public abstract plugin: string
 
   public abstract loadAllOffline(): Promise<T>
-  public abstract exportOffline(save: T): Promise<void>
+  public abstract exportOffline(save: T): Promise<any>
 
   public abstract ViewComp: ViewComp
 }
