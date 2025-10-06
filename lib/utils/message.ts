@@ -80,6 +80,33 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
   const result: PromiseWith<void, { ins: DialogReactive }> = new Promise<void>((s, f) => { success = s; fail = f })
   const show = shallowRef(true)
   const [zIndex, isLast, stopUse] = useZIndex(show)
+  console.log('[createDialog] after useZIndex')
+  const stopStyleWatch = watch(zIndex, zIndex => (<CSSProperties>dialog.style).zIndex = zIndex)
+  console.log('[createDialog] after stopStyleWatch')
+  const stopRouterBreak = window.$router.beforeEach(() => {
+    if (isLast) return failStop()
+    return true
+  })
+  console.log('[createDialog] after stopRouterBreak')
+  const stop = () => {
+    stopStyleWatch()
+    stopUse()
+    stopRouterBreak()
+    dialog.destroy()
+    return show.value = false
+  }
+  console.log('[createDialog] after stop')
+  const failStop = () => {
+    fail()
+    stop()
+    return false
+  }
+  console.log('[createDialog] after failStop')
+  const successStop = () => {
+    success()
+    stop()
+  }
+  console.log('[createDialog] after successStop')
   const dialog = window.$dialog.create({
     positiveText: '确定',
     negativeText: '取消',
@@ -114,27 +141,7 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
       stop()
     }
   })
-  const stopStyleWatch = watch(zIndex, zIndex => (<CSSProperties>dialog.style).zIndex = zIndex)
-  const successStop = () => {
-    success()
-    stop()
-  }
-  const failStop = () => {
-    fail()
-    stop()
-    return false
-  }
-  const stop = () => {
-    stopStyleWatch()
-    stopUse()
-    stopRouterBreak()
-    dialog.destroy()
-    return show.value = false
-  }
-  const stopRouterBreak = useRouter().beforeEach(() => {
-    if (isLast) return failStop()
-    return true
-  })
+  console.log('[createDialog] after const dialog')
   result.ins = dialog
   return result
 }

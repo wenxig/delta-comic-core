@@ -1,7 +1,7 @@
 <script setup lang='ts' generic="T extends NonNullable<VirtualListProps['items']>[number],PF extends ((d: T[])=>any[])">
-import { VirtualListProps } from 'naive-ui'
+import { VirtualListInst, VirtualListProps } from 'naive-ui'
 import { ceil, debounce, isArray, isEmpty } from 'lodash-es'
-import { StyleValue, shallowRef, useTemplateRef, watch } from 'vue'
+import { Ref, StyleValue, shallowRef, useTemplateRef, watch } from 'vue'
 import { IfAny, useScroll } from '@vueuse/core'
 import { callbackToPromise, RPromiseContent, Stream } from '@/utils/data'
 import { computed } from 'vue'
@@ -101,7 +101,7 @@ defineSlots<{
 }>()
 defineExpose({
   scrollTop: listScrollTop,
-  listInstance: vList,
+  listInstance: <Ref<VirtualListInst>><unknown>vList,
 })
 </script>
 

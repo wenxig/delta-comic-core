@@ -1,5 +1,5 @@
 import { until } from "@vueuse/core"
-import { isEmpty, type constant } from "lodash-es"
+import { isEmpty, isError, type constant } from "lodash-es"
 import { computed, markRaw, ref, shallowRef, type Raw, type Ref } from "vue"
 import { SmartAbortController } from "./request"
 import { useGlobalVar } from "./plugin"
@@ -47,7 +47,7 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
     } catch (err) {
       this.data.value = undefined
       this.isError.value = true
-      this.errorCause.value = err
+      this.errorCause.value = isError(err) ? err : new Error(String(err))
     }
   }
   /**
@@ -68,7 +68,7 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
   public data = shallowRef<TPF>()
   public isLoading = shallowRef(true)
   public isError = shallowRef(false)
-  public errorCause = shallowRef<any>()
+  public errorCause = shallowRef<Error>()
   public isEmpty = shallowRef(true)
   public static fromAsyncFunction<T extends (...args: any[]) => Promise<any>>(asyncFunction: T) {
     return (...args: Parameters<T>): RPromiseContent<Awaited<ReturnType<T>>> => this.fromPromise((() => asyncFunction(...args))())
@@ -131,7 +131,7 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
   public static isStream(stream: any): stream is Stream<any> {
     return stream instanceof this._this
   }
-  public static create<T>(generator: RawGenerator<T>): RStream<T>{
+  public static create<T>(generator: RawGenerator<T>): RStream<T> {
     const stream = new this._this<T>(generator)
     return markRaw(stream)
   }
@@ -269,7 +269,7 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
     return this.isNoData.value
   }
   /** 是否当前为空 */
-  public isEmpty = computed(() => this.length.value == 0)
+  public isEmpty = computed(() => this.length.value === 0)
   /** 是否当前为空 */
   public get _isEmpty() {
     return this.isEmpty.value

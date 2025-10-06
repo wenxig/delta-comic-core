@@ -19,7 +19,7 @@ defineSlots<{
   right(): any
   bottom(): any
 }>()
-const $router = useRouter()
+const $router = window.$router
 const tab = useTemplateRef<TabsInstance>('tab')
 const beforeChange = async (aim: string) => {
   let queryString = '?'

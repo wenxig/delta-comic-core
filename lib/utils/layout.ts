@@ -3,7 +3,7 @@ import { last, remove } from "lodash-es"
 import { computed, onUnmounted, shallowReactive, watch, type MaybeRefOrGetter, type ComputedRef } from "vue"
 import { useGlobalVar } from "./plugin"
 
-const allLayers = useGlobalVar(shallowReactive<symbol[]>([]),'utils/layers')
+const allLayers = useGlobalVar(shallowReactive<symbol[]>([]), 'utils/layers')
 
 /**
  * @description 
@@ -18,11 +18,11 @@ export const useZIndex = (show: MaybeRefOrGetter<boolean>): [index: ComputedRef<
     if (isShow) {
       allLayers.push(th)
     } else {
-      remove(<any>allLayers, t => t == th)
+      remove(<any>allLayers, t => t === th)
     }
   }, { immediate: true })
   try {
     onUnmounted(stop)
   } catch { }
-  return [computed(() => (allLayers.indexOf(th) + 1) * 10), computed(() => last(allLayers) == th), stop]
+  return [computed(() => (allLayers.indexOf(th) + 1) * 10), computed(() => last(allLayers) === th), stop]
 }

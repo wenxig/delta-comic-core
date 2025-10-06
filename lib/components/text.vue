@@ -25,8 +25,8 @@ const texts = computed(() => $props.text.replace(/(http(s?):\/\/)?([\w-]+\.)+(\.
     <template v-for="token of texts">
       <NButton tag="a" class="underline" @click.stop text type="primary" target="_blank"
         :href="/http(s?):\/\/.+/.test(token.value) ? token.value : `https://${token.value}`"
-        v-if="token.mode == 'link'">{{ token.value }}</NButton>
-      <template v-else-if="token.mode == 'text'">{{ token.value }}</template>
+        v-if="token.mode === 'link'">{{ token.value }}</NButton>
+      <template v-else-if="token.mode === 'text'">{{ token.value }}</template>
     </template>
   </div>
 </template>

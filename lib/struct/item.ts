@@ -2,7 +2,7 @@ import * as image from "./image"
 import { Struct, type MetaData } from "@/utils/data"
 import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
-import { useGlobalVar } from "@/utils/plugin"
+import { Ep, type RawEp } from "./ep"
 
 export interface RawItem {
   cover: image.RawImage
@@ -21,18 +21,16 @@ export interface RawItem {
   epLength: string
   $$plugin: string
   $$meta: MetaData
+  description?: string
+  thisEp: RawEp
 }
 
 export class Item extends Struct<RawItem> implements RawItem {
-  private static _this
-  static {
-    this._this = useGlobalVar(this, 'uni/Item')
-  }
   public static is(value: unknown): value is Item {
-    return value instanceof this._this
+    return value instanceof this
   }
   public static create(v: RawItem): Item {
-    return new this._this(v)
+    return new this(v)
   }
   public cover: image.RawImage
   public get $cover() {
@@ -56,11 +54,16 @@ export class Item extends Struct<RawItem> implements RawItem {
   public epLength: string
   public $$plugin: string
   public $$meta
+  public thisEp: RawEp
+  public get $thisEp() {
+    return new Ep(this.thisEp)
+  }
   private constructor(v: RawItem) {
     super(v)
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta
 
+    this.thisEp = v.thisEp
     this.updateTime = v.updateTime
     this.cover = v.cover
     this.title = v.title
@@ -75,6 +78,7 @@ export class Item extends Struct<RawItem> implements RawItem {
     this.contentType = ContentPage.toContentType(v.contentType)
     this.length = v.length
     this.epLength = v.epLength
+    this.description = v.description
   }
 
   public customIsAI?: boolean

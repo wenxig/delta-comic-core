@@ -2,6 +2,7 @@
 import { favouriteDB } from '@/db/favourite'
 import { useMessage } from 'naive-ui'
 import { ref, shallowRef } from 'vue'
+import Popup from '../popup.vue'
 
 const show = shallowRef(false)
 const $message = useMessage()

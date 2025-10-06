@@ -1,4 +1,4 @@
-import { ContentPage, type ContentPageLike, type ViewLayoutComp } from "@/struct/content"
+import { ContentPage, type ContentPageLike, type ItemCardComp, type ViewLayoutComp } from "@/struct/content"
 import { entries, isFunction } from "lodash-es"
 import { Image, type ProcessInstance } from "./struct/image"
 import type { Ref } from "vue"
@@ -9,9 +9,17 @@ export interface PluginConfig {
   content?: {
     /**
      * @description
-     * key: name  
+     * key: contentType  
      * value: component  
-     * 与`ContentPage.setViewLayout(name, key, value)`等价
+     * 与`ContentPage.setItemCard(key, value)`等价
+    */
+    itemCard?: Record<string, ItemCardComp>
+
+    /**
+     * @description
+     * key: contentType  
+     * value: component  
+     * 与`ContentPage.setViewLayout(key, value)`等价
     */
     layout?: Record<string, ViewLayoutComp>
 
@@ -19,7 +27,7 @@ export interface PluginConfig {
      * @description
      * key: name 
      * value: ContentPage  
-     * 与`ContentPage.setContentPage(`${name}:${key}`, value)`等价  
+     * 与`ContentPage.setContentPage(key, value)`等价  
      * _不需要提供viewLayout_
     */
     contentPage?: Record<string, ContentPageLike>
@@ -31,7 +39,8 @@ export interface PluginConfig {
      * value: url  
      * 与`Image.setFork(name, key, value)`等价
     */
-    forks?: Record<string, string[]>
+    forks: Record<string, string[]>
+    test: string
     /**
      * @description
      * key: reference name  
@@ -48,15 +57,73 @@ export interface PluginConfig {
     */
     test: (fork: string, signal: AbortSignal) => PromiseLike<void>
   }>
-  auth?: {
-    call: () => PromiseLike<boolean>
-  }
+  auth?: PluginConfigAuth
   otherProgress?: {
     call: (description: Ref<string>) => PromiseLike<boolean>
     name: string
   }[]
+  onBooted?(ins: PluginDefineResult): PromiseLike<void> | void
 }
 
+export type PluginConfigAuthFormType = {
+  info: string
+  placeholder?: string
+  /**
+   * @default true
+  */
+  required?: boolean
+} & ({
+  type: 'string'
+  patten?: RegExp
+  defaultValue?: string
+} | {
+  type: 'number'
+  range?: [number, number]
+  float?: boolean
+  defaultValue?: number
+} | {
+  type: 'radio'
+  selects: { label: string, value: string }[]
+  comp: 'radio' | 'select'
+  defaultValue?: string
+} | {
+  type: 'checkbox'
+  selects: { label: string, value: string }[]
+  comp: 'checkbox' | 'multipleSelect'
+  defaultValue?: string[]
+} | {
+  type: 'switch'
+  close?: string
+  open?: string
+  defaultValue?: boolean
+} | {
+  type: 'date'
+  defaultValue?: number
+})
+export type PluginConfigAuthFormResult<T extends PluginConfigAuthFormType> =
+  T['type'] extends 'string' ? string :
+  T['type'] extends 'number' ? number :
+  T['type'] extends 'radio' ? string :
+  T['type'] extends 'checkbox' ? string[] :
+  T['type'] extends 'switch' ? boolean :
+  T['type'] extends 'date' ? number :
+  never
+
+export type PluginConfigAuthMethod = {
+  form<T extends Record<string, PluginConfigAuthFormType>>(form: T): Promise<{
+    [x in keyof T]: PluginConfigAuthFormResult<T[x]>
+  }>
+  /**
+   * sandbox: "allow-forms allow-modals allow-orientation-lock allow-popups-to-escape-sandbox  allow-pointer-lock"
+  */
+  website(url: string): Window
+}
+export interface PluginConfigAuth {
+  signUp: (by: PluginConfigAuthMethod) => PromiseLike<any>
+  logIn: (by: PluginConfigAuthMethod) => PromiseLike<any>
+
+  passSelect: () => PromiseLike<'signUp' | 'logIn' | false>
+}
 export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginConfig)) => {
   if (isFunction(config)) var cfg = config(window.$$safe$$)
   else var cfg = config
@@ -67,22 +134,25 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     image
   } = cfg
   if (content) {
-    for (const [name, comp] of entries(content.layout)) ContentPage.setViewLayout(plugin, name, comp)
-    for (const [name, page] of entries(content.contentPage)) ContentPage.setContentPage(`${plugin}:${name}`, page)
+    for (const [ct, comp] of entries(content.layout)) ContentPage.setViewLayout(ct, comp)
+    for (const [ct, comp] of entries(content.itemCard)) ContentPage.setItemCard(ct, comp)
+    for (const [ct, page] of entries(content.contentPage)) ContentPage.setContentPage(ct, page)
   }
   if (image) {
     if (image.forks) for (const [name, url] of entries(image.forks)) Image.setFork(plugin, name, url)
     if (image.process) for (const [name, fn] of entries(image.process)) Image.setProcess(plugin, name, fn)
   }
-  return <Promise<PluginDefineResult>>SharedFunction.callWitch('addPlugin', 'core', {
+  SharedFunction.callWitch('addPlugin', 'core', {
     name: cfg.name,
     api: cfg.api,
     auth: cfg.auth,
-    otherProgress: cfg.otherProgress
-  }).result
+    otherProgress: cfg.otherProgress,
+    onBooted: cfg.onBooted,
+    image: cfg.image
+  })
 }
 
-export type PluginInstance = Pick<PluginConfig, 'api' | 'auth' | 'otherProgress' | 'name'>
+export type PluginInstance = Pick<PluginConfig, 'api' | 'auth' | 'otherProgress' | 'name' | 'onBooted' | 'image'>
 
 export type PluginDefineResult = {
   api?: Record<string, string | undefined | false>

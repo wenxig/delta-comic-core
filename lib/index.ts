@@ -54,7 +54,7 @@ import * as uTranslate from './utils/translate'
 import * as uMessage from './utils/message'
 
 export namespace Utils {
-  export import data =  uData
+  export import data = uData
   export import delay = uDelay
   export import eventBus = uEventBus
   export import image = uImage
@@ -73,10 +73,6 @@ export const Store = {
 
 export { Db } from './db'
 
-import { uni } from './struct/index'
-import { symbol } from './symbol'
-import Layout from './layout/layout.vue'
-export const defaultLayout = uni.content.ContentPage.setViewLayout(symbol.thisNamespace, 'default', Layout)
 import './index.css'
 
 export { User } from './layout/user'

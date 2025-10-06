@@ -32,7 +32,7 @@ defineSlots<{
     class="overflow-hidden w-full van-hairline--top-bottom bg-(--van-background-2) text-(--van-text-color) relative p-2 flex"
     :style="[{ height: freeHeight ? 'auto' : '140px' }, style]"
     :class="[{ 'van-haptics-feedback': !disabled }, $props.class]">
-    <Image :src="item.$cover" v-if="type == 'big'" class="blur-lg absolute top-0 left-0 w-full h-full" fit="cover" />
+    <Image :src="item.$cover" v-if="type === 'big'" class="blur-lg absolute top-0 left-0 w-full h-full" fit="cover" />
     <Image :src="item.$cover" class="!rounded-lg image-size z-2 flex-3" fit="contain" ref="cover" />
     <div class="flex absolute flex-col flex-7 *:text-justify pl-2">
       <span class="mt-3 van-multi-ellipsis--l3">{{ item.title }}</span>

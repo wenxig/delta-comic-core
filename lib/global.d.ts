@@ -11,6 +11,7 @@ declare global {
     $api: Record<string, any>
     $$lib$$: any
     $$safe$$: boolean
+    $router: Router
   }
 }
 export declare module 'axios' {

@@ -27,7 +27,6 @@ export default defineConfig({
       ],
     }),
     tailwindcss(),
-
   ],
   experimental: {
     enableNativePlugin: true

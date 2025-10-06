@@ -1,4 +1,4 @@
-import type { PluginDefineResult, PluginInstance } from "@/plugin"
+import type { PluginInstance } from "@/plugin"
 import type { uni } from "@/struct"
 import { random, uniqBy } from "lodash-es"
 import mitt from "mitt"
@@ -16,7 +16,7 @@ export type SharedFunctions = {
  /** 重复调用需缓存(自行实现)(可不缓存) */ getUser(): PromiseLike<object>
   getRandomProvide(signal: AbortSignal): PromiseLike<uni.item.Item[]>
 
-  addPlugin(ins: PluginInstance): Promise<PluginDefineResult>
+  addPlugin(ins: PluginInstance): void
 }
 
 export class SharedFunction {
@@ -25,6 +25,7 @@ export class SharedFunction {
     plugin: string
   }[]>, 'utils/SharedFunction/sharedFunctions')
   public static define<TKey extends keyof SharedFunctions>(fn: SharedFunctions[TKey], plugin: string, name: TKey) {
+    console.log('[SharedFunction.define] defined new function', plugin, ":", name, '->', fn)
     this.sharedFunctions.set(name, uniqBy([...(this.sharedFunctions.get(name) ?? []), {
       fn,
       plugin
@@ -42,8 +43,9 @@ export class SharedFunction {
   }
   public static callRandom<TKey extends keyof SharedFunctions>(name: TKey, ...args: Parameters<SharedFunctions[TKey]>) {
     const all = this.sharedFunctions.get(name) ?? []
-    const index = random(0, all.length)
+    const index = random(0, all.length - 1)
     const it = all[index]
+    if (!it) throw new Error(`[SharedFunction.callRandom] call ${name}, but not resigner any function.`)
     console.log(`[SharedFunction.callRandom] call index: ${index} in ${all.length}`, it)
     const result: ReturnType<SharedFunctions[TKey]> = (<any>it.fn)(...args)
     return {
@@ -53,7 +55,7 @@ export class SharedFunction {
   }
   public static callWitch<TKey extends keyof SharedFunctions>(name: TKey, plugin: string, ...args: Parameters<SharedFunctions[TKey]>) {
     const all = this.sharedFunctions.get(name) ?? []
-    const it = all.find(c => c.plugin == plugin)
+    const it = all.find(c => c.plugin === plugin)
     if (!it) throw new Error(`[SharedFunction.callWitch] not found plugin function (plugin: ${plugin}, name: ${name})`)
     const result: ReturnType<SharedFunctions[TKey]> = (<any>it.fn)(...args)
     return {

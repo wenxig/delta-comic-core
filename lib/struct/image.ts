@@ -34,19 +34,16 @@ export class Image extends Struct<RawImage> implements RawImage {
   }
 
   private static fork = useGlobalVar(new Map<string, string[]>(), 'uni/image/fork')
+  public static activeFork = useGlobalVar(new Map<string, string>(), 'uni/image/activeFork')
   public static setFork(plugin: string, namespace: string, fork: string[]) {
     const key = `${plugin}:${namespace}`
     this.fork.set(key, fork)
   }
-  private static _this
-  static {
-    this._this = useGlobalVar(this, 'uni/Item')
-  }
   public static is(value: unknown): value is Image {
-    return value instanceof this._this
+    return value instanceof this
   }
   public static create(v: RawImage, aspect?: { width: number, height: number }): Image {
-    return new this._this(v, aspect)
+    return new this(v, aspect)
   }
   private constructor(v: RawImage, public aspect?: { width: number, height: number }) {
     super(v)
@@ -81,7 +78,7 @@ export class Image extends Struct<RawImage> implements RawImage {
       if (option.ignoreExit || !result[1]) continue
       break
     }
-    return `${Image.fork.get(`${this.$$plugin}:${this.forkNamespace}`)}/${resultPath}`
+    return `${Image.activeFork.get(`${this.$$plugin}:${this.forkNamespace}`)}/${resultPath}`
   }
 }
 export type Image_ = string | Image

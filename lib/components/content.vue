@@ -33,14 +33,14 @@ defineEmits<{
 const unionSource = computed(() => Stream.isStream($props.source) ? {
   isLoading: $props.source.isRequesting.value,
   isError: $props.source.error.value,
-  errorCause: $props.source.error.value,
+  errorCause: $props.source.error.value?.message,
   isEmpty: $props.source.isEmpty.value,
   data: <T>$props.source.data.value,
   isNoResult: $props.source.isNoData.value
 } : (PromiseContent.isPromiseContent($props.source) ? {
   isLoading: $props.source.isLoading.value,
   isError: $props.source.isError.value,
-  errorCause: $props.source.errorCause.value,
+  errorCause: $props.source.errorCause.value?.message,
   isEmpty: $props.source.isEmpty.value,
   data: <T>$props.source.data.value,
   isNoResult: $props.source.isEmpty.value
@@ -162,17 +162,17 @@ defineExpose({
 
     </div>
     <AnimatePresence>
-      <motion.div layout :initial="{ opacity: 0, translateY: '-100%', left: '50%', translateX: '-50%' }"
+      <motion.div :initial="{ opacity: 0, translateY: '-100%', left: '50%', translateX: '-50%' }"
         :variants="loadingVariants" :animate="animateOn"
         class="rounded-full shadow flex justify-center items-center scale-100 absolute whitespace-nowrap">
         <Transition name="van-fade">
-          <VanLoading size="25px" color="var(--p-color)" v-if="animateOn == 'isLoadingNoData'" />
-          <Loading size="10px" color="white" v-else-if="animateOn == 'isLoadingData'">加载中</Loading>
-          <div v-else-if="animateOn == 'isEmpty'">
+          <VanLoading size="25px" color="var(--p-color)" v-if="animateOn === 'isLoadingNoData'" />
+          <Loading size="10px" color="white" v-else-if="animateOn === 'isLoadingData'">加载中</Loading>
+          <div v-else-if="animateOn === 'isEmpty'">
             <NEmpty description="无结果" class="w-full !justify-center" :class="[classEmpty]"
               :style="[style, styleEmpty]" />
           </div>
-          <div v-else-if="animateOn == 'isErrorNoData'">
+          <div v-else-if="animateOn === 'isErrorNoData'">
             <NResult class="!items-center !justify-center flex flex-col !size-full" status="error" title="网络错误"
               :class="[classError]" :style="[style, styleError]" :description="unionSource.errorCause ?? '未知原因'">
               <template #footer>
@@ -185,7 +185,7 @@ defineExpose({
               </template>
             </NResult>
           </div>
-          <div v-else-if="animateOn == 'isErrorData'" class="flex items-center gap-3 justify-around">
+          <div v-else-if="animateOn === 'isErrorData'" class="flex items-center gap-3 justify-around">
             <NIcon size="3rem" color="white">
               <WifiTetheringErrorRound />
             </NIcon>

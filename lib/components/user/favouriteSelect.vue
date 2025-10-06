@@ -2,7 +2,7 @@
 import { useTemplateRef, shallowRef } from 'vue'
 import { PlusFilled, StarFilled } from '@vicons/material'
 import { uni } from '@/struct'
-import { FavouriteCard, favouriteDB } from '@/db/favourite'
+import { defaultsFavouriteCard, FavouriteCard, favouriteDB } from '@/db/favourite'
 import ToggleIcon from '../toggleIcon.vue'
 import Var from '../var.vue'
 import { useLiveQueryRef } from '@/utils/db'
@@ -21,7 +21,8 @@ const favouriteThis = async (inCard: FavouriteCard['createAt']) => {
   await favouriteDB.$setItems({
     aims: [inCard],
     item: $props.item,
-    fItem
+    fItem,
+    ep: $props.item.thisEp
   })
 }
 const isShowFavouritePopup = shallowRef(false)
@@ -32,8 +33,7 @@ const createCardSize = (card: FavouriteCard['createAt']) => useLiveQueryRef(() =
 </script>
 
 <template>
-  <ToggleIcon v-if="favouriteDB.defaultPack.value" padding size="27px"
-    @click="favouriteThis(favouriteDB.defaultPack.value.createAt)"
+  <ToggleIcon v-if="defaultsFavouriteCard" padding size="27px" @click="favouriteThis(defaultsFavouriteCard.createAt)"
     :model-value="(thisFavouriteItemRef?.belongTo.length ?? 0) > 0" :icon="StarFilled"
     @long-click="isShowFavouritePopup = true">
     收藏
@@ -54,7 +54,7 @@ const createCardSize = (card: FavouriteCard['createAt']) => useLiveQueryRef(() =
         <VanCell center :title="card.title" :label="`${value.length}个内容`" clickable
           @click="favouriteThis(card.createAt)">
           <template #right-icon>
-            <NCheckbox :checked="!!value.find(v => v.itemKey == thisKey)" />
+            <NCheckbox :checked="!!value.find(v => v.itemKey === thisKey)" />
           </template>
         </VanCell>
       </Var>

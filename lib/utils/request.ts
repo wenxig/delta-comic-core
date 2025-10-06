@@ -81,7 +81,7 @@ export namespace utilInterceptors {
   export const createCheckIsUnauth = (api: AxiosInstance, relogin?: () => Promise<boolean>) => {
     return async (err: any) => {
       if (!checkIsAxiosError(err)) return Promise.reject(err)
-      if (err?.response?.status == 401) {
+      if (err?.response?.status === 401) {
         if (relogin) {
           if (!await relogin()) throw requestErrorResult('networkError_unauth', err)
           return api(err.config ?? {})
@@ -97,7 +97,7 @@ export namespace utilInterceptors {
   }
   export const passCorsError = (err: any) => {
     if (!checkIsAxiosError(err)) return Promise.reject(err)
-    if (err.code == "ERR_NETWORK" && !err.response) throw requestErrorResult('networkError_request', err)
+    if (err.code === "ERR_NETWORK" && !err.response) throw requestErrorResult('networkError_request', err)
     return Promise.reject(err)
   }
 }
