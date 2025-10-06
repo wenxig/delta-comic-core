@@ -3,6 +3,7 @@ import { entries, isFunction } from "lodash-es"
 import { Image, type ProcessInstance } from "./struct/image"
 import type { Ref } from "vue"
 import { SharedFunction } from "./utils/eventBus"
+import { Comment, type CommentRow } from "./struct/comment"
 
 export interface PluginConfig {
   name: string
@@ -14,6 +15,14 @@ export interface PluginConfig {
      * 与`ContentPage.setItemCard(key, value)`等价
     */
     itemCard?: Record<string, ItemCardComp>
+
+    /**
+     * @description
+     * key: contentType  
+     * value: component  
+     * 与`Comment.setCommentRow(key, value)`等价
+    */
+    commentRow?: Record<string, CommentRow>
 
     /**
      * @description
@@ -137,6 +146,7 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     for (const [ct, comp] of entries(content.layout)) ContentPage.setViewLayout(ct, comp)
     for (const [ct, comp] of entries(content.itemCard)) ContentPage.setItemCard(ct, comp)
     for (const [ct, page] of entries(content.contentPage)) ContentPage.setContentPage(ct, page)
+    for (const [ct, row] of entries(content.commentRow)) Comment.setCommentRow(ct, row)
   }
   if (image) {
     if (image.forks) for (const [name, url] of entries(image.forks)) Image.setFork(plugin, name, url)

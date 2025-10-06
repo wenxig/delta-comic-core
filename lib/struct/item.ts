@@ -25,12 +25,13 @@ export interface RawItem {
   thisEp: RawEp
 }
 
-export class Item extends Struct<RawItem> implements RawItem {
+export abstract class Item extends Struct<RawItem> implements RawItem {
+  public abstract like(signal?: AbortSignal): PromiseLike<boolean>
+  public abstract report(signal?: AbortSignal): PromiseLike<any>
+  public abstract sendComment(text: string, signal?: AbortSignal): PromiseLike<any>
+
   public static is(value: unknown): value is Item {
     return value instanceof this
-  }
-  public static create(v: RawItem): Item {
-    return new this(v)
   }
   public cover: image.RawImage
   public get $cover() {
@@ -58,7 +59,7 @@ export class Item extends Struct<RawItem> implements RawItem {
   public get $thisEp() {
     return new Ep(this.thisEp)
   }
-  private constructor(v: RawItem) {
+   constructor(v: RawItem) {
     super(v)
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta

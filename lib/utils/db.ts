@@ -1,7 +1,6 @@
 import { liveQuery } from "dexie"
 import { shallowRef, onUnmounted, shallowReadonly, Ref, watchEffect } from "vue"
-export type LiveQueryRef<T> = Readonly<Ref<T>>
-export function useLiveQueryRef<T>(queryFn: () => Promise<T> | T, initial: T): LiveQueryRef<T> {
+export function useLiveQueryRef<T>(queryFn: () => Promise<T> | T, initial: T): Ref<T> {
   const data = shallowRef(initial)
   const sub = liveQuery(queryFn).subscribe({
     next: (v: T) => data.value = v,

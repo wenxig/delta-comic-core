@@ -33,9 +33,9 @@ defineSlots<{
     :style="[{ height: freeHeight ? 'auto' : '140px' }, style]"
     :class="[{ 'van-haptics-feedback': !disabled }, $props.class]">
     <Image :src="item.$cover" v-if="type === 'big'" class="blur-lg absolute top-0 left-0 w-full h-full" fit="cover" />
-    <Image :src="item.$cover" class="!rounded-lg image-size z-2 flex-3" fit="contain" ref="cover" />
-    <div class="flex absolute flex-col flex-7 *:text-justify pl-2">
-      <span class="mt-3 van-multi-ellipsis--l3">{{ item.title }}</span>
+    <Image :src="item.$cover" class="!rounded-lg image-size z-2 w-3/10" fit="contain" ref="cover" />
+    <div class="flex absolute flex-col w-[calc(70%-14px)] h-[calc(100%-8px)] *:text-justify right-2">
+      <span class="van-multi-ellipsis--l3">{{ item.title }}</span>
       <div class="absolute bottom-2 text-(--van-text-color-2) text-sm">
         <slot />
       </div>

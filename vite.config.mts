@@ -48,7 +48,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'lib/index.ts'),
       name: 'Bundle',
-      fileName: 'bundle'
+      fileName: 'bundle',
     },
     sourcemap: true,
     rollupOptions: {
@@ -64,8 +64,8 @@ export default defineConfig({
           'pinia': 'window.$$lib$$.Pinia',
           'vue-router': 'window.$$lib$$.VR',
           'crypto-js': 'window.$$lib$$.Crypto'
-        }
-      }
+        },
+      },
     }
   }
 })

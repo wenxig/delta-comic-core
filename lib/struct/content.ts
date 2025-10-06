@@ -1,10 +1,11 @@
 import { computed, shallowRef, type Component, shallowReactive, type StyleValue } from 'vue'
 import * as item from './item'
 import * as ep from './ep'
-import { PromiseContent } from '@/utils/data'
+import { PromiseContent, type RStream } from '@/utils/data'
 import { isString } from "lodash-es"
 import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
+import * as comment from './comment'
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
 export abstract class ContentPage<T extends object = any> {
@@ -27,7 +28,7 @@ export abstract class ContentPage<T extends object = any> {
   }
   public static getItemCard(ct_: ContentType_) {
     const ct = this.toContentTypeString(ct_)
-    return this.viewLayout.get(ct)
+    return this.itemCard.get(ct)
   }
 
   private static contentPage = useGlobalVar(shallowReactive(new Map<string, ContentPageLike>()), 'uni/contentPage/contentPage')
@@ -68,6 +69,8 @@ export abstract class ContentPage<T extends object = any> {
 
   public recommends = PromiseContent.withResolvers<item.Item[]>()
 
+  public abstract comments: RStream<comment.Comment>
+  
   public eps = PromiseContent.withResolvers<ep.Ep[]>()
 
   public abstract loadAll(): Promise<any>

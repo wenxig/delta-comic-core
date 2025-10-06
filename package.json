@@ -1,7 +1,7 @@
 {
   "name": "delta-comic-core",
   "version": "0.0.1",
-  "description": "Plugin create helper for 'delta-comic'",
+  "description": "可我曾亲眼看见神的熟视无睹.",
   "homepage": "https://github.com/wenxig/delta-comic-core",
   "repository": {
     "type": "git",
@@ -22,19 +22,21 @@
     "@vicons/antd": "^0.13.0",
     "@vicons/material": "^0.13.0",
     "@vueuse/core": "^13.9.0",
-    "axios": "^1.12.2",
     "capacitor-plugin-safe-area": "^4.0.0",
-    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.18",
     "dexie": "^4.2.0",
     "dexie-relationships": "^1.2.11",
-    "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
+    "tailwindcss": "^4.1.13",
+    "tailwindcss-safe-area-capacitor": "^0.5.1"
+  },
+  "peerDependencies": {
     "motion-v": "^1.7.1",
     "naive-ui": "^2.42.0",
+    "axios": "^1.12.2",
     "pinia": "^3.0.3",
-    "tailwindcss": "^4.1.13",
-    "tailwindcss-safe-area-capacitor": "^0.5.1",
+    "crypto-js": "^4.2.0",
+    "lodash-es": "^4.17.21",
     "vant": "^4.9.21",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"

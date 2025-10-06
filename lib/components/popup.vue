@@ -4,7 +4,6 @@ import { noop } from 'lodash-es'
 import { PopupProps } from 'vant'
 import { computed, StyleValue } from 'vue'
 import { shallowRef, watch } from 'vue'
-import { useRouter } from 'vue-router'
 const $router = window.$router
 const $props = withDefaults(defineProps<Partial<PopupProps & {
   noBorder?: boolean,
@@ -46,9 +45,9 @@ defineExpose({
 </script>
 
 <template>
-  <VanPopup :duration :position :round :closeable v-model:show="show" :z-index teleport="#popups"
+  <VanPopup :="$props" v-model:show="show" :z-index teleport="#popups"
     @open="trulyShow = true" @closed="() => { trulyShow = false; $emit('closed') }"
-    class="max-h-screen !overflow-y-auto overflow-hidden" :style
+    class="max-h-screen !overflow-y-auto overflow-hidden" overlay
     :class="!noBorder && 'border-0 border-t border-solid border-(--van-border-color)'">
     <slot v-if="trulyShow"></slot>
   </VanPopup>

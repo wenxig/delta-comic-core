@@ -1,7 +1,7 @@
 import { useLocalStorage } from "@vueuse/core"
 import { AppDB, type SaveItem, type SaveItem_ } from "./app"
 import type { Table } from "dexie"
-import { useLiveQueryRef, type LiveQueryRef } from "@/utils/db"
+import { useLiveQueryRef } from "@/utils/db"
 import { defaults, isEmpty, uniq } from "lodash-es"
 import { PromiseContent } from "@/utils/data"
 import type { uni } from "@/struct"

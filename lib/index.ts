@@ -75,6 +75,4 @@ export { Db } from './db'
 
 import './index.css'
 
-export { User } from './layout/user'
-
 export * from "./plugin"
