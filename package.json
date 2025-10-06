@@ -7,7 +7,6 @@
     "type": "git",
     "url": "https://github.com/wenxig/delta-comic-core.git"
   },
-  "packageManager": "pnpm@10.12.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -31,12 +30,12 @@
     "tailwindcss-safe-area-capacitor": "^0.5.1"
   },
   "peerDependencies": {
-    "motion-v": "^1.7.1",
-    "naive-ui": "^2.42.0",
     "axios": "^1.12.2",
-    "pinia": "^3.0.3",
     "crypto-js": "^4.2.0",
     "lodash-es": "^4.17.21",
+    "motion-v": "^1.7.1",
+    "naive-ui": "^2.42.0",
+    "pinia": "^3.0.3",
     "vant": "^4.9.21",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
@@ -60,7 +59,12 @@
   "pnpm": {
     "overrides": {
       "vite": "npm:rolldown-vite@latest"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@tailwindcss/oxide",
+      "esbuild"
+    ]
   },
   "files": [
     "dist"
