@@ -1,9 +1,9 @@
 import { ContentPage, type ContentPageLike, type ItemCardComp, type ViewLayoutComp } from "@/struct/content"
 import { entries, isFunction } from "lodash-es"
 import { Image, type ProcessInstance } from "./struct/image"
-import type { Ref } from "vue"
 import { SharedFunction } from "./utils/eventBus"
 import { Comment, type CommentRow } from "./struct/comment"
+import type { UserCardComp } from "./struct/user"
 
 export interface PluginConfig {
   name: string
@@ -66,9 +66,12 @@ export interface PluginConfig {
     */
     test: (fork: string, signal: AbortSignal) => PromiseLike<void>
   }>
+  user?: {
+    card: UserCardComp
+  }
   auth?: PluginConfigAuth
   otherProgress?: {
-    call: (description: Ref<string>) => PromiseLike<boolean>
+    call: (setDescription: (description: string) => void) => PromiseLike<any>
     name: string
   }[]
   onBooted?(ins: PluginDefineResult): PromiseLike<void> | void
@@ -158,11 +161,12 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     auth: cfg.auth,
     otherProgress: cfg.otherProgress,
     onBooted: cfg.onBooted,
-    image: cfg.image
+    image: cfg.image,
+    user: cfg.user
   })
 }
 
-export type PluginInstance = Pick<PluginConfig, 'api' | 'auth' | 'otherProgress' | 'name' | 'onBooted' | 'image'>
+export type PluginInstance = Pick<PluginConfig, 'api' | 'auth' | 'otherProgress' | 'name' | 'onBooted' | 'image' | 'user'>
 
 export type PluginDefineResult = {
   api?: Record<string, string | undefined | false>

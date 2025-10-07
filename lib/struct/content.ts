@@ -85,8 +85,7 @@ export abstract class ContentPage<T extends object = any> {
 }
 export type ViewComp = Component<{
   page: ContentPage
-  isFullscreen: boolean
-  onUpdateIsFullscreen: (isFullscreen: boolean) => void
+  isFullScreen: boolean
 }>
 
 export interface ContentType {

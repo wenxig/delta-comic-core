@@ -2,6 +2,7 @@ import { Struct, type MetaData, type RStream } from "@/utils/data"
 import { shallowReactive, type Component } from "vue"
 import { uni } from "."
 import dayjs from "dayjs"
+import type { User } from "./user"
 
 export interface RawComment {
   sender: {
@@ -20,12 +21,13 @@ export interface RawComment {
   reported: boolean
   $$plugin: string
   $$meta?: MetaData
+  isTop: boolean
 }
 export type CommentRow = Component<{
   comment: Comment
   item: uni.item.Item
   parentComment?: Comment
-  onClick: [c: uni.comment.Comment]
+  onClick?: ((c: Comment) => any)
 }>
 export abstract class Comment extends Struct<RawComment> implements RawComment {
   private static commentRow = shallowReactive(new Map<string, CommentRow>())
@@ -41,7 +43,6 @@ export abstract class Comment extends Struct<RawComment> implements RawComment {
 
   constructor(v: RawComment) {
     super(v)
-    this.sender = v.sender
     this.content = v.content
     this.time = v.time
     this.id = v.id
@@ -51,11 +52,9 @@ export abstract class Comment extends Struct<RawComment> implements RawComment {
     this.reported = v.reported
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta
+    this.isTop = v.isTop
   }
-  public sender: {
-    name: string
-    user?: any
-  }
+  public abstract sender: User
   public content: {
     type: 'string' | 'html'
     text: string
@@ -67,6 +66,7 @@ export abstract class Comment extends Struct<RawComment> implements RawComment {
   public id: string
   public childrenCount: number
   public likeCount: number
+  public isTop: boolean
   public isLiked: boolean
   public reported: boolean
   public $$plugin: string
