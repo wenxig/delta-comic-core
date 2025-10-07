@@ -18,9 +18,9 @@ export const useConfig = defineStore('config', helper => {
   const isSystemDark = usePreferredDark()
   const isDark = computed(() => config.value['app.darkMode'] || isSystemDark.value)
 
-  const $useCustomConfig = helper.action(<T extends Record<string, any>>(plugin: string, defaultConfig: T) =>
+  const $useCustomConfig = helper.action(<T extends Record<string, any>>(plugin: string, defaultConfig: T): T =>
     useLocalStorage(`${plugin}.config`, <T>fromPairs(entries(defaultConfig)
       .map(([name, defaultValue]) => [`${plugin}.${name}`, defaultValue])
-    )), 'useCustomConfig')
+    )).value, 'useCustomConfig')
   return { ...config.value, isDark, $useCustomConfig }
 })

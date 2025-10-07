@@ -70,7 +70,7 @@ export abstract class ContentPage<T extends object = any> {
   public recommends = PromiseContent.withResolvers<item.Item[]>()
 
   public abstract comments: RStream<comment.Comment>
-  
+
   public eps = PromiseContent.withResolvers<ep.Ep[]>()
 
   public abstract loadAll(): Promise<any>
@@ -85,6 +85,8 @@ export abstract class ContentPage<T extends object = any> {
 }
 export type ViewComp = Component<{
   page: ContentPage
+  isFullscreen: boolean
+  onUpdateIsFullscreen: (isFullscreen: boolean) => void
 }>
 
 export interface ContentType {

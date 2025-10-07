@@ -35,7 +35,7 @@ defineSlots<{
     <Image :src="item.$cover" v-if="type === 'big'" class="blur-lg absolute top-0 left-0 w-full h-full" fit="cover" />
     <Image :src="item.$cover" class="!rounded-lg image-size z-2 w-3/10" fit="contain" ref="cover" />
     <div class="flex absolute flex-col w-[calc(70%-14px)] h-[calc(100%-8px)] *:text-justify right-2">
-      <span class="van-multi-ellipsis--l3">{{ item.title }}</span>
+      <span class="van-multi-ellipsis--l2">{{ item.title }}</span>
       <div class="absolute bottom-2 text-(--van-text-color-2) text-sm">
         <slot />
       </div>

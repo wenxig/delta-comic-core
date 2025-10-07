@@ -23,6 +23,9 @@ export interface RawComment {
 }
 export type CommentRow = Component<{
   comment: Comment
+  item: uni.item.Item
+  parentComment?: Comment
+  onClick: [c: uni.comment.Comment]
 }>
 export abstract class Comment extends Struct<RawComment> implements RawComment {
   private static commentRow = shallowReactive(new Map<string, CommentRow>())
@@ -58,7 +61,7 @@ export abstract class Comment extends Struct<RawComment> implements RawComment {
     text: string
   }
   public time: number
-  public $time(){
+  public $time() {
     return dayjs(this.time)
   }
   public id: string
@@ -69,6 +72,7 @@ export abstract class Comment extends Struct<RawComment> implements RawComment {
   public $$plugin: string
   public $$meta?: MetaData
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
-  public abstract report(signal?: AbortSignal): PromiseLike<boolean>
+  public abstract report(signal?: AbortSignal): PromiseLike<any>
+  public abstract sendComment(text: string, signal?: AbortSignal): PromiseLike<any>
   public abstract children: RStream<Comment>
 }

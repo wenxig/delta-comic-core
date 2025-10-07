@@ -23,6 +23,7 @@ export interface RawItem {
   $$meta: MetaData
   description?: string
   thisEp: RawEp
+  commentSendable: boolean
 }
 
 export abstract class Item extends Struct<RawItem> implements RawItem {
@@ -59,7 +60,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public get $thisEp() {
     return new Ep(this.thisEp)
   }
-   constructor(v: RawItem) {
+  constructor(v: RawItem) {
     super(v)
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta
@@ -80,8 +81,9 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
     this.length = v.length
     this.epLength = v.epLength
     this.description = v.description
+    this.commentSendable = v.commentSendable
   }
-
+  public commentSendable: boolean
   public customIsAI?: boolean
   public get $isAi() {
     const check = (str: string) => (/(^|[\(（\[\s【])ai[】\)）\]\s]?/ig).test(str)

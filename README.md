@@ -1,4 +1,4 @@
-# Delta Comic Core - _<span style="font-weight: lighter;font-size:16px">可我曾亲眼看见神的熟视无睹</span>_
+# Delta Comic Core - _<span style="font-weight: lighter;font-size:16px">我曾亲眼见证神的熟视无睹</span>_
 
 [![GitHub](https://img.shields.io/github/license/wenxig/delta-comic-core)](https://raw.githubusercontent.com/wenxig/delta-comic-core/main/LICENSE)
 
