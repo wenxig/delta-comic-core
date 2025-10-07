@@ -4,6 +4,8 @@ import { Image, type ProcessInstance } from "./struct/image"
 import { SharedFunction } from "./utils/eventBus"
 import { Comment, type CommentRow } from "./struct/comment"
 import type { UserCardComp } from "./struct/user"
+import type { RStream } from "./utils/data"
+import type { Item } from "./struct/item"
 
 export interface PluginConfig {
   name: string
@@ -75,6 +77,25 @@ export interface PluginConfig {
     name: string
   }[]
   onBooted?(ins: PluginDefineResult): PromiseLike<void> | void
+  search?: {
+    /**
+     * @description
+     * key: id  
+    */
+    methods?: Record<string, {
+      name: string
+      sorts: {
+        text: string
+        value: string
+      }[]
+      defaultSort: string
+      getStream(input: string, sort: string): RStream<Item>
+      getAutoComplete(input: string, signal: AbortSignal): PromiseLike<{
+        text: string
+        value: string
+      }[]>
+    }>
+  }
 }
 
 export type PluginConfigAuthFormType = {
