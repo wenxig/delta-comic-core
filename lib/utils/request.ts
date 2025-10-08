@@ -47,7 +47,7 @@ export namespace utilInterceptors {
     try {
       return (await fn()).data
     } catch (error) {
-      if (error instanceof Error && ((error.message.includes('Illegal invocation') || error.name.includes('TypeError')))) {
+      if (error instanceof Error && ((error.message.includes('Illegal invocation')))) {
         if (times > 20) {
           throw error
         }
@@ -107,7 +107,7 @@ export const createAxios = (fork: () => Promise<string> | string, config: Create
   middle?.(api)
 
   api.interceptors.request.use(async requestConfig => {
-    const f = await Promise.try(fork)
+    const f = await fork()
     requestConfig.baseURL = f
     return requestConfig
   })

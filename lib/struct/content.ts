@@ -6,6 +6,7 @@ import { isString } from "lodash-es"
 import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
 import * as comment from './comment'
+import type { PluginConfigSearchCategory, PluginConfigSearchTabbar } from '@/plugin'
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
 export abstract class ContentPage<T extends object = any> {
@@ -18,6 +19,22 @@ export abstract class ContentPage<T extends object = any> {
   public static getViewLayout(ct_: ContentType_) {
     const ct = this.toContentTypeString(ct_)
     return this.viewLayout.get(ct)
+  }
+
+  public static tabbar = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchTabbar[]>()), 'uni/contentPage/tabbar')
+  public static setTabbar(plugin: string, ...tabbar: PluginConfigSearchTabbar[]) {
+    this.tabbar.set(plugin, this.getTabbar(plugin).concat(tabbar))
+  }
+  public static getTabbar(plugin: string) {
+    return this.tabbar.get(plugin) ?? []
+  }
+
+  public static categories = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchCategory[]>()), 'uni/contentPage/categories')
+  public static setCategories(plugin: string, ...categories: PluginConfigSearchCategory[]) {
+    this.categories.set(plugin, this.getCategories(plugin).concat(categories))
+  }
+  public static getCategories(plugin: string) {
+    return this.categories.get(plugin) ?? []
   }
 
   private static itemCard = useGlobalVar(shallowReactive(new Map<string, ItemCardComp>()), 'uni/contentPage/itemCard')

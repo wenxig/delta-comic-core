@@ -1,4 +1,4 @@
-import type { PluginInstance } from "@/plugin"
+import type { PluginConfig } from "@/plugin"
 import type { uni } from "@/struct"
 import { random, uniqBy } from "lodash-es"
 import mitt from "mitt"
@@ -16,7 +16,8 @@ export type SharedFunctions = {
  /** 重复调用需缓存(自行实现)(可不缓存) */ getUser(): PromiseLike<object>
   getRandomProvide(signal: AbortSignal): PromiseLike<uni.item.Item[]>
 
-  addPlugin(ins: PluginInstance): void
+  addPlugin(ins: PluginConfig): void
+  addRecent(item: uni.item.Item | uni.item.RawItem): PromiseLike<any>
 }
 
 export class SharedFunction {

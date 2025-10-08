@@ -11,8 +11,6 @@ import Var from './components/var.vue'
 import Waterfall from './components/waterfall.vue'
 import Content from './components/content.vue'
 
-import UserFavouriteSelect from './components/user/favouriteSelect.vue'
-import UserCreateFavouriteCard from './components/user/createFavouriteCard.vue'
 import UserPreviewUser from './components/user/previewUser.vue'
 
 import ContentUnitCard from './components/content/unitCard.vue'
@@ -31,8 +29,6 @@ export const Comp = {
   Var,
   Waterfall,
   user: {
-    FavouriteSelect: UserFavouriteSelect,
-    CreateFavouriteCard: UserCreateFavouriteCard,
     PreviewUser: UserPreviewUser
   },
   content: {
@@ -49,7 +45,6 @@ import * as uEventBus from './utils/eventBus'
 import * as uImage from './utils/image'
 import * as uLayout from './utils/layout'
 import * as uRequest from './utils/request'
-import * as uDb from './utils/db'
 import * as uTranslate from './utils/translate'
 import * as uMessage from './utils/message'
 
@@ -61,7 +56,6 @@ export namespace Utils {
   export import layout = uLayout
   export import request = uRequest
   export import translate = uTranslate
-  export import db = uDb
   export import message = uMessage
 }
 import { useTemp } from './stores/temp'
@@ -70,8 +64,6 @@ export const Store = {
   useTemp,
   useConfig
 }
-
-export { Db } from './db'
 
 import './index.css'
 

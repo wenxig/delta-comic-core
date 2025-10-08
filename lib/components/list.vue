@@ -90,8 +90,7 @@ const handleScroll: VirtualListProps['onScroll'] = debounce(async () => {
 const isPullRefreshHold = shallowRef(false)
 const isRefreshing = shallowRef(false)
 const handleRefresh = async () => {
-  unionSource.value.reset()
-  await unionSource.value.next()
+  await unionSource.value.retry()
   isRefreshing.value = false
 }
 

@@ -191,7 +191,7 @@ defineExpose({
             </NIcon>
             <div class="flex gap-2 flex-col justify-center text-white">
               <div class=" text-sm">网络错误</div>
-              <div class="text-xs">{{ unionSource.errorCause ?? '未知原因' }}</div>
+              <div class="text-xs text-wrap">{{ unionSource.errorCause ?? '未知原因' }}</div>
             </div>
             <NButton circle type="error" size="large" @click="$emit('retry')">
               <template #icon>

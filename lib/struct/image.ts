@@ -1,6 +1,7 @@
 import { Struct, type MetaData } from "@/utils/data"
 import { useGlobalVar } from "@/utils/plugin"
 import { isString } from "lodash-es"
+import { shallowReactive } from "vue"
 
 
 export interface ProcessInstance {
@@ -22,7 +23,7 @@ export interface RawImage {
   processSteps?: ProcessStep_[]
 }
 export class Image extends Struct<RawImage> implements RawImage {
-  private static processInstances = useGlobalVar(new Map<string, ProcessInstance>(), 'uni/image/processInstances')
+  public static processInstances = useGlobalVar(shallowReactive(new Map<string, ProcessInstance>()), 'uni/image/processInstances')
   public static setProcess(plugin: string, referenceName: string, func: ProcessInstance['func']) {
     const fullName = `${plugin}:${referenceName}`
     this.processInstances.set(fullName, {
@@ -33,8 +34,8 @@ export class Image extends Struct<RawImage> implements RawImage {
     })
   }
 
-  private static fork = useGlobalVar(new Map<string, string[]>(), 'uni/image/fork')
-  public static activeFork = useGlobalVar(new Map<string, string>(), 'uni/image/activeFork')
+  public static fork = useGlobalVar(shallowReactive(new Map<string, string[]>()), 'uni/image/fork')
+  public static activeFork = useGlobalVar(shallowReactive(new Map<string, string>()), 'uni/image/activeFork')
   public static setFork(plugin: string, namespace: string, fork: string[]) {
     const key = `${plugin}:${namespace}`
     this.fork.set(key, fork)

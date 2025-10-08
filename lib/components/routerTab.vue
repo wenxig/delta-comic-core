@@ -1,14 +1,14 @@
 <script setup lang='ts' generic="T extends {
-  name: string,
+  name: string
   title: string
+  queries?: Record<string, string>
 }">
 import { TabsInstance } from 'vant'
 import { onUnmounted, ref, useTemplateRef, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 const $props = defineProps<{
-  items: T[],
-  routerBase: string,
-  queries?: Record<string, string>
+  items: T[]
+  routerBase: string
 }>()
 const $route = useRoute()
 const defaultRouter = decodeURI($route.path.replaceAll($props.routerBase + '/', '').split('/')[0])
@@ -23,9 +23,10 @@ const $router = window.$router
 const tab = useTemplateRef<TabsInstance>('tab')
 const beforeChange = async (aim: string) => {
   let queryString = '?'
-  for (const key in ($props.queries ?? {})) {
-    if (Object.prototype.hasOwnProperty.call(($props.queries ?? {}), key)) {
-      const value = ($props.queries ?? {})[key]
+  const aimItem = $props.items.find(v => v.name == aim)!
+  for (const key in (aimItem.queries ?? {})) {
+    if (Object.prototype.hasOwnProperty.call((aimItem.queries ?? {}), key)) {
+      const value = (aimItem.queries ?? {})[key]
       queryString += `${key}=${value}&`
     }
   }
@@ -33,9 +34,6 @@ const beforeChange = async (aim: string) => {
   await $router.force.replace(`${$props.routerBase}/${aim.split('/').map(encodeURI).join('/')}${queryString}`)
   return true
 }
-watch(() => $props.queries, () => {
-  beforeChange(select.value)
-}, { immediate: true })
 watch(() => $props.items, items => {
   if (!items.find(v => v.name.startsWith(select.value))) {
     console.log(select.value, items)
