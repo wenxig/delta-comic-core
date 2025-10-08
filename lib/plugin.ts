@@ -3,7 +3,7 @@ import { entries, isFunction } from "lodash-es"
 import { Image, type ProcessInstance } from "./struct/image"
 import { SharedFunction } from "./utils/eventBus"
 import { Comment, type CommentRow } from "./struct/comment"
-import type { UserCardComp } from "./struct/user"
+import { User, type UserCardComp } from "./struct/user"
 import type { RStream } from "./utils/data"
 import type { Item, RawItem } from "./struct/item"
 import type { Component } from "vue"
@@ -24,6 +24,7 @@ export interface PluginConfig {
 }
 
 export interface PluginConfigUser {
+  edit: Component
   card: UserCardComp
   /**
    * 1. download
@@ -34,6 +35,7 @@ export interface PluginConfigUser {
     download: () => PromiseLike<Item[]>
     upload: (items: RawItem[]) => PromiseLike<any>
   }
+
 }
 
 export interface PluginConfigSearch {
@@ -208,7 +210,8 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     name: plugin,
     content,
     image,
-    search
+    search,
+    user
   } = cfg
   if (content) {
     for (const [ct, comp] of entries(content.layout)) ContentPage.setViewLayout(ct, comp)
@@ -225,6 +228,9 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
       for (const c of search.categories) ContentPage.setCategories(plugin, c)
     if (search.tabbar)
       for (const c of search.tabbar) ContentPage.setTabbar(plugin, c)
+  }
+  if (user) {
+    User.userEditorBase.set(plugin, user.edit)
   }
   SharedFunction.callWitch('addPlugin', 'core', cfg)
 }

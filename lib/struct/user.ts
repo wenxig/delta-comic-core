@@ -10,6 +10,7 @@ export interface RawUser {
 
 export abstract class User {
   public static userBase = shallowReactive(new Map<string, User>())
+  public static userEditorBase = shallowReactive(new Map<string, Component>())
   constructor(v: RawUser) {
     if (v.avatar) this.avatar = Image.create(v.avatar)
     this.name = v.name
