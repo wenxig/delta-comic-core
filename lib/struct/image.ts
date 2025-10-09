@@ -8,7 +8,7 @@ export interface ProcessInstance {
   fullName: string
   plugin: string
   referenceName: string
-  func: (nowPath: string, img: Image) => Promise<[path: string, exit: string]>
+  func: (nowPath: string, img: Image) => Promise<[path: string, exit: boolean]>
 }
 export interface ProcessStep {
   referenceName: string

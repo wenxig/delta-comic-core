@@ -5,10 +5,7 @@ import dayjs from "dayjs"
 import type { User } from "./user"
 
 export interface RawComment {
-  sender: {
-    name: string
-    user?: any
-  }
+  sender: uni.user.User
   content: {
     type: 'string' | 'html'
     text: string
