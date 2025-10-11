@@ -79,7 +79,10 @@ export class Image extends Struct<RawImage> implements RawImage {
       if (option.ignoreExit || !result[1]) continue
       break
     }
-    return `${Image.activeFork.get(`${this.$$plugin}:${this.forkNamespace}`)}/${resultPath}`
+    if (!URL.canParse(resultPath)) {
+      return `${Image.activeFork.get(`${this.$$plugin}:${this.forkNamespace}`)}/${resultPath}`
+    }
+    return resultPath
   }
 }
 export type Image_ = string | Image
