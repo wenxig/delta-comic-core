@@ -11,8 +11,6 @@ import Var from './components/var.vue'
 import Waterfall from './components/waterfall.vue'
 import Content from './components/content.vue'
 
-import UserPreviewUser from './components/user/previewUser.vue'
-
 import ContentUnitCard from './components/content/unitCard.vue'
 
 export const Comp = {
@@ -28,9 +26,6 @@ export const Comp = {
   ToggleIcon,
   Var,
   Waterfall,
-  user: {
-    PreviewUser: UserPreviewUser
-  },
   content: {
     UnitCard: ContentUnitCard
   }

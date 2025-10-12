@@ -24,7 +24,6 @@ export type CommentRow = Component<{
   comment: Comment
   item: uni.item.Item
   parentComment?: Comment
-  onClick?: ((c: Comment) => any)
 }>
 export abstract class Comment extends Struct<RawComment> implements RawComment {
   private static commentRow = shallowReactive(new Map<string, CommentRow>())

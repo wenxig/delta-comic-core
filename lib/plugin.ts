@@ -141,7 +141,7 @@ export interface PluginConfigContent {
   contentPage?: Record<string, ContentPageLike>
 }
 
-export type PluginConfigAuthFormType = {
+export type UniFormDescription = {
   info: string
   placeholder?: string
   /**
@@ -176,7 +176,7 @@ export type PluginConfigAuthFormType = {
   type: 'date'
   defaultValue?: number
 })
-export type PluginConfigAuthFormResult<T extends PluginConfigAuthFormType> =
+export type UniFormResult<T extends UniFormDescription> =
   T['type'] extends 'string' ? string :
   T['type'] extends 'number' ? number :
   T['type'] extends 'radio' ? string :
@@ -185,8 +185,8 @@ export type PluginConfigAuthFormResult<T extends PluginConfigAuthFormType> =
   T['type'] extends 'date' ? number :
   never
 export type PluginConfigAuthMethod = {
-  form<T extends Record<string, PluginConfigAuthFormType>>(form: T): Promise<{
-    [x in keyof T]: PluginConfigAuthFormResult<T[x]>
+  form<T extends Record<string, UniFormDescription>>(form: T): Promise<{
+    [x in keyof T]: UniFormResult<T[x]>
   }>
   /**
    * sandbox: "allow-forms allow-modals allow-orientation-lock allow-popups-to-escape-sandbox  allow-pointer-lock"

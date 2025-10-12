@@ -6,6 +6,7 @@ export interface RawUser {
   avatar?: RawImage
   name: string
   id: string
+  $$plugin: string
 }
 
 export abstract class User {
@@ -15,10 +16,12 @@ export abstract class User {
     if (v.avatar) this.avatar = Image.create(v.avatar)
     this.name = v.name
     this.id = v.id
+    this.$$plugin = v.$$plugin
   }
   public avatar?: Image
   public name: string
   public id: string
+  public $$plugin: string
   public abstract customUser: object
 }
 export type UserCardComp = Component<{

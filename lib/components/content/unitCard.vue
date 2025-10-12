@@ -5,6 +5,7 @@ import { computed, StyleValue, useTemplateRef } from 'vue'
 import { MoreVertRound } from '@vicons/material'
 import { createReusableTemplate } from '@vueuse/core'
 import { SharedFunction } from '@/utils/eventBus'
+import { useConfig } from '@/config'
 const $props = withDefaults(defineProps<{
   item: uni.item.Item | uni.item.RawItem
   freeHeight?: boolean
@@ -32,13 +33,15 @@ const handlePositiveClick = () => {
   // add recent
   SharedFunction.callWitch('addRecent', 'core', $props.item)
 }
+const config = useConfig()
+const processedTitle = computed(() => config.appConfig['core.easilyTitle'] ? $props.item.title.replace(/(\（[^\）]+\）|\[[^\]]+\]|\([^\)]+\)|\【[^\】]+\】)+?/ig, '').trim() : $props.item.title)
 </script>
 
 <template>
   <TemplateIns>
     <NPopconfirm @positive-click="handlePositiveClick">
       <template #trigger>
-        <NButton @click.stop text class="!absolute bottom-2 right-2">
+        <NButton @click.stop text class="!absolute bottom-1.5 right-2">
           <NIcon color="var(--van-text-color-2)" size="1rem">
             <MoreVertRound />
           </NIcon>
@@ -54,7 +57,7 @@ const handlePositiveClick = () => {
     <Image :src="$cover" v-if="type === 'big'" class="blur-lg absolute top-0 left-0 w-full h-full" fit="cover" />
     <Image :src="$cover" class="!rounded-lg image-size z-2 w-3/10" fit="contain" ref="cover" />
     <div class="flex absolute flex-col w-[calc(70%-14px)] h-[calc(100%-8px)] *:text-justify right-2">
-      <span class="van-multi-ellipsis--l2">{{ item.title }}</span>
+      <span class="van-multi-ellipsis--l2">{{ processedTitle }}</span>
       <div class="absolute bottom-2 text-(--van-text-color-2) text-sm">
         <slot />
       </div>
@@ -74,7 +77,7 @@ const handlePositiveClick = () => {
     </div>
     <div class="w-full overflow-hidden p-1 flex flex-col text-(--van-text-color)">
       <div class="flex flex-nowrap">
-        <span class="text-start text-sm">{{ item.title }}</span>
+        <span class="text-start text-sm">{{ processedTitle }}</span>
       </div>
       <div class=" my-1 w-full h-auto flex-nowrap flex items-center">
         <slot />

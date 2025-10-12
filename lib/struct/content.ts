@@ -90,8 +90,8 @@ export abstract class ContentPage<T extends object = any> {
 
   public eps = PromiseContent.withResolvers<ep.Ep[]>()
 
-  public abstract loadAll(): Promise<any>
-  public abstract reloadAll(): Promise<any>
+  public abstract loadAll(signal?: AbortSignal): Promise<any>
+  public abstract reloadAll(signal?: AbortSignal): Promise<any>
 
   public abstract plugin: string
 

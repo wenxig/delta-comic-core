@@ -1,5 +1,5 @@
 import { until } from "@vueuse/core"
-import { isEmpty, isError, type constant } from "lodash-es"
+import { isEmpty, isError } from "lodash-es"
 import { computed, markRaw, ref, shallowRef, type Raw, type Ref } from "vue"
 import { SmartAbortController } from "./request"
 import { useGlobalVar } from "./plugin"
@@ -32,7 +32,7 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
   private constructor(private promise: Promise<T>, private processor: (v: T) => TPF = v => <any>v) {
     this.loadPromise(promise)
   }
-  private async loadPromise(promise: Promise<T>) {
+  public async loadPromise(promise: Promise<T>) {
     this.data.value = undefined
     this.isLoading.value = true
     this.isError.value = false
@@ -50,6 +50,7 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
       this.errorCause.value = isError(err) ? err : new Error(String(err))
     }
   }
+  [Symbol.toStringTag] = '[class PromiseContent]'
   /**
    * 对`this.data.value`做出处理，多次调用仅最后一次生效
   */
