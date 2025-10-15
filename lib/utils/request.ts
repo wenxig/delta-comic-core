@@ -73,7 +73,7 @@ export namespace utilInterceptors {
   }
 
   export const createAutoRetry = (api: AxiosInstance, times = 3) => async (err: any) => {
-    if (!checkIsAxiosError(err)) return Promise.reject(err)
+    // if (!checkIsAxiosError(err)) return Promise.reject(err)
     if (!err.config || err.config.disretry || (err.config.__retryCount ?? 0) >= times) throw requestErrorResult('networkError_response', err)
     err.config.__retryCount = (err.config.__retryCount ?? 0) + 1
     await delay(500 * err.config.__retryCount)
@@ -102,15 +102,19 @@ export namespace utilInterceptors {
     return Promise.reject(err)
   }
 
-  // change to Ap
   export const devProxy: AxiosAdapter = (config) => {
-    const adapter = getAdapter(flatten(isArray(config.adapter) ? config.adapter : config.adapter ? [config.adapter] : []).slice(1))
+    const adapter = getAdapter(['xhr', 'fetch', 'http'])
+    if (window.$isDev) return adapter(config)
+    const url = config.url?.replaceAll('/api0', '') ?? ''
+    console.log(config)
     return adapter({
       ...config,
-      baseURL: '/api0',
-      url: `${config.baseURL}/${config.url}`
+      baseURL: '',
+      url: `http://${location.host}/api0/${URL.canParse(url) ? url : `${config.baseURL}/${url}`}`,
+      
     })
   }
+  export const _ = 1
 }
 export type Requester = ReturnType<typeof createAxios>
 export const createAxios = (fork: () => Promise<string> | string, config: CreateAxiosDefaults = {}, middle?: (axios: AxiosInstance) => AxiosInstance) => {
