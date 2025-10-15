@@ -1,7 +1,8 @@
-import axios, { type AxiosInstance, isCancel, isAxiosError, type AxiosError, type AxiosResponse, type CreateAxiosDefaults, type AxiosRequestConfig } from "axios"
+import axios, { type AxiosInstance, isCancel, isAxiosError, type AxiosError, type AxiosResponse, type CreateAxiosDefaults, type AxiosRequestConfig, type AxiosAdapter, getAdapter } from "axios"
 import mitt from "mitt"
 import { eventBus, type EventBus } from "./eventBus"
 import { delay } from "./delay"
+import { flatten, isArray } from "lodash-es"
 
 export class SmartAbortController implements AbortController {
   private _controller = new AbortController()
@@ -100,15 +101,27 @@ export namespace utilInterceptors {
     if (err.code === "ERR_NETWORK" && !err.response) throw requestErrorResult('networkError_request', err)
     return Promise.reject(err)
   }
+
+  // change to Ap
+  export const devProxy: AxiosAdapter = (config) => {
+    const adapter = getAdapter(flatten(isArray(config.adapter) ? config.adapter : config.adapter ? [config.adapter] : []).slice(1))
+    return adapter({
+      ...config,
+      baseURL: '/api0',
+      url: `${config.baseURL}/${config.url}`
+    })
+  }
 }
 export type Requester = ReturnType<typeof createAxios>
 export const createAxios = (fork: () => Promise<string> | string, config: CreateAxiosDefaults = {}, middle?: (axios: AxiosInstance) => AxiosInstance) => {
-  const api = axios.create(config)
+  const api = axios.create({
+    ...config,
+    adapter: [utilInterceptors.devProxy, ...(isArray(config.adapter) ? config.adapter : config.adapter ? [config.adapter] : [])]
+  })
   middle?.(api)
 
   api.interceptors.request.use(async requestConfig => {
-    const f = await fork()
-    requestConfig.baseURL = f
+    requestConfig.baseURL ??= await fork()
     return requestConfig
   })
   api.interceptors.response.use(undefined, utilInterceptors.isClientError)

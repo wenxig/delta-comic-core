@@ -12,6 +12,7 @@ declare global {
     $$lib$$: any
     $$safe$$: boolean
     $router: Router
+    $isDev: boolean
   }
 }
 export declare module 'axios' {
