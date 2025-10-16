@@ -118,10 +118,7 @@ export namespace utilInterceptors {
 }
 export type Requester = ReturnType<typeof createAxios>
 export const createAxios = (fork: () => Promise<string> | string, config: CreateAxiosDefaults = {}, middle?: (axios: AxiosInstance) => AxiosInstance) => {
-  const api = axios.create({
-    ...config,
-    adapter: [utilInterceptors.devProxy, ...(isArray(config.adapter) ? config.adapter : config.adapter ? [config.adapter] : [])]
-  })
+  const api = axios.create(config)
   middle?.(api)
 
   api.interceptors.request.use(async requestConfig => {

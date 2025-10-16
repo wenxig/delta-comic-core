@@ -5,7 +5,7 @@ import { SmartAbortController } from "./request"
 import { useGlobalVar } from "./plugin"
 export class Struct<TRaw extends object> {
   public toJSON() {
-    return this.$$raw
+    return <TRaw>JSON.parse(JSON.stringify(this.$$raw))
   }
   constructor(protected $$raw: TRaw) { }
 }
