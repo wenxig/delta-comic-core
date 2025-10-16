@@ -164,7 +164,7 @@ defineExpose({
     <AnimatePresence>
       <motion.div :initial="{ opacity: 0, translateY: '-100%', left: '50%', translateX: '-50%' }"
         :variants="loadingVariants" :animate="animateOn"
-        class="rounded-full shadow flex justify-center items-center scale-100 absolute whitespace-nowrap">
+        class=" shadow flex justify-center items-center scale-100 absolute whitespace-nowrap">
         <Transition name="van-fade">
           <VanLoading size="25px" color="var(--p-color)" v-if="animateOn === 'isLoadingNoData'" />
           <Loading size="10px" color="white" v-else-if="animateOn === 'isLoadingData'">加载中</Loading>
@@ -172,7 +172,7 @@ defineExpose({
             <NEmpty description="无结果" class="w-full !justify-center" :class="[classEmpty]"
               :style="[style, styleEmpty]" />
           </div>
-          <div v-else-if="animateOn === 'isErrorNoData'">
+          <div v-else-if="animateOn === 'isErrorNoData'" class="!size-full">
             <NResult class="!items-center !justify-center flex flex-col !size-full" status="error" title="网络错误"
               :class="[classError]" :style="[style, styleError]" :description="unionSource.errorCause ?? '未知原因'">
               <template #footer>
