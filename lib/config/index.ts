@@ -7,7 +7,7 @@ const defaultConfig = {
   'app.easyTitle': false
 }
 export type ConfigType = typeof defaultConfig
-export const useConfig = defineStore('config', helper => {
+ const _useConfig = defineStore('config', helper => {
   const form = shallowReactive(new Map<string, { form: Record<string, UniFormDescription>, value: Ref<any> }>())
 
   const $useCustomConfig = helper.action(<T extends Record<string, Required<Pick<UniFormDescription, 'defaultValue'>> & UniFormDescription>, TPlugin extends string>(plugin: TPlugin, desc: T): {
@@ -74,3 +74,5 @@ export const useConfig = defineStore('config', helper => {
 
   return { appConfig, isDark, form, $useCustomConfig }
 })
+
+export const useConfig = () => _useConfig(window.$api.piniaInstance)
