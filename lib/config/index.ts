@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { useLocalStorage, usePreferredDark } from "@vueuse/core"
 import { computed, shallowReactive, type Ref } from "vue"
 import { entries, fromPairs } from "lodash-es"
-import type { UniFormDescription, UniFormResult } from "@/plugin"
+import type { UniFormDescription, UniFormResult } from "@/plugin/define"
 const defaultConfig = {
   'app.easyTitle': false
 }

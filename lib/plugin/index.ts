@@ -1,0 +1,40 @@
+import { ContentPage } from "@/struct/content"
+import { entries, isFunction } from "lodash-es"
+import { Image } from "@/struct/image"
+import { SharedFunction } from "@/utils/eventBus"
+import { Comment } from "@/struct/comment"
+import { User } from "@/struct/user"
+import type { PluginConfig } from "./define"
+
+export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginConfig)) => {
+  if (isFunction(config)) var cfg = config(window.$$safe$$)
+  else var cfg = config
+  console.log('[definePlugin] new plugin defining...', cfg)
+  const {
+    name: plugin,
+    content,
+    image,
+    search,
+    user
+  } = cfg
+  if (content) {
+    for (const [ct, comp] of entries(content.layout)) ContentPage.setViewLayout(ct, comp)
+    for (const [ct, comp] of entries(content.itemCard)) ContentPage.setItemCard(ct, comp)
+    for (const [ct, page] of entries(content.contentPage)) ContentPage.setContentPage(ct, page)
+    for (const [ct, row] of entries(content.commentRow)) Comment.setCommentRow(ct, row)
+  }
+  if (image) {
+    if (image.forks) for (const [name, url] of entries(image.forks)) Image.setFork(plugin, name, url)
+    if (image.process) for (const [name, fn] of entries(image.process)) Image.setProcess(plugin, name, fn)
+  }
+  if (search) {
+    if (search.categories)
+      for (const c of search.categories) ContentPage.setCategories(plugin, c)
+    if (search.tabbar)
+      for (const c of search.tabbar) ContentPage.setTabbar(plugin, c)
+  }
+  if (user) {
+    User.userEditorBase.set(plugin, user.edit)
+  }
+  SharedFunction.callWitch('addPlugin', 'core', cfg)
+}

@@ -4,11 +4,21 @@ import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
 import { Ep, type RawEp } from "./ep"
 
+export interface Category {
+  name: string
+  search: {
+    keyword: string
+    source: string
+    sort: string
+  }
+}
+
 export interface RawItem {
   cover: image.RawImage
   title: string
   id: string
-  categories: string[]
+  /** @alias tags  */
+  categories: Category[]
   author: string[]
   viewNumber?: number
   likeNumber?: number
@@ -25,7 +35,6 @@ export interface RawItem {
   thisEp: RawEp
   commentSendable: boolean
 }
-
 export abstract class Item extends Struct<RawItem> implements RawItem {
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
   public abstract report(signal?: AbortSignal): PromiseLike<any>
@@ -40,7 +49,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   }
   public title: string
   public id: string
-  public categories: string[]
+  public categories: Category[]
   public author: string[]
   public viewNumber?: number
   public likeNumber?: number

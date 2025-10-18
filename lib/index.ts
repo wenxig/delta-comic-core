@@ -62,4 +62,7 @@ export const Store = {
 
 import './index.css'
 
-export * from "./plugin"
+export * from "./plugin/index"
+
+
+export * from "./plugin/define.ts"
