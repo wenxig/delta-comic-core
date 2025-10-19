@@ -6,7 +6,7 @@ import { isString } from "lodash-es"
 import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
 import * as comment from './comment'
-import type { PluginConfigSearchCategory, PluginConfigSearchTabbar } from '@/plugin'
+import type { PluginConfigSearchCategory, PluginConfigSearchTabbar } from '@/plugin/define'
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
 export abstract class ContentPage<T extends object = any> {
@@ -117,6 +117,9 @@ export interface ContentType {
 export type ContentType_ = ContentType | string
 export type ViewLayoutComp = Component<{
   page: ContentPage
+  comp: {
+    FavouriteSelect: Component<{ item: uni.item.Item }>
+  }
 }>
 
 export type ItemCardComp = Component<{

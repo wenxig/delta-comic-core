@@ -1,4 +1,4 @@
-import type { PluginConfig } from "@/plugin"
+import type { PluginConfig } from "@/plugin/define"
 import type { uni } from "@/struct"
 import { random, uniqBy } from "lodash-es"
 import mitt from "mitt"
@@ -13,11 +13,13 @@ export type EventBus = {
 export const eventBus = useGlobalVar(mitt<EventBus>(), 'utils/eventBus')
 
 export type SharedFunctions = {
- /** 重复调用需缓存(自行实现)(可不缓存) */ getUser(): PromiseLike<object>
   getRandomProvide(signal: AbortSignal): PromiseLike<uni.item.Item[]>
 
   addPlugin(ins: PluginConfig): void
-  addRecent(item: uni.item.Item | uni.item.RawItem): PromiseLike<any>
+
+  addRecent(item: uni.item.Item): PromiseLike<any>
+  routeToContent(contentType_: uni.content.ContentType_, id: string, ep: string, preload?: uni.content.PreloadValue): PromiseLike<any>
+  routeToSearch(input: string, source?: string, sort?: string): PromiseLike<any>
 }
 
 export class SharedFunction {

@@ -48,6 +48,7 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
       this.data.value = undefined
       this.isError.value = true
       this.errorCause.value = isError(err) ? err : new Error(String(err))
+      console.error('Non-throw Error [PromiseContent]', err)
     }
   }
   [Symbol.toStringTag] = '[class PromiseContent]'
