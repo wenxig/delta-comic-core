@@ -26,12 +26,14 @@ const imageRatio = computed(() => cover.value?.isLoaded ? 'unset' : `${$cover.va
 defineSlots<{
   default(): void
   smallTopInfo(): void
+  cover(): void
 }>()
 
 const [TemplateIns, ComponentIns] = createReusableTemplate()
 const handlePositiveClick = () => {
   // add recent
-  SharedFunction.callWitch('addRecent', 'core', $props.item)
+  if (uni.item.Item.is($props.item))
+    SharedFunction.callWitch('addRecent', 'core', $props.item)
 }
 const config = useConfig()
 const processedTitle = computed(() => config.appConfig['core.easilyTitle'] ? $props.item.title.replace(/(\（[^\）]+\）|\[[^\]]+\]|\([^\)]+\)|\【[^\】]+\】)+?/ig, '').trim() : $props.item.title)

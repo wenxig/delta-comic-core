@@ -8,14 +8,12 @@ import browserslist from 'browserslist'
 import dts from 'vite-plugin-dts'
 import _package from './package.json'
 import { resolve } from 'node:path'
-
 import Components from 'unplugin-vue-components/vite'
-import { VantResolver } from '@vant/auto-import-resolver'
 import MotionResolver from 'motion-v/resolver'
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { NaiveUiResolver, VantResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   plugins: [
-    dts({ include: ['./lib'], tsconfigPath: './tsconfig.build.json' }),
+    dts({ include: ['./lib'], tsconfigPath: './tsconfig.json' }),
     vue(),
     vueJsx(),
     Components({

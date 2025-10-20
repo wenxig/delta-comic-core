@@ -2,7 +2,6 @@ import { showImagePreview as _showImagePreview, ImagePreviewOptions, ImagePrevie
 import { computed, shallowRef } from 'vue'
 import { useZIndex } from "./layout"
 import { watchOnce } from "@vueuse/core"
-import { useRouter } from 'vue-router'
 
 export const showImagePreview = (images: string[], config: Omit<ImagePreviewOptions, "images" | "teleport"> = {}) => {
   const isShowing = shallowRef(true)

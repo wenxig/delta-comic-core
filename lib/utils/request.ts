@@ -2,7 +2,6 @@ import axios, { type AxiosInstance, isCancel, isAxiosError, type AxiosError, typ
 import mitt from "mitt"
 import { eventBus, type EventBus } from "./eventBus"
 import { delay } from "./delay"
-import { flatten, isArray } from "lodash-es"
 
 export class SmartAbortController implements AbortController {
   private _controller = new AbortController()
