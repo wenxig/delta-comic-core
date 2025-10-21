@@ -1,5 +1,5 @@
 import { ContentPage } from "@/struct/content"
-import { entries, isFunction } from "es-toolkit/compat-es"
+import { isFunction } from "es-toolkit/compat"
 import { Image } from "@/struct/image"
 import { SharedFunction } from "@/utils/eventBus"
 import { Comment } from "@/struct/comment"
@@ -18,14 +18,14 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     user
   } = cfg
   if (content) {
-    for (const [ct, comp] of entries(content.layout)) ContentPage.setViewLayout(ct, comp)
-    for (const [ct, comp] of entries(content.itemCard)) ContentPage.setItemCard(ct, comp)
-    for (const [ct, page] of entries(content.contentPage)) ContentPage.setContentPage(ct, page)
-    for (const [ct, row] of entries(content.commentRow)) Comment.setCommentRow(ct, row)
+    for (const [ct, comp] of Object.entries(content.layout ?? {})) ContentPage.setViewLayout(ct, comp)
+    for (const [ct, comp] of Object.entries(content.itemCard ?? {})) ContentPage.setItemCard(ct, comp)
+    for (const [ct, page] of Object.entries(content.contentPage ?? {})) ContentPage.setContentPage(ct, page)
+    for (const [ct, row] of Object.entries(content.commentRow ?? {})) Comment.setCommentRow(ct, row)
   }
   if (image) {
-    if (image.forks) for (const [name, url] of entries(image.forks)) Image.setFork(plugin, name, url)
-    if (image.process) for (const [name, fn] of entries(image.process)) Image.setProcess(plugin, name, fn)
+    if (image.forks) for (const [name, url] of Object.entries(image.forks)) Image.setFork(plugin, name, url)
+    if (image.process) for (const [name, fn] of Object.entries(image.process)) Image.setProcess(plugin, name, fn)
   }
   if (search) {
     if (search.categories)

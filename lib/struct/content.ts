@@ -2,7 +2,7 @@ import { computed, shallowRef, type Component, shallowReactive, type StyleValue 
 import * as item from './item'
 import * as ep from './ep'
 import { PromiseContent, type RStream } from '@/utils/data'
-import { isString } from "es-toolkit/compat-es"
+import { isString } from "es-toolkit/compat"
 import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
 import * as comment from './comment'

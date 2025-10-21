@@ -2,7 +2,7 @@ import { useGlobalVar } from "@/utils/plugin"
 import { defineStore } from "pinia"
 import { reactive, shallowReactive, type Reactive } from "vue"
 
-export const useTemp = useGlobalVar(defineStore('core:temp', helper => {
+const _useTemp = useGlobalVar(defineStore('core:temp', helper => {
   const tempBase = shallowReactive(new Map<string, any>())
   const $apply = <T extends object>(id: string, def: () => T) => {
     id = `reactive:${id}`
@@ -34,3 +34,5 @@ export const useTemp = useGlobalVar(defineStore('core:temp', helper => {
   }, 'onlyGetRaw')
   return { $apply, $has, $onlyGet, $applyRaw, $hasRaw, $onlyGetRaw }
 }), 'store/temp')
+
+export const useTemp = () => _useTemp(window.$api.piniaInstance)

@@ -50,7 +50,7 @@ export default defineConfig({
     },
     sourcemap: true,
     rollupOptions: {
-      external: ['vue', 'axios', 'lodash-es', 'naive-ui', 'vant', "motion-v", 'pinia', 'vue-router', 'crypto-js'],
+      external: ['vue', 'axios', 'es-toolkit', 'naive-ui', 'vant', "motion-v", 'pinia', 'vue-router', 'crypto-js'],
       output: {
         globals: {
           vue: 'window.$$lib$$.Vue',
@@ -58,7 +58,7 @@ export default defineConfig({
           'naive-ui': 'window.$$lib$$.Naive',
           "motion-v": 'window.$$lib$$.Motion',
           axios: 'window.$$lib$$.Axios',
-          'es-tookit': 'window.$$lib$$.EsKits',
+          'es-toolkit': 'window.$$lib$$.EsKits',
           'pinia': 'window.$$lib$$.Pinia',
           'vue-router': 'window.$$lib$$.VR',
           'crypto-js': 'window.$$lib$$.Crypto'
