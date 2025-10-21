@@ -1,5 +1,5 @@
 import { ContentPage } from "@/struct/content"
-import { entries, isFunction } from "lodash-es"
+import { entries, isFunction } from "es-toolkit/compat-es"
 import { Image } from "@/struct/image"
 import { SharedFunction } from "@/utils/eventBus"
 import { Comment } from "@/struct/comment"

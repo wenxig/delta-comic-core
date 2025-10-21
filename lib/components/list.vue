@@ -1,6 +1,6 @@
 <script setup lang='ts' generic="T extends NonNullable<VirtualListProps['items']>[number],PF extends ((d: T[])=>any[])">
 import { VirtualListInst, VirtualListProps } from 'naive-ui'
-import { ceil, debounce, isArray, isEmpty } from 'lodash-es'
+import { ceil, debounce, isArray, isEmpty } from 'es-toolkit/compat'
 import { Ref, StyleValue, shallowRef, useTemplateRef, watch } from 'vue'
 import { IfAny, useScroll } from '@vueuse/core'
 import { callbackToPromise, RPromiseContent, Stream } from '@/utils/data'

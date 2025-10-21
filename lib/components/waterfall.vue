@@ -8,7 +8,7 @@ import { ComponentExposed } from 'vue-component-type-helpers'
 import { IfAny, useResizeObserver, useScroll } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
 import { useTemp } from '@/stores/temp'
-import { isArray } from 'lodash-es'
+import { isArray } from 'es-toolkit/compat'
 const $props = withDefaults(defineProps<{
   source: {
     data: RPromiseContent<any, T[]>

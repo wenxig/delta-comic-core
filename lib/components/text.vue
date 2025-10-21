@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { isNumber } from 'lodash-es'
+import { isNumber } from 'es-toolkit/compat'
 import { computed } from 'vue'
 
 const $props = withDefaults(defineProps<{

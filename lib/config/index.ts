@@ -1,19 +1,19 @@
 import { defineStore } from "pinia"
 import { useLocalStorage, usePreferredDark } from "@vueuse/core"
 import { computed, shallowReactive, type Ref } from "vue"
-import { entries, fromPairs } from "lodash-es"
+import { fromPairs } from "es-toolkit/compat"
 import type { UniFormDescription, UniFormResult } from "@/plugin/define"
 const defaultConfig = {
   'app.easyTitle': false
 }
 export type ConfigType = typeof defaultConfig
- const _useConfig = defineStore('config', helper => {
+const _useConfig = defineStore('config', helper => {
   const form = shallowReactive(new Map<string, { form: Record<string, UniFormDescription>, value: Ref<any> }>())
 
   const $useCustomConfig = helper.action(<T extends Record<string, Required<Pick<UniFormDescription, 'defaultValue'>> & UniFormDescription>, TPlugin extends string>(plugin: TPlugin, desc: T): {
     [K in keyof T as `${TPlugin}.${Extract<K, string>}`]: UniFormResult<T[K]>
   } => {
-    const store = useLocalStorage(`${plugin}.config`, <any>fromPairs(entries(desc)
+    const store = useLocalStorage(`${plugin}.config`, <any>fromPairs(Object.entries(desc)
       .map(([name, desc]) => [`${plugin}.${name}`, desc.defaultValue])
     ))
     form.set(plugin, {

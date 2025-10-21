@@ -1,6 +1,6 @@
 import { Struct, type MetaData } from "@/utils/data"
 import { useGlobalVar } from "@/utils/plugin"
-import { isString } from "lodash-es"
+import { isString } from "es-toolkit/compat-es"
 import { shallowReactive } from "vue"
 
 

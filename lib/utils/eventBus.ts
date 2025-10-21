@@ -1,6 +1,6 @@
 import type { PluginConfig } from "@/plugin/define"
 import type { uni } from "@/struct"
-import { random, uniqBy } from "lodash-es"
+import { random, uniqBy } from "es-toolkit/compat-es"
 import mitt from "mitt"
 import { useGlobalVar } from "./plugin"
 

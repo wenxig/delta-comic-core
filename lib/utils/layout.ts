@@ -1,4 +1,4 @@
-import { last, remove } from "lodash-es"
+import { last, remove } from "es-toolkit/compat-es"
 import { computed, onUnmounted, shallowReactive, watch, type MaybeRefOrGetter, type ComputedRef, toRef } from "vue"
 import { useGlobalVar } from "./plugin"
 

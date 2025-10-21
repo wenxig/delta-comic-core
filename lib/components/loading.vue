@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { isNumber } from 'lodash-es'
+import { isNumber } from 'es-toolkit/compat'
 import { LoadingProps } from 'vant'
 import { computed } from 'vue'
 

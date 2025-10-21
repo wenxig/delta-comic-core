@@ -1,5 +1,5 @@
 import { computed, isRef, shallowRef, watch, type CSSProperties, type MaybeRefOrGetter } from "vue"
-import { isFunction } from "lodash-es"
+import { isFunction } from "es-toolkit/compat-es"
 import type { DialogOptions, DialogReactive } from "naive-ui"
 import { noop } from "@vueuse/core"
 import { delay } from "./delay"

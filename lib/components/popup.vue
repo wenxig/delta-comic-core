@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { useZIndex } from '@/utils/layout'
-import { noop } from 'lodash-es'
+import { noop } from 'es-toolkit/compat'
 import { PopupProps } from 'vant'
 import { computed, StyleValue } from 'vue'
 import { shallowRef, watch } from 'vue'
@@ -45,10 +45,9 @@ defineExpose({
 </script>
 
 <template>
-  <VanPopup :="$props" v-model:show="show" :z-index teleport="#popups"
-    @open="trulyShow = true" @closed="() => { trulyShow = false; $emit('closed') }"
-    class="max-h-screen !overflow-y-auto overflow-hidden" overlay close-on-click-overlay
-    :class="!noBorder && 'border-0 border-t border-solid border-(--van-border-color)'">
+  <VanPopup :="$props" v-model:show="show" :z-index teleport="#popups" @open="trulyShow = true"
+    @closed="() => { trulyShow = false; $emit('closed') }" class="max-h-screen !overflow-y-auto overflow-hidden" overlay
+    close-on-click-overlay :class="!noBorder && 'border-0 border-t border-solid border-(--van-border-color)'">
     <slot v-if="trulyShow"></slot>
   </VanPopup>
 </template>

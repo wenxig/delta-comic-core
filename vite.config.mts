@@ -58,7 +58,7 @@ export default defineConfig({
           'naive-ui': 'window.$$lib$$.Naive',
           "motion-v": 'window.$$lib$$.Motion',
           axios: 'window.$$lib$$.Axios',
-          'lodash-es': 'window.$$lib$$.Lodash',
+          'es-tookit': 'window.$$lib$$.EsKits',
           'pinia': 'window.$$lib$$.Pinia',
           'vue-router': 'window.$$lib$$.VR',
           'crypto-js': 'window.$$lib$$.Crypto'

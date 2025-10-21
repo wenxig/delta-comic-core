@@ -1,5 +1,5 @@
 import { until } from "@vueuse/core"
-import { isEmpty, isError } from "lodash-es"
+import { isEmpty, isError } from "es-toolkit/compat-es"
 import { computed, markRaw, ref, shallowRef, type Raw, type Ref } from "vue"
 import { SmartAbortController } from "./request"
 import { useGlobalVar } from "./plugin"
