@@ -17,12 +17,14 @@ export interface PluginConfig {
   api?: Record<string, PluginConfigApi>
   user?: PluginConfigUser
   auth?: PluginConfigAuth
-  otherProgress?: {
-    call: (setDescription: (description: string) => void) => PromiseLike<any>
-    name: string
-  }[]
+  otherProgress?: PluginOtherProgress[]
   onBooted?(ins: PluginDefineResult): PromiseLike<void> | void
   search?: PluginConfigSearch
+}
+
+export interface PluginOtherProgress {
+  call: (setDescription: (description: string) => void) => PromiseLike<any>
+  name: string
 }
 
 export interface PluginConfigUser {
@@ -30,14 +32,39 @@ export interface PluginConfigUser {
   card: UserCardComp
   /**
    * 1. download
-   * 2. (auto)clear cloud
-   * 3. upload
+   * 2. upload (收藏那些云端未收藏的漫画)
   */
   syncFavourite?: {
     download: () => PromiseLike<Item[]>
     upload: (items: RawItem[]) => PromiseLike<any>
   }
 
+  /**
+   * 在用户界面，在历史记录那个板块的下方，你希望展示的自己的板块
+  */
+  userActionPages?: PluginUserActionPage[]
+
+}
+
+export interface PluginUserActionPage {
+  title?: string
+  items: PluginUserActionPageItem[]
+
+  clickPage?: Component
+  clickText?: string
+}
+export type PluginUserActionPageItem = {
+  name: string
+  key: string
+  type: 'button'
+  icon: Component
+
+  page: Component
+} | {
+  name: string
+  key: string
+  type: 'statistic'
+  value: string | number
 }
 
 export interface PluginConfigSearch {

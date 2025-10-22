@@ -67,6 +67,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     top: '8px',
     translateX: '-50%',
     backgroundColor: '#ffffff',
+    borderRadius: '100%'
   },
   isErrorNoData: {
     opacity: 1,
