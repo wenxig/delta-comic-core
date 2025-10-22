@@ -33,6 +33,7 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./lib', import.meta.url)),
     },
+    dedupe: ['vue', 'vue-router'],
     extensions: ['.ts', '.tsx', '.json', '.mjs', '.js', '.jsx', '.mts']
   },
   css: {

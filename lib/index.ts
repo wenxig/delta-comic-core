@@ -61,8 +61,11 @@ export const Store = {
 }
 
 import './index.css'
+import { routerKey } from 'vue-router'
 
 export * from "./plugin/index"
 
 
 export * from "./plugin/define.ts"
+
+console.log(routerKey)
