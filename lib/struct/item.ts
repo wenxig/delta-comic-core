@@ -6,6 +6,7 @@ import { Ep, type RawEp } from "./ep"
 
 export interface Category {
   name: string
+  group: string
   search: {
     keyword: string
     source: string
