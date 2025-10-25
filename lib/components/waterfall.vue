@@ -1,6 +1,6 @@
 <script setup lang='ts' generic="T = any, PF extends ((d: T[]) => any[]) = ((d: T[]) => T[])">
 import { callbackToPromise, RPromiseContent, Stream } from '@/utils/data'
-import { computed, nextTick, onUnmounted, Ref, shallowReactive, shallowRef, StyleValue, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, Ref, shallowReactive, shallowRef, StyleValue, watch } from 'vue'
 import { VirtualWaterfall } from '@lhlyu/vue-virtual-waterfall'
 import { useEventListener } from '@vant/use'
 import Content from './content.vue'
@@ -102,7 +102,11 @@ watch(() => $props.source, () => {
 }, { deep: 1, immediate: true })
 
 const waterfallEl = useTemplateRef('waterfallEl')
-const sizeMapTemp = useTemp().$applyRaw('waterfall', () => shallowReactive(new Map<T, number>()))
+
+const waterfallIndex = useTemp().$apply('waterfall', () => ({ top: 0 }))
+const thisIndex = waterfallIndex.top++
+const sizeMapTemp = useTemp().$applyRaw(`waterfall:${thisIndex}`, () => shallowReactive(new Map<T, number>()))
+
 const sizeWatcherCleaner = new Array<VoidFunction>()
 const observer = new MutationObserver(([mutation]) => {
   for (const stop of sizeWatcherCleaner) stop()

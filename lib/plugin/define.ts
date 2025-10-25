@@ -4,7 +4,7 @@ import { CommentRow } from "@/struct/comment"
 import { UserCardComp } from "@/struct/user"
 import { RStream } from "@/utils/data"
 import { Item, RawItem } from "@/struct/item"
-import { Component } from "vue"
+import { Component, type MaybeRefOrGetter } from "vue"
 
 export type PluginDefineResult = {
   api?: Record<string, string | undefined | false>
@@ -64,7 +64,9 @@ export type PluginUserActionPageItem = {
   name: string
   key: string
   type: 'statistic'
-  value: string | number
+  icon?: Component
+
+  value: MaybeRefOrGetter<string | number>
 }
 
 export interface PluginConfigSearch {
