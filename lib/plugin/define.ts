@@ -2,7 +2,7 @@ import { ContentPageLike, ItemCardComp, ViewLayoutComp } from "@/struct/content"
 import { ProcessInstance } from "@/struct/image"
 import { CommentRow } from "@/struct/comment"
 import { UserCardComp } from "@/struct/user"
-import { RStream } from "@/utils/data"
+import { RStream, type RPromiseContent } from "@/utils/data"
 import { Item, RawItem } from "@/struct/item"
 import { Component, type MaybeRefOrGetter } from "vue"
 
@@ -79,6 +79,27 @@ export interface PluginConfigSearch {
   tabbar?: PluginConfigSearchTabbar[]
 
   categories?: PluginConfigSearchCategory[]
+
+  hotPage?: {
+    levelBoard?: PluginConfigSearchHotPageLevelboard[]
+    topButton?: PluginConfigSearchHotPageTopButton[]
+    mainListCard?: PluginConfigSearchHotPageMainList[]
+  }
+}
+export interface PluginConfigSearchHotPageLevelboard {
+  name: string
+  content: () => (RStream<Item> | RPromiseContent<any, Item[]>)
+}
+export interface PluginConfigSearchHotPageMainList {
+  name: string
+  content: () => (RStream<Item> | RPromiseContent<any, Item[]>)
+  onClick?(): any
+}
+export interface PluginConfigSearchHotPageTopButton {
+  name: string
+  icon: Component
+  bgColor: string
+  onClick?(): any
 }
 
 export interface PluginConfigSearchCategory {

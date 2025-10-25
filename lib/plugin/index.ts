@@ -32,6 +32,11 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
       for (const c of search.categories) ContentPage.setCategories(plugin, c)
     if (search.tabbar)
       for (const c of search.tabbar) ContentPage.setTabbar(plugin, c)
+    if (search.hotPage) {
+      for (const mlc of search.hotPage.mainListCard ?? []) ContentPage.setMainList(plugin, mlc)
+      for (const lb of search.hotPage.levelBoard ?? []) ContentPage.setLevelboard(plugin, lb)
+      for (const tb of search.hotPage.topButton ?? []) ContentPage.setTopButton(plugin, tb)
+    }
   }
   if (user) {
     User.userEditorBase.set(plugin, user.edit)

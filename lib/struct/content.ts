@@ -6,7 +6,7 @@ import { isString } from "es-toolkit/compat"
 import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
 import * as comment from './comment'
-import type { PluginConfigSearchCategory, PluginConfigSearchTabbar } from '@/plugin/define'
+import type { PluginConfigSearchCategory, PluginConfigSearchHotPageLevelboard, PluginConfigSearchHotPageMainList, PluginConfigSearchHotPageTopButton, PluginConfigSearchTabbar } from '@/plugin/define'
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
 export abstract class ContentPage<T extends object = any> {
@@ -58,7 +58,6 @@ export abstract class ContentPage<T extends object = any> {
     if (!v) throw new Error(`[ContentPage.getContentPage] not found ContentPage (contentType: ${contentType})`)
     return v
   }
-
   public static toContentType(ct: ContentType_): ContentType {
     if (isString(ct)) {
       const [plugin, name] = ct.split(':')
@@ -71,6 +70,39 @@ export abstract class ContentPage<T extends object = any> {
   public static toContentTypeString(ct: ContentType_): string {
     if (isString(ct)) return ct
     return `${ct.plugin}:${ct.name}`
+  }
+
+  public static levelboard = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchHotPageLevelboard[]>()), 'uni/contentPage/levelboard')
+  public static setLevelboard(plugin: string, cfg: PluginConfigSearchHotPageLevelboard): string {
+    const old = this.levelboard.get(plugin) ?? []
+    old.push(cfg)
+    this.levelboard.set(plugin, old)
+    return plugin
+  }
+  public static getLevelboard(plugin: string) {
+    return this.levelboard.get(plugin)
+  }
+
+  public static topButton = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchHotPageTopButton[]>()), 'uni/contentPage/topButton')
+  public static setTopButton(plugin: string, cfg: PluginConfigSearchHotPageTopButton): string {
+    const old = this.topButton.get(plugin) ?? []
+    old.push(cfg)
+    this.topButton.set(plugin, old)
+    return plugin
+  }
+  public static getTopButton(plugin: string) {
+    return this.topButton.get(plugin)
+  }
+
+  public static mainLists = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchHotPageMainList[]>()), 'uni/contentPage/mainLists')
+  public static setMainList(plugin: string, cfg: PluginConfigSearchHotPageMainList): string {
+    const old = this.mainLists.get(plugin) ?? []
+    old.push(cfg)
+    this.mainLists.set(plugin, old)
+    return plugin
+  }
+  public static getMainList(plugin: string) {
+    return this.mainLists.get(plugin)
   }
 
   constructor(preload: PreloadValue, public id: string, public ep: string) {
