@@ -33,12 +33,13 @@
     },
     "types": [
       "./env.d.ts",
-      "./lib/global.d.ts",
+      "./public/global.d.ts",
       "./components.d.ts",
       "vue-component-type-helpers",
     ],
   },
   "include": [
-    "./lib/**/*"
+    "./lib/**/*",
+    "./public/**/*"
   ]
 }

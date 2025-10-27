@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/wenxig/delta-comic-core.git"
   },
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
@@ -53,7 +53,7 @@
   ],
   "main": "./dist/bundle.umd.cjs",
   "module": "./dist/bundle.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/global.d.ts",
   "exports": {
     ".": {
       "import": "./dist/bundle.js",
