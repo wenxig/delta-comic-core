@@ -67,6 +67,3 @@ export * from "./plugin/index"
 
 
 export * from "./plugin/define.ts"
-
-import type { _ } from './global'
-console.log(<_>routerKey)
