@@ -3,8 +3,8 @@ import { useZIndex } from '@/utils/layout'
 import { useWindowSize } from '@vueuse/core'
 import { isArray, noop } from 'es-toolkit/compat'
 import { computed, shallowReadonly, shallowRef, StyleValue, watch } from 'vue'
-import { onBeforeRouteLeave } from 'vue-router'
-const $router = window.$router
+import { onBeforeRouteLeave, useRouter } from 'vue-router'
+const $router = useRouter()
 const $props = withDefaults(defineProps<{
   anchors?: 'high' | 'low' | number[],
   lockScroll?: boolean,

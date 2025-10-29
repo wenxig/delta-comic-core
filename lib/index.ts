@@ -11,8 +11,6 @@ import Var from './components/var.vue'
 import Waterfall from './components/waterfall.vue'
 import Content from './components/content.vue'
 
-import ContentUnitCard from './components/content/unitCard.vue'
-
 export const Comp = {
   Await,
   Loading,
@@ -26,9 +24,6 @@ export const Comp = {
   ToggleIcon,
   Var,
   Waterfall,
-  content: {
-    UnitCard: ContentUnitCard
-  }
 }
 
 
@@ -54,16 +49,18 @@ export namespace Utils {
   export import message = uMessage
 }
 import { useTemp } from './stores/temp'
-import { useConfig } from './config'
+import { useConfig, ConfigPointer,appConfig } from './config'
 export const Store = {
   useTemp,
-  useConfig
+  useConfig,
+  appConfig,
+  ConfigPointer
 }
 
 import './index.css'
-import { routerKey } from 'vue-router'
 
 export * from "./plugin/index"
 
+export * from './depends'
 
 export * from "./plugin/define.ts"

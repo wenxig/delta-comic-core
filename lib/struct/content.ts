@@ -161,4 +161,10 @@ export type ItemCardComp = Component<{
   type?: 'default' | 'big' | 'small'
   class?: any
   style?: StyleValue
+}, any, any, any, any, {
+  click: []
+}, {
+  default(): void
+  smallTopInfo(): void
+  cover(): void
 }>

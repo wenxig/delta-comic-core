@@ -5,6 +5,7 @@ import { UserCardComp } from "@/struct/user"
 import { RStream, type RPromiseContent } from "@/utils/data"
 import { Item, RawItem } from "@/struct/item"
 import { Component, type MaybeRefOrGetter } from "vue"
+import type { ConfigPointer } from "@/config"
 
 export type PluginDefineResult = {
   api?: Record<string, string | undefined | false>
@@ -18,8 +19,16 @@ export interface PluginConfig {
   user?: PluginConfigUser
   auth?: PluginConfigAuth
   otherProgress?: PluginOtherProgress[]
-  onBooted?(ins: PluginDefineResult): PromiseLike<void> | void
+  /**
+   * 返回值如果不为空，则会await后作为expose暴露
+   */
+  onBooted?(ins: PluginDefineResult): (PromiseLike<object> | object) | void
   search?: PluginConfigSearch
+  /** 
+   * 插件的配置项需在此处注册  
+   * 传入`Store.ConfigPointer`
+   */
+  config?: ConfigPointer[]
 }
 
 export interface PluginOtherProgress {

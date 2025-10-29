@@ -5,7 +5,7 @@
 }">
 import { TabsInstance } from 'vant'
 import { onUnmounted, ref, useTemplateRef, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const $props = defineProps<{
   items: T[]
   routerBase: string
@@ -19,7 +19,7 @@ defineSlots<{
   right(): any
   bottom(): any
 }>()
-const $router = window.$router
+const $router = useRouter()
 const tab = useTemplateRef<TabsInstance>('tab')
 const beforeChange = async (aim: string) => {
   let queryString = '?'

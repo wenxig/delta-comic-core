@@ -4,7 +4,8 @@ import { noop } from 'es-toolkit/compat'
 import { PopupProps } from 'vant'
 import { computed, StyleValue } from 'vue'
 import { shallowRef, watch } from 'vue'
-const $router = window.$router
+import { useRouter } from 'vue-router'
+const $router = useRouter()
 const $props = withDefaults(defineProps<Partial<PopupProps & {
   noBorder?: boolean,
   useTrulyShow: boolean
