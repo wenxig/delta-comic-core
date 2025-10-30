@@ -15,16 +15,6 @@ export class ConfigPointer<T extends ConfigDescription = ConfigDescription> {
   public readonly key: symbol
 }
 
-export const resignerConfig = (pointer: ConfigPointer) => {
-  const cfg = useConfig()
-  const store = useLocalStorage(`${pointer.pluginName}.config`, fromPairs(Object.entries(pointer.config)
-    .map(([name, desc]) => [name, desc.defaultValue])
-  ))
-  cfg.form.set(pointer.key, {
-    form: pointer.config,
-    value: store
-  })
-}
 
 export const appConfig = new ConfigPointer('core', {
   recordHistory: {
@@ -60,7 +50,6 @@ export const appConfig = new ConfigPointer('core', {
   }
 })
 
-resignerConfig(appConfig)
 
 export const useConfig = defineStore('config', helper => {
   const form = shallowReactive(new Map<symbol, { form: ConfigDescription, value: Ref<any> }>())
@@ -90,3 +79,13 @@ export const useConfig = defineStore('config', helper => {
   })
   return {  isDark, form, $load }
 })
+export const resignerConfig = (pointer: ConfigPointer) => {
+  const cfg = useConfig()
+  const store = useLocalStorage(`${pointer.pluginName}.config`, fromPairs(Object.entries(pointer.config)
+    .map(([name, desc]) => [name, desc.defaultValue])
+  ))
+  cfg.form.set(pointer.key, {
+    form: pointer.config,
+    value: store
+  })
+}
