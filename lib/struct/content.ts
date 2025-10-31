@@ -149,9 +149,6 @@ export interface ContentType {
 export type ContentType_ = ContentType | string
 export type ViewLayoutComp = Component<{
   page: ContentPage
-  comp: {
-    FavouriteSelect: Component<{ item: uni.item.Item }>
-  }
 }>
 
 export type ItemCardComp = Component<{
