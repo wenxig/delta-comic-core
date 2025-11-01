@@ -3,6 +3,7 @@ import { isEmpty, isError } from "es-toolkit/compat"
 import { computed, markRaw, ref, shallowRef, type Raw, type Ref } from "vue"
 import { SmartAbortController } from "./request"
 import { useGlobalVar } from "./plugin"
+import mitt from "mitt"
 export class Struct<TRaw extends object> {
   public toJSON() {
     return <TRaw>JSON.parse(JSON.stringify(this.$$raw))
@@ -11,10 +12,17 @@ export class Struct<TRaw extends object> {
 }
 
 export type MetaData = Record<string | number, any>
+
+type PromiseContentEmits<TR> = {
+  success: TR
+  error: any
+  finial: void
+}
 /**
  * 扩展内容的`Promise`，可视为普通`Promise`使用
 */
-export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
+export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseContentEmits<TPF> = PromiseContentEmits<TPF>> implements PromiseLike<T> {
+  [Symbol.toStringTag] = 'PromiseContent'
   private static _this
   static {
     this._this = useGlobalVar(this, 'data/PromiseContent')
@@ -44,14 +52,31 @@ export class PromiseContent<T, TPF extends any = T> implements PromiseLike<T> {
       this.isLoading.value = false
       this.isError.value = false
       this.isEmpty.value = isEmpty(v)
+      this.emitter.emit('success', this.data.value)
     } catch (err) {
       this.data.value = undefined
       this.isError.value = true
       this.errorCause.value = isError(err) ? err : new Error(String(err))
       console.error('Non-throw Error [PromiseContent]', err)
+      this.emitter.emit('error', err)
     }
+    this.emitter.emit('finial', undefined)
   }
-  [Symbol.toStringTag] = '[class PromiseContent]'
+  private emitter = mitt<TEmits>()
+
+  public onError(processor: (err: TEmits['error']) => any) {
+    this.emitter.on('error', processor)
+    return () => this.emitter.off('error', processor)
+  }
+  public onSuccess(processor: (err: TEmits['success']) => any) {
+    this.emitter.on('success', processor)
+    return () => this.emitter.off('success', processor)
+  }
+  public onFinal(processor: (err: TEmits['finial']) => any) {
+    this.emitter.on('finial', processor)
+    return () => this.emitter.off('finial', processor)
+  }
+
   /**
    * 对`this.data.value`做出处理，多次调用仅最后一次生效
   */
