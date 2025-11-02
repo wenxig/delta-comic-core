@@ -5,7 +5,7 @@ import { SharedFunction } from "@/utils/eventBus"
 import { Comment } from "@/struct/comment"
 import { User } from "@/struct/user"
 import type { PluginConfig } from "./define"
-import { resignerConfig } from "@/config"
+import { useConfig } from "@/config"
 
 export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginConfig)) => {
   if (isFunction(config)) var cfg = config(window.$$safe$$)
@@ -44,7 +44,7 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
   }
   if (cfg.config) {
     for (const config of cfg.config) {
-      resignerConfig(config)
+      useConfig().$resignerConfig(config)
     }
   }
   return SharedFunction.call('addPlugin', cfg)

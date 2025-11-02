@@ -35,6 +35,7 @@ export interface RawItem {
   description?: string
   thisEp: RawEp
   commentSendable: boolean
+  customIsSafe?: boolean
 }
 export abstract class Item extends Struct<RawItem> implements RawItem {
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
@@ -67,6 +68,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public $$plugin: string
   public $$meta
   public thisEp: RawEp
+  public customIsSafe?: boolean
   public get $thisEp() {
     return new Ep(this.thisEp)
   }
@@ -92,6 +94,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
     this.epLength = v.epLength
     this.description = v.description
     this.commentSendable = v.commentSendable
+    this.customIsSafe = v.customIsSafe
   }
   public commentSendable: boolean
   public customIsAI?: boolean

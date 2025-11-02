@@ -4,7 +4,6 @@ import { ReloadOutlined } from '@vicons/antd'
 import { WifiTetheringErrorRound } from '@vicons/material'
 import { isEmpty } from 'es-toolkit/compat'
 import { motion, VariantType } from 'motion-v'
-import { useThemeVars } from 'naive-ui'
 import { StyleValue, computed, useTemplateRef } from 'vue'
 import Loading from './loading.vue'
 const $props = defineProps<{
@@ -54,7 +53,6 @@ const unionSource = computed(() => Stream.isStream($props.source) ? {
 }))
 type AllVariant = 'isLoadingNoData' | 'isErrorNoData' | 'isLoadingData' | 'isErrorData' | 'isEmpty' | 'done'
 
-const pColor = useThemeVars()
 const loadingVariants: Record<AllVariant, VariantType> = {
   isLoadingNoData: {
     opacity: 1,
@@ -66,7 +64,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     left: '50%',
     top: '8px',
     translateX: '-50%',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'var(--van-background-2)',
     borderRadius: '100%'
   },
   isErrorNoData: {
@@ -79,7 +77,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     left: '50%',
     top: '50%',
     translateX: '-50%',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'var(--van-background-2)',
     borderRadius: '4px'
   },
   isLoadingData: {
@@ -92,7 +90,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     left: '4px',
     top: 'calc(100% - 8px - 1rem)',
     translateX: '0%',
-    backgroundColor: pColor.value.primaryColor,
+    backgroundColor: 'var(--p-color)',
     borderRadius: '1.3rem'
   },
   isErrorData: {
@@ -105,7 +103,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     left: '4px',
     top: 'calc(100% - 8px - 4rem)',
     translateX: '0%',
-    backgroundColor: pColor.value.primaryColor,
+    backgroundColor: 'var(--p-color)',
     borderRadius: '4px'
   },
   isEmpty: {
@@ -118,7 +116,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     left: '50%',
     top: '50%',
     translateX: '-50%',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'var(--van-background-2)',
     borderRadius: '4px'
   },
   done: {
@@ -131,7 +129,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     left: '4px',
     top: 'calc(100% - 8px - 1rem)',
     translateX: '0%',
-    backgroundColor: pColor.value.primaryColor,
+    backgroundColor: 'var(--p-color)',
     borderRadius: '4px'
   }
 }

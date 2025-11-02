@@ -98,7 +98,6 @@ const handleImageLoad = (...e: Event[]) => {
   images.loaded.add(src.value)
 }
 const img = useTemplateRef('img')
-console.log('[img]',img)
 defineExpose({
   isLoaded,
   imageEl: computed(() => img.value?.imageRef),

@@ -10,7 +10,7 @@ export type ConfigType = typeof defaultConfig
 export type ConfigDescription = Record<string, Required<Pick<UniFormDescription, 'defaultValue'>> & UniFormDescription>
 export class ConfigPointer<T extends ConfigDescription = ConfigDescription> {
   constructor(public pluginName: string, public config: T) {
-    this.key = Symbol(pluginName)
+    this.key = Symbol.for(`config:${pluginName}`)
   }
   public readonly key: symbol
 }
@@ -54,18 +54,20 @@ export const appConfig = new ConfigPointer('core', {
 export const useConfig = defineStore('config', helper => {
   const form = shallowReactive(new Map<symbol, { form: ConfigDescription, value: Ref<any> }>())
 
-  const $load = helper.action(<T extends ConfigPointer>(pointer: T): {
+  const $load = helper.action(<T extends ConfigPointer>(pointer: T): Ref<{
     [K in keyof T['config']]: UniFormResult<T['config'][K]>
-  } => {
+  }> => {
     const v = form.get(pointer.key)
     if (!v) throw new Error(`not found config by plugin "${pointer.pluginName}"`)
-    return <any>v.value
+    return v.value
   }, 'load')
 
 
   const isSystemDark = usePreferredDark()
   const isDark = computed(() => {
-    const cfg = $load(appConfig)
+    if (!$isExistConfig(appConfig))
+      return isSystemDark.value
+    const cfg = $load(appConfig).value
     switch (cfg.darkMode) {
       case 'light':
         return false
@@ -77,15 +79,18 @@ export const useConfig = defineStore('config', helper => {
         return false
     }
   })
-  return {  isDark, form, $load }
+  const $isExistConfig = helper.action((pointer: ConfigPointer) =>
+    form.has(pointer.key)
+    , 'isExistConfig')
+  const $resignerConfig = helper.action((pointer: ConfigPointer) => {
+    const cfg = useConfig()
+    const store = useLocalStorage(`config:${pointer.pluginName}`, fromPairs(Object.entries(pointer.config)
+      .map(([name, desc]) => [name, desc.defaultValue])
+    ))
+    cfg.form.set(pointer.key, {
+      form: pointer.config,
+      value: store
+    })
+  }, 'resignerConfig')
+  return { isDark, form, $load, $isExistConfig, $resignerConfig }
 })
-export const resignerConfig = (pointer: ConfigPointer) => {
-  const cfg = useConfig()
-  const store = useLocalStorage(`${pointer.pluginName}.config`, fromPairs(Object.entries(pointer.config)
-    .map(([name, desc]) => [name, desc.defaultValue])
-  ))
-  cfg.form.set(pointer.key, {
-    form: pointer.config,
-    value: store
-  })
-}
