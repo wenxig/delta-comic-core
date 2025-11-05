@@ -110,13 +110,13 @@ export namespace utilInterceptors {
       ...config,
       baseURL: '',
       url: `http://${location.host}/api0/${URL.canParse(url) ? url : `${config.baseURL}/${url}`}`,
-      
+
     })
   }
   export const _ = 1
 }
 export type Requester = ReturnType<typeof createAxios>
-export const createAxios = (fork: () => Promise<string> | string, config: CreateAxiosDefaults = {}, middle?: (axios: AxiosInstance) => AxiosInstance) => {
+export const createAxios = (fork: () => Promise<string> | string, config: CreateAxiosDefaults & Partial<{ noPassClientError: boolean }> = {}, middle?: (axios: AxiosInstance) => AxiosInstance) => {
   const api = axios.create(config)
   middle?.(api)
 
@@ -124,7 +124,7 @@ export const createAxios = (fork: () => Promise<string> | string, config: Create
     requestConfig.baseURL ??= await fork()
     return requestConfig
   })
-  api.interceptors.response.use(undefined, utilInterceptors.isClientError)
+  if (!config.noPassClientError) api.interceptors.response.use(undefined, utilInterceptors.isClientError)
   api.interceptors.response.use(undefined, utilInterceptors.createAutoRetry(api, 10))
   return {
     get: async <T>(url: string, config: AxiosRequestConfig = {}) => utilInterceptors.useUnreadableRetry(() => api.get<T>(url, config)),
