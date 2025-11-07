@@ -39,7 +39,7 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
       for (const tb of search.hotPage.topButton ?? []) ContentPage.setTopButton(plugin, tb)
     }
   }
-  if (user) {
+  if (user?.edit) {
     User.userEditorBase.set(plugin, user.edit)
   }
   if (cfg.config) {

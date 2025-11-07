@@ -3,6 +3,7 @@ import { Struct, type MetaData } from "@/utils/data"
 import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
 import { Ep, type RawEp } from "./ep"
+import type { Component } from "vue"
 
 export interface Category {
   name: string
@@ -14,13 +15,24 @@ export interface Category {
   }
 }
 
+export interface Author {
+  label: string
+  icon: image.RawImage | Component
+  description: string
+ /**
+  * 为空则不可订阅
+  * 否则传入的为`defineConfig`中定义的`subscribe.type`
+  */ subscribe?: string
+  actions?: string[]
+}
+
 export interface RawItem {
   cover: image.RawImage
   title: string
   id: string
   /** @alias tags  */
   categories: Category[]
-  author: string[]
+  author: Author[]
   viewNumber?: number
   likeNumber?: number
   commentNumber?: number
@@ -52,7 +64,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public title: string
   public id: string
   public categories: Category[]
-  public author: string[]
+  public author: Author[]
   public viewNumber?: number
   public likeNumber?: number
   public commentNumber?: number
@@ -100,7 +112,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public customIsAI?: boolean
   public get $isAi() {
     const check = (str: string) => (/(^|[\(（\[\s【])ai[】\)）\]\s]?/ig).test(str)
-    return this.customIsAI || check(this.title) || this.author.some(author => check(author))
+    return this.customIsAI || check(this.title) || this.author.some(author => check(`${author.label}\u1145${author.description}`))
   }
 }
 

@@ -6,6 +6,7 @@ import { isString } from "es-toolkit/compat"
 import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
 import * as comment from './comment'
+import { type AudioSrc, type MediaSrc, type TextTrackInit } from "vidstack"
 import type { PluginConfigSearchCategory, PluginConfigSearchHotPageLevelboard, PluginConfigSearchHotPageMainList, PluginConfigSearchHotPageTopButton, PluginConfigSearchTabbar } from '@/plugin/define'
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
@@ -165,3 +166,17 @@ export type ItemCardComp = Component<{
   smallTopInfo(): void
   cover(): void
 }>
+
+
+
+export type VideoConfig = {
+  textTrack?: TextTrackInit[]
+} & (Exclude<MediaSrc, string | AudioSrc>[])
+
+export abstract class ContentImagePage extends ContentPage {
+  public images = PromiseContent.withResolvers<uni.image.Image[]>()
+}
+
+export abstract class ContentVideoPage extends ContentPage {
+  public videos = PromiseContent.withResolvers<VideoConfig>()
+}

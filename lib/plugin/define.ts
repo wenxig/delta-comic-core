@@ -3,7 +3,7 @@ import { ProcessInstance } from "@/struct/image"
 import { CommentRow } from "@/struct/comment"
 import { UserCardComp } from "@/struct/user"
 import { RStream, type RPromiseContent } from "@/utils/data"
-import { Item, RawItem } from "@/struct/item"
+import { Item, RawItem, type Author } from "@/struct/item"
 import { Component, type MaybeRefOrGetter } from "vue"
 import type { ConfigPointer } from "@/config"
 
@@ -29,6 +29,18 @@ export interface PluginConfig {
    * 传入`Store.ConfigPointer`
    */
   config?: ConfigPointer[]
+
+  subscribe?: Record<string, PluginConfigSubscribe>
+}
+
+export interface PluginConfigSubscribe {
+  getUpdateList(signal?: AbortSignal): PromiseLike<{
+    isUpdated: boolean
+    whichUpdated: Author[]
+  }>
+  add(author: Author): PromiseLike<void>
+  remove(author: Author): PromiseLike<void>
+  getListStream(author: Author): RStream<Item>
 }
 
 export interface PluginOtherProgress {
@@ -37,8 +49,8 @@ export interface PluginOtherProgress {
 }
 
 export interface PluginConfigUser {
-  edit: Component
-  card: UserCardComp
+  edit?: Component
+  card?: UserCardComp
   /**
    * 1. download
    * 2. upload (收藏那些云端未收藏的漫画)
@@ -53,6 +65,13 @@ export interface PluginConfigUser {
   */
   userActionPages?: PluginUserActionPage[]
 
+  authorActions?: Record<string, AuthorAction>
+}
+
+export interface AuthorAction {
+  call(author: Author): any
+  name: string
+  icon?: Component
 }
 
 export interface PluginUserActionPage {
@@ -201,10 +220,6 @@ export interface PluginConfigContent {
   */
   contentPage?: Record<string, ContentPageLike>
 }
-
-
-
-
 
 export type UniFormDescription = {
   info: string
