@@ -17,6 +17,7 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     image,
     search,
     user,
+    subscribe
   } = cfg
   if (content) {
     for (const [ct, comp] of Object.entries(content.layout ?? {})) ContentPage.setViewLayout(ct, comp)
@@ -39,8 +40,15 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
       for (const tb of search.hotPage.topButton ?? []) ContentPage.setTopButton(plugin, tb)
     }
   }
-  if (user?.edit) {
-    User.userEditorBase.set(plugin, user.edit)
+  if (user) {
+    if (user.edit) User.userEditorBase.set(plugin, user.edit)
+    if (user.authorActions)
+      for (const [key, value] of Object.entries(user.authorActions))
+        User.setAuthorActions(plugin, key, value)
+  }
+  if (subscribe) {
+    for (const [key, value] of Object.entries(subscribe))
+      User.setSubscribes(plugin, key, value)
   }
   if (cfg.config) {
     for (const config of cfg.config) {

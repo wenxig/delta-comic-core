@@ -34,12 +34,12 @@ export interface PluginConfig {
 }
 
 export interface PluginConfigSubscribe {
-  getUpdateList(signal?: AbortSignal): PromiseLike<{
+  getUpdateList(olds: { author: Author, list: Item[] }[], signal?: AbortSignal): PromiseLike<{
     isUpdated: boolean
     whichUpdated: Author[]
   }>
-  add(author: Author): PromiseLike<void>
-  remove(author: Author): PromiseLike<void>
+  onAdd?(author: Author): any
+  onRemove?(author: Author): any
   getListStream(author: Author): RStream<Item>
 }
 
@@ -153,10 +153,10 @@ export interface PluginConfigSearchMethod {
   }[]
   defaultSort: string
   getStream(input: string, sort: string): RStream<Item>
-  getAutoComplete(input: string, signal: AbortSignal): PromiseLike<{
+  getAutoComplete(input: string, signal: AbortSignal): PromiseLike<({
     text: string
     value: string
-  }[]>
+  } | Component)[]>
 }
 
 export interface PluginConfigApi {

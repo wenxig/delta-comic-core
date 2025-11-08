@@ -1,4 +1,4 @@
-import type { PluginConfigSubscribe } from "@/plugin/define"
+import type { AuthorAction, PluginConfigSubscribe } from "@/plugin/define"
 import type { uni } from "."
 import { Image, type RawImage } from "./image"
 import { shallowReactive, type Component } from "vue"
@@ -22,8 +22,8 @@ export abstract class User {
     return this.subscribes.get(`${plugin}:${type}`)
   }
 
-  public static authorActions = shallowReactive(new Map<string, PluginConfigSubscribe>())
-  public static setAuthorActions(plugin: string, type: string, config: PluginConfigSubscribe) {
+  public static authorActions = shallowReactive(new Map<string, AuthorAction>())
+  public static setAuthorActions(plugin: string, type: string, config: AuthorAction) {
     this.authorActions.set(`${plugin}:${type}`, config)
   }
   public static getAuthorActions(plugin: string, type: string) {

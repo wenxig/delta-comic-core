@@ -24,6 +24,7 @@ export interface Author {
   * 否则传入的为`defineConfig`中定义的`subscribe.type`
   */ subscribe?: string
   actions?: string[]
+  $$meta?: MetaData
 }
 
 export interface RawItem {
