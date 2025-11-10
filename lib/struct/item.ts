@@ -3,7 +3,7 @@ import { Struct, type MetaData } from "@/utils/data"
 import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
 import { Ep, type RawEp } from "./ep"
-import type { Component } from "vue"
+import { shallowReactive, type Component } from "vue"
 
 export interface Category {
   name: string
@@ -17,7 +17,7 @@ export interface Category {
 
 export interface Author {
   label: string
-  icon: image.RawImage | Component
+  icon: image.RawImage | string
   description: string
  /**
   * 为空则不可订阅
@@ -51,6 +51,13 @@ export interface RawItem {
   customIsSafe?: boolean
 }
 export abstract class Item extends Struct<RawItem> implements RawItem {
+  public static authorIcon = shallowReactive(new Map<string, Component>())
+  public static getAuthorIcon(plugin: string, name: string) {
+    return this.authorIcon.get(`${plugin}:${name}`)
+  }
+  public static setAuthorIcon(plugin: string, name: string, icon: Component){
+    this.authorIcon.set(`${plugin}:${name}`, icon)
+  }
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
   public abstract report(signal?: AbortSignal): PromiseLike<any>
   public abstract sendComment(text: string, signal?: AbortSignal): PromiseLike<any>

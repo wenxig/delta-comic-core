@@ -66,6 +66,8 @@ export interface PluginConfigUser {
   userActionPages?: PluginUserActionPage[]
 
   authorActions?: Record<string, AuthorAction>
+
+  authorIcon?: Record<string, Component>
 }
 
 export interface AuthorAction {

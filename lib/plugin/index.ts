@@ -4,6 +4,7 @@ import { Image } from "@/struct/image"
 import { SharedFunction } from "@/utils/eventBus"
 import { Comment } from "@/struct/comment"
 import { User } from "@/struct/user"
+import { Item } from "@/struct/item"
 import type { PluginConfig } from "./define"
 import { useConfig } from "@/config"
 
@@ -45,6 +46,9 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     if (user.authorActions)
       for (const [key, value] of Object.entries(user.authorActions))
         User.setAuthorActions(plugin, key, value)
+    if (user.authorIcon)
+      for (const [key, value] of Object.entries(user.authorIcon))
+        Item.setAuthorIcon(plugin, key, value)
   }
   if (subscribe) {
     for (const [key, value] of Object.entries(subscribe))

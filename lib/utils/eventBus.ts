@@ -20,6 +20,10 @@ export type SharedFunctions = {
   addRecent(item: uni.item.Item): PromiseLike<any>
   routeToContent(contentType_: uni.content.ContentType_, id: string, ep: string, preload?: uni.content.PreloadValue): PromiseLike<any>
   routeToSearch(input: string, source?: string, sort?: string): PromiseLike<any>
+
+  addAuthorSubscribe(author: uni.item.Author, plugin: string): PromiseLike<void>
+  removeAuthorSubscribe(author: uni.item.Author, plugin: string): PromiseLike<void>
+  getIsAuthorSubscribe(author: uni.item.Author, plugin: string): PromiseLike<boolean>
 }
 
 export class SharedFunction {
