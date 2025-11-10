@@ -19,7 +19,7 @@ export class ConfigPointer<T extends ConfigDescription = ConfigDescription> {
 export const appConfig = new ConfigPointer('core', {
   recordHistory: {
     type: 'switch',
-    defaultValue: false,
+    defaultValue: true,
     info: '记录历史记录',
   },
   showAIProject: {
