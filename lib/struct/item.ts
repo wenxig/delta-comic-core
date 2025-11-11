@@ -25,6 +25,7 @@ export interface Author {
   */ subscribe?: string
   actions?: string[]
   $$meta?: MetaData
+  $$plugin: string
 }
 
 export interface RawItem {
@@ -55,7 +56,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public static getAuthorIcon(plugin: string, name: string) {
     return this.authorIcon.get(`${plugin}:${name}`)
   }
-  public static setAuthorIcon(plugin: string, name: string, icon: Component){
+  public static setAuthorIcon(plugin: string, name: string, icon: Component) {
     this.authorIcon.set(`${plugin}:${name}`, icon)
   }
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
