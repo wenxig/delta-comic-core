@@ -20,6 +20,9 @@ export const coreModule = declareDependType<{
       item: uni.item.Item
       comments: Utils.data.RStream<uni.comment.Comment>
     }>
+    CommentRow: Component<{
+      comments: uni.comment.Comment
+    }, any, any, any, any, { userExtra(): any, }>
     ItemCard: uni.content.ItemCardComp
     FavouriteSelect: Component<{
       item: uni.item.Item

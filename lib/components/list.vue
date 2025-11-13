@@ -19,6 +19,7 @@ const $props = defineProps<{
   itemResizable?: boolean
   dataProcessor?: PF
 
+  unReloadable?: boolean
   style?: StyleValue
   class?: any
 }>()
@@ -90,7 +91,9 @@ const handleScroll: VirtualListProps['onScroll'] = debounce(async () => {
 const isPullRefreshHold = shallowRef(false)
 const isRefreshing = shallowRef(false)
 const handleRefresh = async () => {
-  await unionSource.value.retry()
+  unionSource.value.reset()
+  console.log('reset done')
+  await unionSource.value.next()
   isRefreshing.value = false
 }
 
@@ -106,11 +109,11 @@ defineExpose({
 
 <template>
   <VanPullRefresh v-model="isRefreshing" :class="['relative', $props.class]" @refresh="handleRefresh"
-    :disabled="(Stream.isStream(source) ? false : (isArray(source) ? true : (source.reloadable ?? true))) || (unionSource.isError || unionSource.isRequesting || (!!listScrollTop && !isPullRefreshHold))"
+    :disabled="unReloadable || (Stream.isStream(source) ? false : (isArray(source) ? true : (source.reloadable ?? true))) || (unionSource.isError || unionSource.isRequesting || (!!listScrollTop && !isPullRefreshHold))"
     @change="({ distance }) => isPullRefreshHold = !!distance" :style>
     <Content retriable :source="Stream.isStream(source) ? source : (isArray(source) ? source : source.data)"
-      class-loading="mt-2 !h-[24px]" class-empty="!h-full" class-error="!h-full" @retry="handleRefresh"
-      :hide-loading="isPullRefreshHold && unionSource.isRequesting">
+      class-loading="mt-2 !h-[24px]" class-empty="!h-full" class-error="!h-full" @reset-retry="handleRefresh"
+      :hide-loading="isPullRefreshHold && unionSource.isRequesting" @retry="unionSource.retry()">
       <Var :value="unionSource.data" v-slot="{ value }">
         <NVirtualList :="(listProp ?? {})" :item-resizable :item-size="itemHeight" @scroll="handleScroll"
           class="overflow-x-hidden h-full" :items="value"

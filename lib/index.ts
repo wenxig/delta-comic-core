@@ -30,7 +30,6 @@ export const Comp = {
 export { uni } from './struct/index'
 
 import * as uData from './utils/data'
-import * as uDelay from './utils/delay'
 import * as uEventBus from './utils/eventBus'
 import * as uImage from './utils/image'
 import * as uLayout from './utils/layout'
@@ -40,7 +39,6 @@ import * as uMessage from './utils/message'
 
 export namespace Utils {
   export import data = uData
-  export import delay = uDelay
   export import eventBus = uEventBus
   export import image = uImage
   export import layout = uLayout

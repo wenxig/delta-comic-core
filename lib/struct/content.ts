@@ -11,6 +11,8 @@ import type { PluginConfigSearchCategory, PluginConfigSearchHotPageLevelboard, P
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
 export abstract class ContentPage<T extends object = any> {
+
+  
   private static viewLayout = useGlobalVar(shallowReactive(new Map<string, ViewLayoutComp>()), 'uni/contentPage/viewLayout')
   public static setViewLayout(ct_: ContentType_, component: ViewLayoutComp): string {
     const fullName = this.toContentTypeString(ct_)

@@ -4,6 +4,7 @@ import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
 import { Ep, type RawEp } from "./ep"
 import { shallowReactive, type Component } from "vue"
+import type { PluginConfigContentItemTranslator } from "@/plugin/define"
 
 export interface Category {
   name: string
@@ -52,6 +53,12 @@ export interface RawItem {
   customIsSafe?: boolean
 }
 export abstract class Item extends Struct<RawItem> implements RawItem {
+  public static itemTranslator = shallowReactive(new Map<string, PluginConfigContentItemTranslator>())
+  public static create(raw: RawItem) {
+    const translator = this.itemTranslator.get(ContentPage.toContentTypeString(raw.contentType))
+    if (!translator) throw new Error(`can not found itemTranslator contentType:"${ContentPage.toContentTypeString(raw.contentType) }"`)
+    return translator(raw)
+  }
   public static authorIcon = shallowReactive(new Map<string, Component>())
   public static getAuthorIcon(plugin: string, name: string) {
     return this.authorIcon.get(`${plugin}:${name}`)

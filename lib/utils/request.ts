@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, isCancel, isAxiosError, type AxiosError, type AxiosResponse, type CreateAxiosDefaults, type AxiosRequestConfig, type AxiosAdapter, getAdapter } from "axios"
 import mitt from "mitt"
 import { eventBus, type EventBus } from "./eventBus"
-import { delay } from "./delay"
+import { delay } from "es-toolkit"
 
 export class SmartAbortController implements AbortController {
   private _controller = new AbortController()

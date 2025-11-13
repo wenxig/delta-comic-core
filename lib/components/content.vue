@@ -172,8 +172,9 @@ defineExpose({
               :style="[style, styleEmpty]" />
           </div>
           <div v-else-if="animateOn === 'isErrorNoData'" class="!size-full">
-            <NResult class="!items-center !justify-center flex flex-col !size-full *:w-full text-wrap" status="error" title="网络错误"
-              :class="[classError]" :style="[style, styleError]" :description="unionSource.errorCause ?? '未知原因'">
+            <NResult class="!items-center !justify-center flex flex-col !size-full *:w-full text-wrap" status="error"
+              title="网络错误" :class="[classError]" :style="[style, styleError]"
+              :description="unionSource.errorCause ?? '未知原因'">
               <template #footer>
                 <NButton v-if="retriable" @click="$emit('resetRetry')" type="primary">重试</NButton>
               </template>

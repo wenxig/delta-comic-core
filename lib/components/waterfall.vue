@@ -154,7 +154,7 @@ defineExpose({
     :disabled="unReloadable || unionSource.isRequesting || (!!contentScrollTop && !isPullRefreshHold)"
     @refresh="handleRefresh" @change="({ distance }) => isPullRefreshHold = !!distance" :style>
     <Content retriable :source="Stream.isStream(source) ? source : source.data" class-loading="mt-2 !h-[24px]"
-      class-empty="!h-full" class-error="!h-full" class="h-full overflow-auto w-full" @retry="handleRefresh"
+      class-empty="!h-full" class-error="!h-full" class="h-full overflow-auto w-full" @retry="unionSource.retry()"
       @reset-retry="handleRefresh" :hide-loading="isPullRefreshHold && unionSource.isRequesting" ref="content">
       <VirtualWaterfall :items="unionSource.data" :gap :padding :preload-screen-count="[0, 1]" ref="waterfallEl"
         v-slot="{ item, index }: { item: T, index: number }"

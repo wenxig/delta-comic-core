@@ -188,14 +188,14 @@ export interface PluginConfigImage {
   process?: Record<string, ProcessInstance['func']>
 }
 
-export interface PluginConfigContent {
+export type PluginConfigContent = Record<string, {
   /**
    * @description
    * key: contentType  
    * value: component  
    * 与`ContentPage.setItemCard(key, value)`等价
   */
-  itemCard?: Record<string, ItemCardComp>
+  itemCard?: ItemCardComp
 
   /**
    * @description
@@ -203,7 +203,7 @@ export interface PluginConfigContent {
    * value: component  
    * 与`Comment.setCommentRow(key, value)`等价
   */
-  commentRow?: Record<string, CommentRow>
+  commentRow?: CommentRow
 
   /**
    * @description
@@ -211,7 +211,7 @@ export interface PluginConfigContent {
    * value: component  
    * 与`ContentPage.setViewLayout(key, value)`等价
   */
-  layout?: Record<string, ViewLayoutComp>
+  layout?: ViewLayoutComp
 
   /**
    * @description
@@ -220,8 +220,15 @@ export interface PluginConfigContent {
    * 与`ContentPage.setContentPage(key, value)`等价  
    * _不需要提供viewLayout_
   */
-  contentPage?: Record<string, ContentPageLike>
-}
+  contentPage?: ContentPageLike
+
+  /**
+   * @description
+   * 将原始对象转换为类
+  */
+  itemTranslator?: PluginConfigContentItemTranslator
+}>
+export type PluginConfigContentItemTranslator = (raw: RawItem) => Item
 
 export type UniFormDescription = {
   info: string
