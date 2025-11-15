@@ -1,5 +1,5 @@
 import type { uni } from "@/struct"
-import type { Component } from "vue"
+import type { Component, SlotsType } from "vue"
 import type { Utils } from ".."
 
 interface DependDefineConstraint<_T> {
@@ -21,8 +21,13 @@ export const coreModule = declareDependType<{
       comments: Utils.data.RStream<uni.comment.Comment>
     }>
     CommentRow: Component<{
-      comments: uni.comment.Comment
-    }, any, any, any, any, { userExtra(): any, }>
+      comment: uni.comment.Comment
+      parentComment?: uni.comment.Comment
+      usernameHighlight?: boolean
+    }, any, any, any, any, {
+      click: [c: uni.comment.Comment]
+      clickUser: [u: uni.user.User]
+    }, SlotsType<{ userExtra(): any, }>>
     ItemCard: uni.content.ItemCardComp
     FavouriteSelect: Component<{
       item: uni.item.Item
