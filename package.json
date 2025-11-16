@@ -52,14 +52,18 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/bundle.umd.cjs",
+  "main": "./dist/bundle.js",
   "module": "./dist/bundle.js",
-  "types": "./dist/global.d.ts",
   "exports": {
     ".": {
       "import": "./dist/bundle.js",
-      "require": "./dist/bundle.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/bundle.cjs",
+      "types": "./dist/lib/index.d.ts"
+    },
+    "./vite": {
+      "import": "./dist/bundle2.js",
+      "require": "./dist/bundle2.cjs",
+      "types": "./dist/vite/index.d.ts"
     },
     "./style.css": "./dist/bundle.css"
   },

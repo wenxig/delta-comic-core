@@ -30,6 +30,7 @@
     "vite.config.mts",
     "./scripts/**/*",
     "./scripts/*",
+    "./vite/**/*",
     "./*.ts"
   ],
   "exclude": [

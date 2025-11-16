@@ -47,16 +47,17 @@ export interface RawItem {
   epLength: string
   $$plugin: string
   $$meta: MetaData
-  description?: string
+  description?: Description
   thisEp: RawEp
   commentSendable: boolean
   customIsSafe?: boolean
 }
+export type Description = string | { type: 'html', content: string } | { type: 'text', content: string }
 export abstract class Item extends Struct<RawItem> implements RawItem {
   public static itemTranslator = shallowReactive(new Map<string, PluginConfigContentItemTranslator>())
   public static create(raw: RawItem) {
     const translator = this.itemTranslator.get(ContentPage.toContentTypeString(raw.contentType))
-    if (!translator) throw new Error(`can not found itemTranslator contentType:"${ContentPage.toContentTypeString(raw.contentType) }"`)
+    if (!translator) throw new Error(`can not found itemTranslator contentType:"${ContentPage.toContentTypeString(raw.contentType)}"`)
     return translator(raw)
   }
   public static authorIcon = shallowReactive(new Map<string, Component>())
@@ -85,7 +86,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public likeNumber?: number
   public commentNumber?: number
   public isLiked?: boolean
-  public description?: string
+  public description?: Description
   public updateTime?: number
   public get $updateTime() {
     return dayjs(this.updateTime)
