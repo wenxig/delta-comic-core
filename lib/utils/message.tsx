@@ -2,16 +2,16 @@ import { computed, isRef, shallowRef, watch, type CSSProperties, type MaybeRefOr
 import { isFunction } from "es-toolkit/compat"
 import type { DialogOptions, DialogReactive } from "naive-ui"
 import { noop } from "@vueuse/core"
-import { useZIndex } from "./layout"
 import { ReloadOutlined } from "@vicons/antd"
-import { FileDownloadRound } from "@vicons/material"
+import { DoneRound, FileDownloadRound } from "@vicons/material"
 import { until } from "@vueuse/core"
 import { isError, isUndefined, delay } from "es-toolkit"
 import { isNumber, toString } from "es-toolkit/compat"
 import { motion } from "motion-v"
-import { NProgress, NIcon, NButton } from "naive-ui"
+import { NProgress, NIcon, NButton, NIconWrapper } from "naive-ui"
 import { Icon, Loading } from "vant"
 import { nextTick, Transition, TransitionGroup, withDirectives, reactive, ref, type Reactive, vShow } from "vue"
+import { useZIndex } from "./layout"
 
 export type LoadingInstance = ReturnType<typeof createLoadingMessage>
 export const createLoadingMessage = (text: MaybeRefOrGetter<string> = '加载中', api = window.$message) => {
@@ -87,14 +87,11 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
   const result: PromiseWith<void, { ins: DialogReactive }> = new Promise<void>((s, f) => { success = s; fail = f })
   const show = shallowRef(true)
   const [zIndex, isLast, stopUse] = useZIndex(show)
-  console.log('[createDialog] after useZIndex')
   const stopStyleWatch = watch(zIndex, zIndex => (dialog.style as CSSProperties).zIndex = zIndex)
-  console.log('[createDialog] after stopStyleWatch')
   const stopRouterBreak = window.$router.beforeEach(() => {
     if (isLast) return failStop()
     return true
   })
-  console.log('[createDialog] after stopRouterBreak')
   const stop = () => {
     stopStyleWatch()
     stopUse()
@@ -102,18 +99,15 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
     dialog.destroy()
     return show.value = false
   }
-  console.log('[createDialog] after stop')
   const failStop = () => {
     fail()
     stop()
     return false
   }
-  console.log('[createDialog] after failStop')
   const successStop = () => {
     success()
     stop()
   }
-  console.log('[createDialog] after successStop')
   const dialog = window.$dialog.create({
     positiveText: '确定',
     negativeText: '取消',
@@ -148,7 +142,6 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
       stop()
     }
   })
-  console.log('[createDialog] after const dialog')
   result.ins = dialog
   return result
 }
@@ -170,6 +163,7 @@ const allDownloadMessagesIsMinsize = reactive(new Array<boolean | undefined>())
 export const createDownloadMessage = async <T,>(title: string, bind: (method: DownloadMessageBind) => PromiseLike<T>): Promise<T> => {
   const index = allDownloadMessagesIsMinsize.length
   allDownloadMessagesIsMinsize[index] = false
+  const isAllDone = ref(false)
   const messageList = reactive(new Array<{
     title: string
     description: string
@@ -234,8 +228,13 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
             </div>
             :
             <div class="w-full relative">
-              <div class='font-semibold text-base'>
-                {$props.content}
+              <div class='font-semibold text-base flex items-center gap-2'>
+                <span>{$props.content}</span>
+                {isAllDone.value && <NIconWrapper size={18} color="var(--nui-success-color)" borderRadius={114514} >
+                  <NIcon size={12}>
+                    <DoneRound />
+                  </NIcon>
+                </NIconWrapper>}
               </div>
               {/* content */}
               {/* @ts-ignore class应当存在 */}
@@ -261,7 +260,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
                         <Transition name="van-slide-right">
                           {
                             withDirectives(
-                              (<NButton tertiary circle onClick={v.retry} class="!absolute right-[4%] w-[18%] top-1/2 -translate-y-1/2">{{
+                              (<NButton tertiary circle onClick={v.retry} class="!absolute !ease-in-out right-[4%] w-[18%] top-1/2 -translate-y-1/2">{{
                                 icon: () => (<NIcon>
                                   <ReloadOutlined />
                                 </NIcon>)
@@ -345,15 +344,16 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
   const createLoading: DownloadMessageBind['createLoading'] = (title, fn) => {
     return createLine(title, {}, fn)
   }
-  const result = bind({
+  const result = await bind({
     createProgress,
     createLoading
   })
   await until(() => messageList.every(v => !isUndefined(v.state))).toBeTruthy()
   minsize.value = false
+  isAllDone.value = true
   await nextTick()
-  minsizeWatcher.stop()
   await until(minsize).toBeTruthy()
+  minsizeWatcher.stop()
   message.destroy()
   allDownloadMessagesIsMinsize[index] = undefined
 
@@ -361,5 +361,5 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
   console.log('[maybeError]', maybeError, messageList)
   if (maybeError) throw maybeError.error
 
-  return await result
+  return result
 }
