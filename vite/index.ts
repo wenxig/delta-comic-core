@@ -19,7 +19,7 @@ export const createMonkeyConfig = (config: {
     require: ['core', ...(config.require ?? [])],
   },
   build: {
-    externalGlobals: command == 'serve' ? undefined : {
+    externalGlobals: command == 'serve' ? {} : {
       vue: 'window.$$lib$$.Vue',
       vant: 'window.$$lib$$.Vant',
       'naive-ui': 'window.$$lib$$.Naive',
@@ -37,7 +37,7 @@ export const createMonkeyConfig = (config: {
   }
 } as any)
 
-export const createExternalConfig = (command: "build" | "serve") => command == 'build' ? undefined : {
+export const createExternalConfig = (command: "build" | "serve") => command == 'build' ? {} : {
   externals: {
     vue: 'window.$$lib$$.Vue',
     vant: 'window.$$lib$$.Vant',
