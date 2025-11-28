@@ -130,8 +130,8 @@ export abstract class ContentPage<T extends object = any> {
 
   public abstract plugin: string
 
-  public abstract loadAllOffline(): Promise<T>
-  public abstract exportOffline(save: T): Promise<any>
+  public abstract loadAllOffline(save: T): Promise<any>
+  public abstract exportOffline(): Promise<T>
 
   public abstract ViewComp: ViewComp
 }

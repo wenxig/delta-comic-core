@@ -12,6 +12,7 @@ import { NProgress, NIcon, NButton, NIconWrapper } from "naive-ui"
 import { Icon, Loading } from "vant"
 import { nextTick, Transition, TransitionGroup, withDirectives, reactive, ref, type Reactive, vShow } from "vue"
 import { useZIndex } from "./layout"
+import { useGlobalVar } from "./plugin"
 
 export type LoadingInstance = ReturnType<typeof createLoadingMessage>
 export const createLoadingMessage = (text: MaybeRefOrGetter<string> = '加载中', api = window.$message) => {
@@ -159,7 +160,7 @@ export interface DownloadMessageBind {
   createProgress<TResult>(title: string, fn: (ins: Reactive<DownloadMessageProgress>) => PromiseLike<TResult>): Promise<TResult>
   createLoading<TResult>(title: string, fn: (ins: Reactive<DownloadMessageLoading>) => PromiseLike<TResult>): Promise<TResult>
 }
-const allDownloadMessagesIsMinsize = reactive(new Array<boolean | undefined>())
+const allDownloadMessagesIsMinsize = useGlobalVar(reactive(new Array<boolean | undefined>()), 'utils/messsage/allDownloadMessagesIsMinsize')
 export const createDownloadMessage = async <T,>(title: string, bind: (method: DownloadMessageBind) => PromiseLike<T>): Promise<T> => {
   const index = allDownloadMessagesIsMinsize.length
   allDownloadMessagesIsMinsize[index] = false
@@ -348,9 +349,14 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
     createProgress,
     createLoading
   })
-  await until(() => messageList.every(v => !isUndefined(v.state))).toBeTruthy()
+  await until(() => messageList.every(v => !!v.state)).toBeTruthy()
   minsize.value = false
   isAllDone.value = true
+
+  delay(3000).then(() => {
+    minsize.value = true
+  })
+
   await nextTick()
   await until(minsize).toBeTruthy()
   minsizeWatcher.stop()
