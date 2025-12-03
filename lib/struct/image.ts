@@ -1,15 +1,9 @@
-import { Struct, type MetaData } from "@/utils/data"
+import { SourcedKeyMap, Struct, type MetaData } from "@/utils/data"
 import { useGlobalVar } from "@/utils/plugin"
 import { isString } from "es-toolkit/compat"
-import { shallowReactive } from "vue"
 
 
-export interface ProcessInstance {
-  fullName: string
-  plugin: string
-  referenceName: string
-  func: (nowPath: string, img: Image) => Promise<[path: string, exit: boolean]>
-}
+export type ProcessInstance = (nowPath: string, img: Image) => Promise<[path: string, exit: boolean]>
 export interface ProcessStep {
   referenceName: string
   ignoreExit?: boolean
@@ -23,23 +17,11 @@ export interface RawImage {
   processSteps?: ProcessStep_[]
 }
 export class Image extends Struct<RawImage> implements RawImage {
-  public static processInstances = useGlobalVar(shallowReactive(new Map<string, ProcessInstance>()), 'uni/image/processInstances')
-  public static setProcess(plugin: string, referenceName: string, func: ProcessInstance['func']) {
-    const fullName = `${plugin}:${referenceName}`
-    this.processInstances.set(fullName, {
-      func,
-      plugin,
-      referenceName,
-      fullName
-    })
-  }
+  public static processInstances = useGlobalVar(SourcedKeyMap.create<[plugin: string, referenceName: string], ProcessInstance>(), 'uni/image/processInstances')
 
-  public static fork = useGlobalVar(shallowReactive(new Map<string, string[]>()), 'uni/image/fork')
-  public static activeFork = useGlobalVar(shallowReactive(new Map<string, string>()), 'uni/image/activeFork')
-  public static setFork(plugin: string, namespace: string, fork: string[]) {
-    const key = `${plugin}:${namespace}`
-    this.fork.set(key, fork)
-  }
+  public static fork = useGlobalVar(SourcedKeyMap.create<[plugin: string, namespace: string], string[]>(), 'uni/image/fork')
+  public static activeFork = useGlobalVar(SourcedKeyMap.create<[plugin: string, namespace: string], string>(), 'uni/image/activeFork')
+
   public static is(value: unknown): value is Image {
     return value instanceof this
   }
@@ -74,13 +56,13 @@ export class Image extends Struct<RawImage> implements RawImage {
       }
 
       // call
-      const result = await instance.func(resultPath, this)
+      const result = await instance(resultPath, this)
       resultPath = result[0]
       if (option.ignoreExit || !result[1]) continue
       break
     }
     if (!URL.canParse(resultPath)) {
-      return `${Image.activeFork.get(`${this.$$plugin}:${this.forkNamespace}`)}/${resultPath}`
+      return `${Image.activeFork.get([this.$$plugin, this.forkNamespace])}/${resultPath}`
     }
     return resultPath
   }

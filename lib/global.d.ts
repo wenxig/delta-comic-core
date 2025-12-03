@@ -14,14 +14,6 @@ declare global {
     $$lib$$: Record<ExternalLibKey[keyof ExternalLibKey], any>
     $$safe$$: boolean
     $router: Router
-    // $layout: Record<string, uni.content.ViewLayoutComp>
-    // $view: Record<string, uni.content.ViewComp>
-    // $comp: {
-    //   Comment: Component<{
-    //     item: uni.item.Item
-    //     comments: Utils.data.RStream<uni.comment.Comment>
-    //   }>
-    // }
     $isDev: boolean
   }
 }

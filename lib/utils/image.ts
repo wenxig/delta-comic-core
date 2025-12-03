@@ -1,4 +1,4 @@
-import { showImagePreview as _showImagePreview, ImagePreviewOptions, ImagePreviewInstance } from 'vant'
+import { ImagePreviewOptions, ImagePreviewInstance } from 'vant'
 import { computed, shallowRef } from 'vue'
 import { useZIndex } from "./layout"
 import { watchOnce } from "@vueuse/core"
@@ -6,7 +6,7 @@ import { watchOnce } from "@vueuse/core"
 export const showImagePreview = (images: string[], config: Omit<ImagePreviewOptions, "images" | "teleport"> = {}) => {
   const isShowing = shallowRef(true)
   const [, , stopUse] = useZIndex(isShowing)
-  const previewInstance = _showImagePreview({
+  const previewInstance = window.$api.showImagePreview({
     images,
     ...config,
     overlayClass: '!z-2147483646',

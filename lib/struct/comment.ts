@@ -1,5 +1,5 @@
-import { Struct, type MetaData, type RStream } from "@/utils/data"
-import { shallowReactive, type Component } from "vue"
+import { SourcedKeyMap, Struct, type MetaData, type RStream } from "@/utils/data"
+import { type Component } from "vue"
 import { uni } from "."
 import dayjs from "dayjs"
 import type { User } from "./user"
@@ -26,16 +26,7 @@ export type CommentRow = Component<{
   parentComment?: Comment
 }>
 export abstract class Comment extends Struct<RawComment> implements RawComment {
-  private static commentRow = shallowReactive(new Map<string, CommentRow>())
-  public static setCommentRow(ct_: uni.content.ContentType_, component: CommentRow): string {
-    const fullName = uni.content.ContentPage.toContentTypeString(ct_)
-    this.commentRow.set(fullName, component)
-    return fullName
-  }
-  public static getCommentRow(ct_: uni.content.ContentType_) {
-    const ct = uni.content.ContentPage.toContentTypeString(ct_)
-    return this.commentRow.get(ct)
-  }
+  public static commentRow = SourcedKeyMap.create<uni.content.ContentType, CommentRow>()
 
   constructor(v: RawComment) {
     super(v)

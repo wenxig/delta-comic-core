@@ -1,8 +1,7 @@
 import { computed, shallowRef, type Component, shallowReactive, type StyleValue } from 'vue'
 import * as item from './item'
 import * as ep from './ep'
-import { PromiseContent, type RStream } from '@/utils/data'
-import { isString } from "es-toolkit/compat"
+import { PromiseContent, SourcedKeyMap, type RStream, type SourcedKeyType } from '@/utils/data'
 import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
 import * as comment from './comment'
@@ -10,102 +9,48 @@ import { type AudioSrc, type MediaSrc, type TextTrackInit } from "vidstack"
 import type { PluginConfigSearchCategory, PluginConfigSearchHotPageLevelboard, PluginConfigSearchHotPageMainList, PluginConfigSearchHotPageTopButton, PluginConfigSearchTabbar } from '@/plugin/define'
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
-export abstract class ContentPage<T extends object = any> {
 
-  
-  private static viewLayout = useGlobalVar(shallowReactive(new Map<string, ViewLayoutComp>()), 'uni/contentPage/viewLayout')
-  public static setViewLayout(ct_: ContentType_, component: ViewLayoutComp): string {
-    const fullName = this.toContentTypeString(ct_)
-    this.viewLayout.set(fullName, component)
-    return fullName
-  }
-  public static getViewLayout(ct_: ContentType_) {
-    const ct = this.toContentTypeString(ct_)
-    return this.viewLayout.get(ct)
-  }
+export abstract class ContentPage<T extends object = any> {
+  public static viewLayout = useGlobalVar(SourcedKeyMap.create<ContentType, ViewLayoutComp>(), 'uni/contentPage/viewLayout')
 
   public static tabbar = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchTabbar[]>()), 'uni/contentPage/tabbar')
-  public static setTabbar(plugin: string, ...tabbar: PluginConfigSearchTabbar[]) {
-    this.tabbar.set(plugin, this.getTabbar(plugin).concat(tabbar))
-  }
-  public static getTabbar(plugin: string) {
-    return this.tabbar.get(plugin) ?? []
+  public static addTabbar(plugin: string, ...tabbar: PluginConfigSearchTabbar[]) {
+    this.tabbar.set(plugin, (this.tabbar.get(plugin) ?? []).concat(tabbar))
   }
 
-  public static categories = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchCategory[]>()), 'uni/contentPage/categories')
-  public static setCategories(plugin: string, ...categories: PluginConfigSearchCategory[]) {
-    this.categories.set(plugin, this.getCategories(plugin).concat(categories))
-  }
-  public static getCategories(plugin: string) {
-    return this.categories.get(plugin) ?? []
+
+  public static categories = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchCategory[]>()), 'uni/contentPage/tabbar')
+  public static addCategories(plugin: string, ...categories: PluginConfigSearchCategory[]) {
+    this.categories.set(plugin, (this.categories.get(plugin) ?? []).concat(categories))
   }
 
-  private static itemCard = useGlobalVar(shallowReactive(new Map<string, ItemCardComp>()), 'uni/contentPage/itemCard')
-  public static setItemCard(ct_: ContentType_, component: ItemCardComp): string {
-    const fullName = this.toContentTypeString(ct_)
-    this.itemCard.set(fullName, component)
-    return fullName
-  }
-  public static getItemCard(ct_: ContentType_) {
-    const ct = this.toContentTypeString(ct_)
-    return this.itemCard.get(ct)
-  }
+  public static itemCard = useGlobalVar(SourcedKeyMap.create<ContentType, ItemCardComp>(), 'uni/contentPage/itemCard')
 
-  private static contentPage = useGlobalVar(shallowReactive(new Map<string, ContentPageLike>()), 'uni/contentPage/contentPage')
-  public static setContentPage(contentType: ContentType_, page: ContentPageLike) {
-    this.contentPage.set(this.toContentTypeString(contentType), page)
-  }
-  public static getContentPage(contentType: ContentType_) {
-    const key = this.toContentTypeString(contentType)
-    const v = this.contentPage.get(key)
-    if (!v) throw new Error(`[ContentPage.getContentPage] not found ContentPage (contentType: ${contentType})`)
-    return v
-  }
-  public static toContentType(ct: ContentType_): ContentType {
-    if (isString(ct)) {
-      const [plugin, name] = ct.split(':')
-      return {
-        name, plugin
-      }
-    }
-    return ct
-  }
-  public static toContentTypeString(ct: ContentType_): string {
-    if (isString(ct)) return ct
-    return `${ct.plugin}:${ct.name}`
-  }
+  public static contentPage = useGlobalVar(SourcedKeyMap.create<[plugin: string, name: string], ContentPageLike>(), 'uni/contentPage/contentPage')
+
 
   public static levelboard = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchHotPageLevelboard[]>()), 'uni/contentPage/levelboard')
-  public static setLevelboard(plugin: string, cfg: PluginConfigSearchHotPageLevelboard): string {
+  public static addLevelboard(plugin: string, cfg: PluginConfigSearchHotPageLevelboard): string {
     const old = this.levelboard.get(plugin) ?? []
     old.push(cfg)
     this.levelboard.set(plugin, old)
     return plugin
   }
-  public static getLevelboard(plugin: string) {
-    return this.levelboard.get(plugin)
-  }
 
   public static topButton = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchHotPageTopButton[]>()), 'uni/contentPage/topButton')
-  public static setTopButton(plugin: string, cfg: PluginConfigSearchHotPageTopButton): string {
+  public static addTopButton(plugin: string, cfg: PluginConfigSearchHotPageTopButton): string {
     const old = this.topButton.get(plugin) ?? []
     old.push(cfg)
     this.topButton.set(plugin, old)
     return plugin
   }
-  public static getTopButton(plugin: string) {
-    return this.topButton.get(plugin)
-  }
 
   public static mainLists = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchHotPageMainList[]>()), 'uni/contentPage/mainLists')
-  public static setMainList(plugin: string, cfg: PluginConfigSearchHotPageMainList): string {
+  public static addMainList(plugin: string, cfg: PluginConfigSearchHotPageMainList): string {
     const old = this.mainLists.get(plugin) ?? []
     old.push(cfg)
     this.mainLists.set(plugin, old)
     return plugin
-  }
-  public static getMainList(plugin: string) {
-    return this.mainLists.get(plugin)
   }
 
   constructor(preload: PreloadValue, public id: string, public ep: string) {
@@ -135,21 +80,15 @@ export abstract class ContentPage<T extends object = any> {
 
   public abstract ViewComp: ViewComp
 }
+
+export type ContentType_ = SourcedKeyType<typeof ContentPage.contentPage>
+export type ContentType = Exclude<ContentType_, string>
+
 export type ViewComp = Component<{
   page: ContentPage
   isFullScreen: boolean
 }>
 
-export interface ContentType {
-  plugin: string
-  name: string
-}
-/** 
- * @example "bika:comic"
- * "91video:video"
- * "jm:comic"
- */
-export type ContentType_ = ContentType | string
 export type ViewLayoutComp = Component<{
   page: ContentPage
 }>

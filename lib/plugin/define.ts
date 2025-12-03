@@ -185,7 +185,7 @@ export interface PluginConfigImage {
    * value: process function  
    * 与`Image.setProcess(name, key, value)`等价
   */
-  process?: Record<string, ProcessInstance['func']>
+  process?: Record<string, ProcessInstance>
 }
 
 export type PluginConfigContent = Record<string, {

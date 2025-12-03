@@ -103,15 +103,16 @@ defineExpose({
   imageEl: computed(() => img.value?.imageRef),
   imageIns: img
 })
+const NImg = window.$api.NImage as typeof NImage
 </script>
 
 <template>
-  <NImage @error="reload" v-bind="$props" :object-fit="fit" preview-disabled :alt ref="img"
+  <NImg @error="reload" v-bind="$props" :object-fit="fit" preview-disabled :alt ref="img"
     :img-props="{ ...(imgProp ?? {}), class: 'w-full', ['fetchpriority' as any]: $props.fetchpriority }"
     :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style
     v-show="!images.error.has(src) && images.loaded.has(src)" v-if="show" @load="handleImageLoad"
     @click="handleClickImage" :src>
-  </NImage>
+  </NImg>
   <div class="justify-center items-center" v-if="!images.loaded.has(src) && !images.error.has(src) && !hideLoading"
     :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style
     @click="$emit('click')">
@@ -119,14 +120,14 @@ defineExpose({
     <Loading v-else />
   </div>
   <template v-if="images.error.has(src) && !hideError">
-    <NImage @error="reload" v-bind="$props" :object-fit="fit" preview-disabled :alt
+    <NImg @error="reload" v-bind="$props" :object-fit="fit" preview-disabled :alt
       :img-props="{ ...(imgProp ?? {}), class: 'w-full', ['fetchpriority' as any]: $props.fetchpriority }"
       :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style v-if="fallback"
       :src="fallbackSrc" />
     <div class="justify-center items-center flex-col" @click.stop="() => {
-      images.error.delete(src)
-      beginReload()
-    }" v-else :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]">
+        images.error.delete(src)
+        beginReload()
+      }" v-else :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]">
       <slot name="loading" v-if="$slots.loading"></slot>
       <template v-else>
         <VanIcon name="warning-o" size="2.5rem" color="var(--van-text-color-2)" />

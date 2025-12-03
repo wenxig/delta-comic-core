@@ -1,5 +1,5 @@
 import * as image from "./image"
-import { Struct, type MetaData } from "@/utils/data"
+import { SourcedKeyMap, Struct, type MetaData } from "@/utils/data"
 import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
 import { Ep, type RawEp } from "./ep"
@@ -54,19 +54,14 @@ export interface RawItem {
 }
 export type Description = string | { type: 'html', content: string } | { type: 'text', content: string }
 export abstract class Item extends Struct<RawItem> implements RawItem {
-  public static itemTranslator = shallowReactive(new Map<string, PluginConfigContentItemTranslator>())
+  public static itemTranslator = SourcedKeyMap.create<[plugin: string, name: string], PluginConfigContentItemTranslator>()
   public static create(raw: RawItem) {
-    const translator = this.itemTranslator.get(ContentPage.toContentTypeString(raw.contentType))
-    if (!translator) throw new Error(`can not found itemTranslator contentType:"${ContentPage.toContentTypeString(raw.contentType)}"`)
+    const translator = this.itemTranslator.get(raw.contentType)
+    if (!translator) throw new Error(`can not found itemTranslator contentType:"${ContentPage.contentPage.toString(raw.contentType)}"`)
     return translator(raw)
   }
-  public static authorIcon = shallowReactive(new Map<string, Component>())
-  public static getAuthorIcon(plugin: string, name: string) {
-    return this.authorIcon.get(`${plugin}:${name}`)
-  }
-  public static setAuthorIcon(plugin: string, name: string, icon: Component) {
-    this.authorIcon.set(`${plugin}:${name}`, icon)
-  }
+  public static authorIcon = SourcedKeyMap.create<[plugin: string, name: string], Component>()
+
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
   public abstract report(signal?: AbortSignal): PromiseLike<any>
   public abstract sendComment(text: string, signal?: AbortSignal): PromiseLike<any>
@@ -118,7 +113,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
     this.commentNumber = v.commentNumber
     this.isLiked = v.isLiked
     this.customIsAI = v.customIsAI
-    this.contentType = ContentPage.toContentType(v.contentType)
+    this.contentType = ContentPage.contentPage.toJSON(v.contentType)
     this.length = v.length
     this.epLength = v.epLength
     this.description = v.description

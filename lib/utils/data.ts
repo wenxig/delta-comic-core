@@ -39,11 +39,18 @@ export class SourcedValue<T extends [string, string]> {
   }
   constructor(public separator = ':') { }
 }
+export type SourcedKeyType<T extends SourcedKeyMap<any, any>> = Parameters<T['get']>[0]
 /**
  * 相比较于普通的Map，这个元素的key操作可以是`TKey | string`  
  * _但内部保存仍使用`SourcedValue.toString`作为key_
 */
 export class SourcedKeyMap<TKey extends [string, string], TValue> extends SourcedValue<TKey> implements Map<string, TValue> {
+  public static create<TKey extends [string, string], TValue>(separator = ':') {
+    return shallowReactive(new this<TKey, TValue>(separator))
+  }
+  private constructor(separator = ':') {
+    super(separator)
+  }
   private store = shallowReactive(new Map<string, TValue>())
   public get size(): number {
     return this.store.size
