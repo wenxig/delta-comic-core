@@ -39,7 +39,9 @@ export class SourcedValue<T extends [string, string]> {
   }
   constructor(public separator = ':') { }
 }
-export type SourcedKeyType<T extends SourcedKeyMap<any, any>> = Parameters<T['get']>[0]
+export type SourcedKeyType<T extends SourcedKeyMap<any, any> | SourcedValue<any>> = T extends SourcedKeyMap<any, any> ?
+  Parameters<T['get']>[0]
+  : Parameters<T['toJSON']>[0]
 /**
  * 相比较于普通的Map，这个元素的key操作可以是`TKey | string`  
  * _但内部保存仍使用`SourcedValue.toString`作为key_
