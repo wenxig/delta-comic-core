@@ -4,8 +4,15 @@ export const createMonkeyConfig = (config: {
   version: string
   author?: string
   description: string
-   /** @default ['core'] */ require?: string[]
-   /** @default 'src/main.ts' */ entry?: string
+  /** 通过语义化版本号描述core支持版本，通过`semver.satisfies`判定 */
+  supportCoreVersion: string
+  /** @default ['core'] */
+  require?: ({
+    id: string
+    download?: string
+  } | string)[]
+  /** @default 'src/main.ts' */
+  entry?: string
 }, command: "build" | "serve") => ({
   entry: config.entry ?? 'src/main.ts',
   userscript: {
@@ -13,10 +20,18 @@ export const createMonkeyConfig = (config: {
       ds: config.displayName,
       default: config.name
     },
-    version: config.version,
+    version: {
+      plugin: config.version,
+      supportCore: config.supportCoreVersion
+    },
     author: config.author,
     description: config.description,
-    require: ['core', ...(config.require ?? [])],
+    require: ['core', ...(config.require ?? [])].map(v => {
+      if (typeof v == 'string') return {
+        id: v
+      }
+      return v
+    }),
   },
   build: {
     externalGlobals: command == 'serve' ? {} : {
@@ -36,6 +51,7 @@ export const createMonkeyConfig = (config: {
     prefix: false
   }
 } as any)
+
 
 export const createExternalConfig = (command: "build" | "serve") => command == 'build' ? {} : {
   externals: {

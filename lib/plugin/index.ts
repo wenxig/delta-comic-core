@@ -64,3 +64,40 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
   }
   return SharedFunction.call('addPlugin', cfg)
 }
+
+
+export interface RawPluginMeta {
+  name: {
+    ds: string
+    default: string
+  }
+  version: {
+    plugin: string
+    supportCore: string
+  }
+  author: string | undefined
+  description: string
+  require: {
+    id: string
+    download?: string | undefined
+  }[]
+}
+
+export interface PluginMeta {
+  name: {
+    display: string
+    id: string
+  }
+  version: {
+    plugin: string
+    supportCore: string
+  }
+  author: string
+  description: string
+  require: {
+    id: string
+    download?: string | undefined
+  }[]
+}
+
+export const decodePluginMeta = (v: RawPluginMeta ): PluginMeta => { }

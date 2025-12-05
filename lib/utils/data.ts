@@ -39,7 +39,7 @@ export class SourcedValue<T extends [string, string]> {
   }
   constructor(public separator = ':') { }
 }
-export type SourcedKeyType<T extends SourcedKeyMap<any, any> | SourcedValue<any>> = T extends SourcedKeyMap<any, any> ?
+export type SourcedKeyType<T extends SourcedKeyMap<[string, string], any> | SourcedValue<any>> = T extends SourcedKeyMap<[string, string], any> ?
   Parameters<T['get']>[0]
   : Parameters<T['toJSON']>[0]
 /**
