@@ -7,6 +7,7 @@ import { User } from "@/struct/user"
 import { Item } from "@/struct/item"
 import type { PluginConfig } from "./define"
 import { useConfig } from "@/config"
+import { isString } from "es-toolkit"
 
 export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginConfig)) => {
   if (isFunction(config)) var cfg = config(window.$$safe$$)
@@ -67,20 +68,12 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
 
 
 export interface RawPluginMeta {
-  name: {
-    ds: string
-    default: string
-  }
-  version: {
-    plugin: string
-    supportCore: string
-  }
+  'name:display': string
+  'name:id': string
+  version: string
   author: string | undefined
   description: string
-  require: {
-    id: string
-    download?: string | undefined
-  }[]
+  require?: string[] | string
 }
 
 export interface PluginMeta {
@@ -100,4 +93,22 @@ export interface PluginMeta {
   }[]
 }
 
-export const decodePluginMeta = (v: RawPluginMeta ): PluginMeta => { }
+export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({
+  name: {
+    display: v["name:display"],
+    id: v["name:id"],
+  },
+  author: v.author ?? '',
+  description: v.description,
+  require: (v.require ? isString(v.require) ? [v.require] : v.require : []).map(dep => {
+    const [name, download] = dep.split(':')
+    return {
+      id: name,
+      download
+    }
+  }),
+  version: {
+    plugin: v.version.split('/')[0],
+    supportCore: v.version.split('/')[1],
+  }
+})

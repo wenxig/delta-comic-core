@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { ImgHTMLAttributes, StyleValue, computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
-import { ImageProps } from 'naive-ui'
+import { ImageProps, NImage } from 'naive-ui'
 import { isString } from 'es-toolkit/compat'
 import { showImagePreview } from '@/utils/image'
 import { useTemp } from '@/stores/temp'

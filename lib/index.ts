@@ -47,7 +47,7 @@ export namespace Utils {
   export import message = uMessage
 }
 import { useTemp } from './stores/temp'
-import { useConfig, ConfigPointer,appConfig } from './config'
+import { useConfig, ConfigPointer, appConfig } from './config'
 export const Store = {
   useTemp,
   useConfig,
@@ -62,3 +62,6 @@ export * from "./plugin/index"
 export * from './depends'
 
 export * from "./plugin/define.ts"
+
+import _package from '../package.json'
+export const version = _package.version

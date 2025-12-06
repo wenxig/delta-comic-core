@@ -17,20 +17,15 @@ export const createMonkeyConfig = (config: {
   entry: config.entry ?? 'src/main.ts',
   userscript: {
     name: {
-      ds: config.displayName,
-      default: config.name
+      display: config.displayName,
+      id: config.name
     },
-    version: {
-      plugin: config.version,
-      supportCore: config.supportCoreVersion
-    },
+    version: `${config.version}/${config.supportCoreVersion}`,
     author: config.author,
     description: config.description,
     require: ['core', ...(config.require ?? [])].map(v => {
-      if (typeof v == 'string') return {
-        id: v
-      }
-      return v
+      if (typeof v == 'string') return `${v}:`
+      return `${v.id}:${v.download ?? ''}`
     }),
   },
   build: {
