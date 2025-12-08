@@ -3,8 +3,11 @@ import { SourcedKeyMap, Struct, type MetaData } from "@/utils/data"
 import dayjs from "dayjs"
 import { ContentPage, type ContentType, type ContentType_ } from "./content"
 import { Ep, type RawEp } from "./ep"
-import { shallowReactive, type Component } from "vue"
+import { type Component } from "vue"
 import type { PluginConfigContentItemTranslator } from "@/plugin/define"
+import { useGlobalVar } from "@/utils/plugin"
+import type { uni } from "."
+import type { StyleValue } from "vue"
 
 export interface Category {
   name: string
@@ -52,6 +55,24 @@ export interface RawItem {
   commentSendable: boolean
   customIsSafe?: boolean
 }
+
+export type ItemCardComp = Component<{
+  item: uni.item.Item
+  freeHeight?: boolean
+  disabled?: boolean
+  type?: 'default' | 'big' | 'small'
+  class?: any
+  style?: StyleValue
+}, any, any, any, any, {
+  click: []
+}, {
+  default(): void
+  smallTopInfo(): void
+  cover(): void
+}>
+
+
+
 export type Description = string | { type: 'html', content: string } | { type: 'text', content: string }
 export abstract class Item extends Struct<RawItem> implements RawItem {
   public static itemTranslator = SourcedKeyMap.create<[plugin: string, name: string], PluginConfigContentItemTranslator>()
@@ -61,6 +82,8 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
     return translator(raw)
   }
   public static authorIcon = SourcedKeyMap.create<[plugin: string, name: string], Component>()
+
+  public static itemCard = useGlobalVar(SourcedKeyMap.create<ContentType, ItemCardComp>(), 'uni/item/itemCard')
 
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
   public abstract report(signal?: AbortSignal): PromiseLike<any>

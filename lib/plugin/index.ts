@@ -19,12 +19,13 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     image,
     search,
     user,
-    subscribe
+    subscribe,
+    share,
   } = cfg
   if (content)
     for (const [ct, { commentRow, contentPage, itemCard, layout, itemTranslator }] of Object.entries(content)) {
       if (layout) ContentPage.viewLayout.set(ct, layout)
-      if (itemCard) ContentPage.itemCard.set(ct, itemCard)
+      if (itemCard) Item.itemCard.set(ct, itemCard)
       if (contentPage) ContentPage.contentPage.set(ct, contentPage)
       if (commentRow) Comment.commentRow.set(ct, commentRow)
       if (itemTranslator) Item.itemTranslator.set(ct, itemTranslator)
@@ -62,6 +63,12 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
     for (const config of cfg.config) {
       useConfig().$resignerConfig(config)
     }
+  }
+  if (share) {
+    for (const v of share.initiative ?? [])
+      ContentPage.share.set([plugin, v.key], v)
+    for (const v of share.tokenListen ?? [])
+      ContentPage.shareToken.set([plugin, v.key], v)
   }
   return SharedFunction.call('addPlugin', cfg)
 }

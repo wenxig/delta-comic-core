@@ -1,9 +1,9 @@
-import { ContentPageLike, ItemCardComp, ViewLayoutComp } from "@/struct/content"
-import { ProcessInstance } from "@/struct/image"
+import { ContentPageLike, ViewLayoutComp, type ContentPage } from "@/struct/content"
+import { ProcessInstance, type Image } from "@/struct/image"
 import { CommentRow } from "@/struct/comment"
 import { UserCardComp } from "@/struct/user"
 import { RStream, type RPromiseContent } from "@/utils/data"
-import { Item, RawItem, type Author } from "@/struct/item"
+import { Item, RawItem, type Author, type ItemCardComp } from "@/struct/item"
 import { Component, type MaybeRefOrGetter } from "vue"
 import type { ConfigPointer } from "@/config"
 
@@ -31,6 +31,34 @@ export interface PluginConfig {
   config?: ConfigPointer[]
 
   subscribe?: Record<string, PluginConfigSubscribe>
+
+  share?: PluginShare
+}
+export interface PluginShare {
+  initiative: PluginShareInitiativeItem[]
+  tokenListen: PluginShareToken[]
+}
+
+export interface PluginShareToken {
+  key: string
+  name: string
+  patten(chipboard: string): boolean
+  show(chipboard: string): Promise<PluginShareTokenPopup> | PluginShareTokenPopup
+}
+
+export interface PluginShareTokenPopup {
+  title: string
+  detail: string
+  onPositive(): void
+  onNegative(): void
+}
+
+export interface PluginShareInitiativeItem {
+  key: string
+  name: string
+  icon: Component | Image
+  call(page: ContentPage): Promise<any>
+  filter(page: ContentPage): boolean
 }
 
 export interface PluginConfigSubscribe {
