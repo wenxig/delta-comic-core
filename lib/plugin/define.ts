@@ -57,6 +57,7 @@ export interface PluginShareInitiativeItem {
   key: string
   name: string
   icon: Component | Image
+  bgColor?: string
   call(page: ContentPage): Promise<any>
   filter(page: ContentPage): boolean
 }

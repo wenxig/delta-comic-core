@@ -28,7 +28,7 @@ export const coreModule = declareDependType<{
       click: [c: uni.comment.Comment]
       clickUser: [u: uni.user.User]
     }, SlotsType<{ userExtra(): any, }>>
-    ItemCard: uni.content.ItemCardComp
+    ItemCard: uni.item.ItemCardComp
     FavouriteSelect: Component<{
       item: uni.item.Item
     }>
