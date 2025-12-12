@@ -26,7 +26,8 @@ export type SharedFunctions = {
   getIsAuthorSubscribe(author: uni.item.Author, plugin: string): PromiseLike<boolean>
 
   triggerSharePopup(page: uni.content.ContentPage): PromiseLike<void>
-  triggerShoreToken(token: string): PromiseLike<void>
+  triggerShareToken(token: string): PromiseLike<void>
+  pushShareToken(token: string): PromiseLike<void>
 }
 
 export class SharedFunction {
