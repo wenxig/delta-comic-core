@@ -1,30 +1,36 @@
-# Delta Comic Core - _<span style="font-weight: lighter;font-size:16px">我曾亲眼见证神的熟视无睹</span>_
+[<p align="center">
+    <img alt="logo" src="icon.png" width="120" height="120" style="margin-bottom: 10px;">
+</p>
 
-[![GitHub](https://img.shields.io/github/license/wenxig/delta-comic-core)](https://raw.githubusercontent.com/wenxig/delta-comic-core/main/LICENSE)
+<h1 align="center">Delta Space</h1>
 
-- 工具库
+<p align="center">唯资源与数据无价<p>
 
-## 功能
+---
 
-- 辅助编写插件
-- 提供通用数据结构与默认样式
+## 特点
 
-## 如何使用
+- 该项目致力于开发一个可扩展的平台，使得来源不同的资源可通过**插件**整合于单个应用
+- 该项目仅供技术研究使用，请勿用于其他用途，下载后请与24小时内删除
 
-  1. `git clone https://github.com/wenxig/delta-comic-core`
-  2. `bun run build`
-  3. `pnpm i "/path/to/delta-comic-core"`
+## 概览
 
-## 为谁编写插件?
+### Delta Comic
 
- [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=wenxig&repo=delta-comic)](https://github.com/wenxig/delta-comic)
-
-## 现成的插件
+   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=delta-comic&repo=delta-comic)](https://github.com/wenxig/delta-comic)  
 
 ### PicaAcg/bika/哔卡漫画
 
-   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=wenxig&repo=delta-comic-plugin-bika)](https://github.com/wenxig/delta-comic-plugin-bika)  
+   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=delta-comic&repo=delta-comic-plugin-bika)](https://github.com/wenxig/delta-comic-plugin-bika)  
 
-## Star History
+### Jmcomic/禁漫天堂
 
-[![Star History Chart](https://api.star-history.com/svg?repos=wenxig/delta-comic-core&type=Date)](https://www.star-history.com/#wenxig/delta-comic-core&Date)
+   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=delta-comic&repo=delta-comic-plugin-jmcomic)](https://github.com/wenxig/delta-comic-plugin-jmcomic)  
+
+### Cosav/cos天堂
+
+   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=delta-comic&repo=delta-comic-plugin-cosav)](https://github.com/wenxig/delta-comic-plugin-cosav)  
+
+### E-hentai/ExHentai/EHentai(_开发中_)    
+
+   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=delta-comic&repo=delta-comic-plugin-ehentai)](https://github.com/wenxig/delta-comic-plugin-ehentai)  
