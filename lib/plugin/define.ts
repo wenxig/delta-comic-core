@@ -6,6 +6,7 @@ import { RStream, type RPromiseContent } from "@/utils/data"
 import { Item, RawItem, type Author, type ItemCardComp } from "@/struct/item"
 import { Component, type MaybeRefOrGetter } from "vue"
 import type { ConfigPointer } from "@/config"
+import type { SharedFunctions } from "@/utils/eventBus"
 
 export type PluginDefineResult = {
   api?: Record<string, string | undefined | false>
@@ -144,7 +145,19 @@ export interface PluginConfigSearch {
     topButton?: PluginConfigSearchHotPageTopButton[]
     mainListCard?: PluginConfigSearchHotPageMainList[]
   }
+
+  barcode?: PluginConfigSearchBarcode[]
 }
+
+export interface PluginConfigSearchBarcode {
+  match: (searchText: string) => boolean
+  /**
+   * 选中后返回路由信息
+  */
+  getContent: (searchText: string, signal: AbortSignal) => PromiseLike<Parameters<SharedFunctions['routeToContent']>>
+  name: string
+}
+
 export interface PluginConfigSearchHotPageLevelboard {
   name: string
   content: () => (RStream<Item> | RPromiseContent<any, Item[]>)

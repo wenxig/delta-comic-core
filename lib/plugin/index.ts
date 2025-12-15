@@ -45,6 +45,9 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
       for (const lb of search.hotPage.levelBoard ?? []) ContentPage.addLevelboard(plugin, lb)
       for (const tb of search.hotPage.topButton ?? []) ContentPage.addTopButton(plugin, tb)
     }
+    if (search.barcode) {
+      for (const barcode of search.barcode ?? []) ContentPage.addBarcode(plugin, barcode)
+    }
   }
   if (user) {
     if (user.edit) User.userEditorBase.set(plugin, user.edit)

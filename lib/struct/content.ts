@@ -6,7 +6,7 @@ import { useGlobalVar } from '@/utils/plugin'
 import type { uni } from '.'
 import * as comment from './comment'
 import { type AudioSrc, type MediaSrc, type TextTrackInit } from "vidstack"
-import type { PluginConfigSearchCategory, PluginConfigSearchHotPageLevelboard, PluginConfigSearchHotPageMainList, PluginConfigSearchHotPageTopButton, PluginConfigSearchTabbar, PluginShareInitiativeItem, PluginShareToken } from '@/plugin/define'
+import type { PluginConfigSearchBarcode, PluginConfigSearchCategory, PluginConfigSearchHotPageLevelboard, PluginConfigSearchHotPageMainList, PluginConfigSearchHotPageTopButton, PluginConfigSearchTabbar, PluginShareInitiativeItem, PluginShareToken } from '@/plugin/define'
 export type PreloadValue = item.Item | undefined
 export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string) => ContentPage
 
@@ -41,6 +41,14 @@ export abstract class ContentPage<T extends object = any> {
   }
 
   public static contentPage = useGlobalVar(SourcedKeyMap.create<[plugin: string, name: string], ContentPageLike>(), 'uni/contentPage/contentPage')
+
+  public static barcode = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchBarcode[]>()), 'uni/contentPage/barcode')
+  public static addBarcode(plugin: string, cfg: PluginConfigSearchBarcode): string {
+    const old = this.barcode.get(plugin) ?? []
+    old.push(cfg)
+    this.barcode.set(plugin, old)
+    return plugin
+  }
 
 
   public static levelboard = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchHotPageLevelboard[]>()), 'uni/contentPage/levelboard')
