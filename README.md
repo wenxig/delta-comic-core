@@ -23,7 +23,7 @@
 
 ### PicaAcg/bika/哔卡漫画
 
-   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=wenxig&repo=delta-comic-plugin-bika)](https://github.com/wenxig/delta-comic-plugin-bika)  
+   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=wenxig&repo=delta-comic-plugin-bika&user)](https://github.com/wenxig/delta-comic-plugin-bika)  
 
 ## Star History
 
