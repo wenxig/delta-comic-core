@@ -1,11 +1,12 @@
 import type { AuthorAction, PluginConfigSubscribe } from "@/plugin/define"
 import type { uni } from "."
-import { Image, type RawImage } from "./image"
+import { Image } from "./image"
 import { shallowReactive, type Component } from "vue"
 import { SourcedKeyMap } from "@/utils/data"
+import type { RawResource } from "./resource"
 
 export interface RawUser {
-  avatar?: RawImage
+  avatar?: RawResource
   name: string
   id: string
   $$plugin: string

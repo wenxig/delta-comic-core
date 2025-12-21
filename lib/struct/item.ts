@@ -8,6 +8,7 @@ import type { PluginConfigContentItemTranslator } from "@/plugin/define"
 import { useGlobalVar } from "@/utils/plugin"
 import type { uni } from "."
 import type { StyleValue } from "vue"
+import type { RawResource } from "./resource"
 
 export interface Category {
   name: string
@@ -21,7 +22,7 @@ export interface Category {
 
 export interface Author {
   label: string
-  icon: image.RawImage | string
+  icon: RawResource | string
   description: string
  /**
   * 为空则不可订阅
@@ -33,7 +34,7 @@ export interface Author {
 }
 
 export interface RawItem {
-  cover: image.RawImage
+  cover: RawResource
   title: string
   id: string
   /** @alias tags  */
@@ -92,7 +93,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public static is(value: unknown): value is Item {
     return value instanceof this
   }
-  public cover: image.RawImage
+  public cover: RawResource
   public get $cover() {
     return image.Image.create(this.cover)
   }
