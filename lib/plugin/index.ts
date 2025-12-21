@@ -16,7 +16,7 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
   const {
     name: plugin,
     content,
-    image,
+    resource,
     search,
     user,
     subscribe,
@@ -31,9 +31,9 @@ export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginCo
       if (itemTranslator) Item.itemTranslator.set(ct, itemTranslator)
     }
 
-  if (image) {
-    if (image.forks) for (const [name, url] of Object.entries(image.forks)) Image.fork.set([plugin, name], url)
-    if (image.process) for (const [name, fn] of Object.entries(image.process)) Image.processInstances.set([plugin, name], fn)
+  if (resource) {
+    if (resource.types) for (const type of resource.types) Image.fork.set([plugin, type.type], type)
+    if (resource.process) for (const [name, fn] of Object.entries(resource.process)) Image.processInstances.set([plugin, name], fn)
   }
   if (search) {
     if (search.categories)

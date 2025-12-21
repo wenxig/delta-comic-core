@@ -1,6 +1,7 @@
 import { SourcedKeyMap, Struct, type MetaData } from "@/utils/data"
 import { useGlobalVar } from "@/utils/plugin"
 import { isString } from "es-toolkit/compat"
+import { shallowReactive } from "vue"
 
 
 export type ProcessInstance = (nowPath: string, resource: Resource) => Promise<[path: string, exit: boolean]>
@@ -9,18 +10,24 @@ export interface ProcessStep {
   ignoreExit?: boolean
 }
 type ProcessStep_ = ProcessStep | string
+
+export interface ResourceType {
+  type: string
+  urls: string[]
+  test: (url: string) => Promise<boolean>
+}
 export interface RawResource {
   $$plugin: string
   $$meta?: MetaData
-  path: string
-  forkNamespace: string
+  pathname: string
+  type: string
   processSteps?: ProcessStep_[]
 }
 export class Resource extends Struct<RawResource> implements RawResource {
   public static processInstances = useGlobalVar(SourcedKeyMap.create<[plugin: string, referenceName: string], ProcessInstance>(), 'uni/resource/processInstances')
 
-  public static fork = useGlobalVar(SourcedKeyMap.create<[plugin: string, namespace: string], string[]>(), 'uni/resource/fork')
-  public static activeFork = useGlobalVar(SourcedKeyMap.create<[plugin: string, namespace: string], string>(), 'uni/resource/activeFork')
+  public static fork = useGlobalVar(SourcedKeyMap.create<[plugin: string, type: string], ResourceType>(), 'uni/resource/fork')
+  public static precedenceFork = useGlobalVar(SourcedKeyMap.create<[plugin: string, type: string], string>(), 'uni/resource/precedenceFork')
 
   public static is(value: unknown): value is Resource {
     return value instanceof this
@@ -32,20 +39,20 @@ export class Resource extends Struct<RawResource> implements RawResource {
     super(v)
     this.$$plugin = v.$$plugin
     this.$$meta = v.$$meta
-    this.path = v.path
-    this.forkNamespace = v.forkNamespace
+    this.pathname = v.pathname
+    this.type = v.type
     this.processSteps = (v.processSteps ?? []).map<ProcessStep>(v => isString(v) ? {
       referenceName: v,
       ignoreExit: false
     } : v)
   }
-  public forkNamespace: string
-  public path: string
+  public type: string
+  public pathname: string
   public processSteps: ProcessStep[]
   public $$meta?: MetaData
   public $$plugin: string
   public async getUrl(): Promise<string> {
-    let resultPath = this.path
+    let resultPath = this.pathname
     for (const option of this.processSteps) {
       // preflight
       const instance = Resource.processInstances.get([this.$$plugin, option.referenceName])
@@ -60,10 +67,27 @@ export class Resource extends Struct<RawResource> implements RawResource {
       if (option.ignoreExit || !result[1]) continue
       break
     }
-    if (!URL.canParse(resultPath)) {
-      return `${Resource.activeFork.get([this.$$plugin, this.forkNamespace])}/${resultPath}`
-    }
+    if (!URL.canParse(resultPath))
+      return `${this.getThisFork()}/${resultPath}`
     return resultPath
   }
+  public omittedForks = shallowReactive(new Set<string>())
+  public getThisFork() {
+    const all = new Set(Resource.fork.get([this.$$plugin, this.type])?.urls ?? [])
+    if (this.omittedForks.size == 0)
+      var fork: string | undefined = Resource.precedenceFork.get([this.$$plugin, this.type])
+    else {
+      const diff = Array.from(all.difference(this.omittedForks).values())
+      var fork: string | undefined = diff[0]
+    }
+    if (!fork) throw new Error(`[Resource.getThisFork] fork not found, type: [${this.$$plugin}, ${this.type}]`)
+    return fork
+  }
+  public localChangeFork() {
+    const all = new Set(Resource.fork.get([this.$$plugin, this.type])?.urls ?? [])
+    this.omittedForks.add(this.getThisFork())
+    const isEmptied = all.difference(this.omittedForks).size != 0
+    if (isEmptied) this.omittedForks.clear()
+    return isEmptied
+  }
 }
-export type Resource_ = string | Resource

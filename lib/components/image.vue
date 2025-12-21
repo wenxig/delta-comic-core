@@ -29,7 +29,7 @@ const $props = withDefaults(defineProps<{
 
 }>(), {
   fetchpriority: 'auto',
-  retryMax: 6,
+  retryMax: 2,
 })
 const src = computedAsync(async () => {
   try {
@@ -48,13 +48,27 @@ const $emit = defineEmits<{
   error: []
 }>()
 let reloadTime = 0
-const reload = async () => {
-  reloadTime++
-  if (reloadTime > $props.retryMax) {
+let isForkEmpty = false
+const handleFail = async () => {
+  if (!isForkEmpty) {
     images.error.add(src.value)
     return $emit('error')
   }
+  reloadTime++
   show.value = false
+  if (reloadTime > $props.retryMax) {
+    if (!uni.resource.Resource.is($props.src)) {
+      isForkEmpty = true
+      handleFail()
+      return
+    }
+    if(!$props.src.localChangeFork()) {
+      isForkEmpty = true
+      handleFail()
+      return
+    }
+    reloadTime = 0
+  }
   await nextTick()
   show.value = true
 }
@@ -65,8 +79,9 @@ const temp = useTemp().$apply('imageState', () => ({
 const images = $props.useList ?? temp
 const show = shallowRef(true)
 const beginReload = () => {
+  isForkEmpty = false
   reloadTime = 0
-  reload()
+  handleFail()
 }
 watch(src, beginReload)
 defineSlots<{
@@ -107,7 +122,7 @@ const NImg = window.$api.NImage as typeof NImage
 </script>
 
 <template>
-  <NImg @error="reload" v-bind="$props" :object-fit="fit" preview-disabled :alt ref="img"
+  <NImg @error="handleFail" v-bind="$props" :object-fit="fit" preview-disabled :alt ref="img"
     :img-props="{ ...(imgProp ?? {}), class: 'w-full', ['fetchpriority' as any]: $props.fetchpriority }"
     :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style
     v-show="!images.error.has(src) && images.loaded.has(src)" v-if="show" @load="handleImageLoad"
@@ -120,14 +135,14 @@ const NImg = window.$api.NImage as typeof NImage
     <Loading v-else />
   </div>
   <template v-if="images.error.has(src) && !hideError">
-    <NImg @error="reload" v-bind="$props" :object-fit="fit" preview-disabled :alt
+    <NImg @error="handleFail" v-bind="$props" :object-fit="fit" preview-disabled :alt
       :img-props="{ ...(imgProp ?? {}), class: 'w-full', ['fetchpriority' as any]: $props.fetchpriority }"
       :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style v-if="fallback"
       :src="fallbackSrc" />
     <div class="justify-center items-center flex-col" @click.stop="() => {
-        images.error.delete(src)
-        beginReload()
-      }" v-else :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]">
+      images.error.delete(src)
+      beginReload()
+    }" v-else :class="[{ '!rounded-full': !!round }, inline ? 'inline-flex' : 'flex', $props.class]">
       <slot name="loading" v-if="$slots.loading"></slot>
       <template v-else>
         <VanIcon name="warning-o" size="2.5rem" color="var(--van-text-color-2)" />

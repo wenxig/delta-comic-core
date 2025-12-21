@@ -1,5 +1,4 @@
 import { ContentPageLike, ViewLayoutComp, type ContentPage } from "@/struct/content"
-import { ProcessInstance, type Image } from "@/struct/image"
 import { CommentRow } from "@/struct/comment"
 import { UserCardComp } from "@/struct/user"
 import { RStream, type RPromiseContent } from "@/utils/data"
@@ -7,6 +6,8 @@ import { Item, RawItem, type Author, type ItemCardComp } from "@/struct/item"
 import { Component, type MaybeRefOrGetter } from "vue"
 import type { ConfigPointer } from "@/config"
 import type { SharedFunctions } from "@/utils/eventBus"
+import type { ProcessInstance, ResourceType } from "@/struct/resource"
+import type { Image } from "@/struct/image"
 
 export type PluginDefineResult = {
   api?: Record<string, string | undefined | false>
@@ -15,7 +16,7 @@ export type PluginDefineResult = {
 export interface PluginConfig {
   name: string
   content?: PluginConfigContent
-  image?: PluginConfigImage
+  resource?: PluginConfigResource
   api?: Record<string, PluginConfigApi>
   user?: PluginConfigUser
   auth?: PluginConfigAuth
@@ -212,22 +213,9 @@ export interface PluginConfigApi {
   test: (fork: string, signal: AbortSignal) => PromiseLike<void>
 }
 
-export interface PluginConfigImage {
-  /** 
-   * @description
-   * key: namespace  
-   * value: url  
-   * 与`Image.setFork(name, key, value)`等价
-  */
-  forks: Record<string, string[]>
-  test: string
-  /**
-   * @description
-   * key: reference name  
-   * value: process function  
-   * 与`Image.setProcess(name, key, value)`等价
-  */
+export interface PluginConfigResource {
   process?: Record<string, ProcessInstance>
+  types?: ResourceType[]
 }
 
 export type PluginConfigContent = Record<string, {
