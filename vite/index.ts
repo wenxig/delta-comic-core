@@ -19,7 +19,7 @@ export const deltaComic = (config: {
   /** @default 'src/main.ts' */
   entry?: string
 },
-  command: "build" | "serve") => [
+  command: "build" | "serve"): any => [
     command == 'build' ? false : external({
       externals: {
         vue: 'window.$$lib$$.Vue',
