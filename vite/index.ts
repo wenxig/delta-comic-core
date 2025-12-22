@@ -1,6 +1,3 @@
-import type { PluginOption } from 'vite'
-
-
 import external from 'vite-plugin-external'
 import monkey from 'vite-plugin-monkey'
 /** vite插件，自动配置了库的外部化与脚本头 */
@@ -22,7 +19,7 @@ export const deltaComic = (config: {
   /** @default 'src/main.ts' */
   entry?: string
 },
-  command: "build" | "serve"): PluginOption => [
+  command: "build" | "serve") => [
     command == 'build' ? false : external({
       externals: {
         vue: 'window.$$lib$$.Vue',

@@ -56,7 +56,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'vue', 'axios', 'es-toolkit', 'naive-ui', 'vant', "motion-v", 'pinia', 'vue-router', 'crypto-js',
-        'vite-plugin-external', 'vite-plugin-monkey'
+        'vite-plugin-external', 'vite-plugin-monkey', 'vite'
       ],
       output: {
         globals: {
