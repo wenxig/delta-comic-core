@@ -50,7 +50,7 @@ const $emit = defineEmits<{
 let reloadTime = 0
 let isForkEmpty = false
 const handleFail = async () => {
-  if (!isForkEmpty) {
+  if (isForkEmpty) {
     images.error.add(src.value)
     return $emit('error')
   }

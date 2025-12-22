@@ -119,6 +119,12 @@ export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({
   }),
   version: {
     plugin: v.version.split('/')[0],
-    supportCore: v.version.split('/')[1],
+    supportCore: (() => {
+      const raw = v.version.split('/')[1]
+      if (Boolean(v.version.split('/')[2])) {
+        return raw.replaceAll('>=', '^')
+      }
+      return raw
+    })()
   }
 })

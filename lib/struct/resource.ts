@@ -9,7 +9,7 @@ export interface ProcessStep {
   referenceName: string
   ignoreExit?: boolean
 }
-type ProcessStep_ = ProcessStep | string
+export type ProcessStep_ = ProcessStep | string
 
 export interface ResourceType {
   type: string

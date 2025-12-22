@@ -45,13 +45,19 @@ export default defineConfig({
   base: "/",
   build: {
     lib: {
-      entry: [resolve(__dirname, 'lib/index.ts'), resolve(__dirname, 'vite/index.ts')],
+      entry: [
+        resolve(__dirname, 'lib/index.ts'),
+        resolve(__dirname, 'vite/index.ts')
+      ],
       name: 'Bundle',
       fileName: 'bundle',
     },
     sourcemap: true,
     rollupOptions: {
-      external: ['vue', 'axios', 'es-toolkit', 'naive-ui', 'vant', "motion-v", 'pinia', 'vue-router', 'crypto-js'],
+      external: [
+        'vue', 'axios', 'es-toolkit', 'naive-ui', 'vant', "motion-v", 'pinia', 'vue-router', 'crypto-js',
+        'vite-plugin-external', 'vite-plugin-monkey'
+      ],
       output: {
         globals: {
           vue: 'window.$$lib$$.Vue',
