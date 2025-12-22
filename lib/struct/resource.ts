@@ -14,7 +14,7 @@ type ProcessStep_ = ProcessStep | string
 export interface ResourceType {
   type: string
   urls: string[]
-  test: (url: string, signal: AbortSignal) => Promise<boolean>
+  test: (url: string, signal: AbortSignal) => PromiseLike<void>
 }
 export interface RawResource {
   $$plugin: string

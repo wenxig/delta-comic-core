@@ -168,11 +168,11 @@ defineExpose({
           <VanLoading size="25px" color="var(--p-color)" v-if="animateOn === 'isLoadingNoData'" />
           <Loading size="10px" color="white" v-else-if="animateOn === 'isLoadingData'">加载中</Loading>
           <div v-else-if="animateOn === 'isEmpty'">
-            <NEmpty description="无结果" class="w-full !justify-center" :class="[classEmpty]"
+            <NEmpty description="无结果" class="w-full justify-center!" :class="[classEmpty]"
               :style="[style, styleEmpty]" />
           </div>
-          <div v-else-if="animateOn === 'isErrorNoData'" class="!size-full">
-            <NResult class="!items-center !justify-center flex flex-col !size-full *:w-full text-wrap" status="error"
+          <div v-else-if="animateOn === 'isErrorNoData'" class="size-full">
+            <NResult class="items-center! justify-center! flex flex-col size-full! *:w-full text-wrap" status="error"
               title="网络错误" :class="[classError]" :style="[style, styleError]"
               :description="unionSource.errorCause ?? '未知原因'">
               <template #footer>
