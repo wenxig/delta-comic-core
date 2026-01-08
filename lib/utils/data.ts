@@ -14,6 +14,10 @@ export class Struct<TRaw extends object> {
     return <TRaw>JSON.parse(JSON.stringify(this.$$raw))
   }
   constructor(protected $$raw: TRaw) { }
+  public static toRaw<T extends object, TRaw = T extends Struct<infer TR> ? TR : T>(item: T): TRaw {
+    if (item instanceof Struct) return item.toJSON()
+    return item as any
+  }
 }
 
 export type MetaData = Record<string | number, any>
