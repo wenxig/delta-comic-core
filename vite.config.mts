@@ -13,7 +13,10 @@ import MotionResolver from 'motion-v/resolver'
 import { NaiveUiResolver, VantResolver } from 'unplugin-vue-components/resolvers'
 export default defineConfig({
   plugins: [
-    dts({ include: ['./lib', './vite'], tsconfigPath: './tsconfig.json' }),
+    dts({
+      include: ['./lib', './vite'],
+      tsconfigPath: './tsconfig.json',
+    }),
     vue(),
     vueJsx(),
     Components({

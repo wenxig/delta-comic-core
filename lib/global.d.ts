@@ -1,8 +1,7 @@
-import type { Style } from '@capacitor/status-bar'
 import { type useMessage, type useLoadingBar, type useDialog } from 'naive-ui'
 import type { Router } from 'vue-router'
 import { uni } from './struct'
-import { Utils } from './utils';
+import { Utils } from './utils'
 import { Component } from 'vue'
 import { ExternalLibKey } from '../external'
 declare global {
@@ -34,9 +33,7 @@ declare module 'vue-router' {
   }
   interface RouteMeta {
     statusBar?: {
-      overlaysWebView?: boolean
-      style?: Style
-      backgroundColor?: string
+      style?: 'light' | 'dark' | 'auto'
     }
     force?: boolean
   }

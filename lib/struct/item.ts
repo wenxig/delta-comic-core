@@ -7,7 +7,6 @@ import { type Component } from "vue"
 import type { PluginConfigContentItemTranslator } from "@/plugin/define"
 import { useGlobalVar } from "@/utils/plugin"
 import type { uni } from "."
-import type { StyleValue } from "vue"
 import type { RawResource } from "./resource"
 
 export interface Category {
@@ -63,7 +62,7 @@ export type ItemCardComp = Component<{
   disabled?: boolean
   type?: 'default' | 'big' | 'small'
   class?: any
-  style?: StyleValue
+  style?: any
 }, any, any, any, any, {
   click: []
 }, {

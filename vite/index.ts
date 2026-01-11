@@ -19,18 +19,26 @@ export const deltaComic = (config: {
   /** @default 'src/main.ts' */
   entry?: string
 },
-  command: "build" | "serve"): any => [
+  command: "build" | "serve", packageJson: { dependencies: Record<string, string>; devDependencies: Record<string, string> }): any => {
+  let externalDepends: Record<string, string> = {
+    vue: 'window.$$lib$$.Vue',
+    vant: 'window.$$lib$$.Vant',
+    'naive-ui': 'window.$$lib$$.Naive',
+    axios: 'window.$$lib$$.Axios',
+    'es-toolkit': 'window.$$lib$$.EsKits',
+    'delta-comic-core': 'window.$$lib$$.Dcc',
+    'vue-router': 'window.$$lib$$.VR',
+    'crypto-js': 'window.$$lib$$.Crypto'
+  }
+
+  const allDependencies = { ...packageJson.dependencies, ...packageJson.devDependencies }
+  externalDepends = Object.fromEntries(
+    Object.entries(externalDepends).filter(([key]) => key in allDependencies)
+  )
+
+  const result = [
     command == 'build' ? false : external({
-      externals: {
-        vue: 'window.$$lib$$.Vue',
-        vant: 'window.$$lib$$.Vant',
-        'naive-ui': 'window.$$lib$$.Naive',
-        axios: 'window.$$lib$$.Axios',
-        'es-toolkit': 'window.$$lib$$.EsKits',
-        'delta-comic-core': 'window.$$lib$$.Dcc',
-        'vue-router': 'window.$$lib$$.VR',
-        'crypto-js': 'window.$$lib$$.Crypto'
-      }
+      externals: externalDepends
     }),
     monkey({
       entry: config.entry ?? 'src/main.ts',
@@ -48,21 +56,14 @@ export const deltaComic = (config: {
         }),
       },
       build: {
-        externalGlobals: command == 'serve' ? {} : {
-          vue: 'window.$$lib$$.Vue',
-          vant: 'window.$$lib$$.Vant',
-          'naive-ui': 'window.$$lib$$.Naive',
-          axios: 'window.$$lib$$.Axios',
-          'es-toolkit': 'window.$$lib$$.EsKits',
-          'delta-comic-core': 'window.$$lib$$.Dcc',
-          'vue-router': 'window.$$lib$$.VR',
-          'crypto-js': 'window.$$lib$$.Crypto'
-        },
+        externalGlobals: command == 'serve' ? {} : externalDepends,
       },
       server: {
         mountGmApi: false,
         open: false,
         prefix: false
-      }
+      },
     })
   ]
+  return result
+}

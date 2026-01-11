@@ -1,7 +1,7 @@
 import type { uni } from "@/struct"
-import type { Component, SlotsType } from "vue"
+import type { Component, ShallowRef, SlotsType } from "vue"
 import type { Utils } from ".."
-
+import { Kysely } from 'kysely';
 interface DependDefineConstraint<_T> {
 }
 export type DependDefine<T> = symbol & DependDefineConstraint<T>
@@ -32,5 +32,13 @@ export const coreModule = declareDependType<{
     FavouriteSelect: Component<{
       item: uni.item.Item
     }>
+    AuthorIcon: Component<{
+      author: {
+        $$plugin: string
+        icon: string | uni.resource.RawResource
+      }
+      sizeSpacing: number
+    }>
   }
+  db: ShallowRef<Kysely<any>, Kysely<any>>
 }>('core')
