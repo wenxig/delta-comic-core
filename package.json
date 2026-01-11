@@ -1,6 +1,6 @@
 {
   "name": "delta-comic-core",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "我曾亲眼见证神的熟视无睹.",
   "homepage": "https://github.com/wenxig/delta-comic-core",
   "repository": {
@@ -19,7 +19,6 @@
     "@vicons/material": "^0.13.0",
     "@vueuse/core": "14.1.0",
     "dayjs": "^1.11.19",
-    "kysely": "^0.28.9",
     "mitt": "^3.0.1",
     "tailwindcss-safe-area-capacitor": "^0.5.1",
     "vidstack": "^1.12.13",
@@ -32,8 +31,19 @@
     "naive-ui": "2.43.1",
     "pinia": "^3.0.3",
     "vant": "4.9.21",
-    "vue": "3.5.22",
     "vue-router": "4.6.3"
+  },
+  "peerDependencies": {
+    "kysely": "^0.28.9",
+    "axios": "^1.12.2",
+    "crypto-js": "4.2.0",
+    "es-toolkit": "^1.40.0",
+    "motion-v": "1.8.1",
+    "naive-ui": "2.43.2",
+    "pinia": "^3.0.4",
+    "vant": "4.9.22",
+    "vue": "3.5.26",
+    "vue-router": "4.6.4"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",

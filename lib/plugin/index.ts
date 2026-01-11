@@ -111,10 +111,10 @@ export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({
   author: v.author ?? '',
   description: v.description,
   require: (v.require ? isString(v.require) ? [v.require] : v.require : []).map(dep => {
-    const [name, download] = dep.split(':')
+    const [name, ...download] = dep.split(':')
     return {
       id: name,
-      download
+      download: download.join(':')
     }
   }),
   version: {
