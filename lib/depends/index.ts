@@ -1,7 +1,8 @@
 import type { uni } from "@/struct"
-import type { Component, ShallowRef, SlotsType } from "vue"
+import type { Component, MaybeRefOrGetter, ShallowRef, SlotsType } from "vue"
 import type { Utils } from ".."
 import { Kysely } from 'kysely';
+import type { RemovableRef } from "@vueuse/core"
 interface DependDefineConstraint<_T> {
 }
 export type DependDefine<T> = symbol & DependDefineConstraint<T>
@@ -41,4 +42,5 @@ export const coreModule = declareDependType<{
     }>
   }
   db: ShallowRef<Kysely<any>, Kysely<any>>
+  useNativeStore: <T>(namespace: string, key: MaybeRefOrGetter<string>, defaultValue: MaybeRefOrGetter<T>) => RemovableRef<T>
 }>('core')

@@ -1,8 +1,9 @@
 import { defineStore } from "pinia"
-import { useLocalStorage, usePreferredDark } from "@vueuse/core"
+import { usePreferredDark } from "@vueuse/core"
 import { computed, shallowReactive, type Ref } from "vue"
 import { fromPairs } from "es-toolkit/compat"
 import type { UniFormDescription, UniFormResult } from "@/plugin/define"
+import { coreModule, requireDepend } from "@/depends"
 const defaultConfig = {
   'app.easyTitle': false
 }
@@ -83,8 +84,9 @@ export const useConfig = defineStore('config', helper => {
     form.has(pointer.key)
     , 'isExistConfig')
   const $resignerConfig = helper.action((pointer: ConfigPointer) => {
+    const { useNativeStore } = requireDepend(coreModule)
     const cfg = useConfig()
-    const store = useLocalStorage(`config:${pointer.pluginName}`, fromPairs(Object.entries(pointer.config)
+    const store = useNativeStore(pointer.pluginName, 'config', fromPairs(Object.entries(pointer.config)
       .map(([name, desc]) => [name, desc.defaultValue])
     ))
     cfg.form.set(pointer.key, {
