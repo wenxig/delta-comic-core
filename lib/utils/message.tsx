@@ -264,14 +264,15 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
                             withDirectives(
                               (<div class="absolute! ease-in-out! right-[4%] top-1/2 -translate-y-1/2 flex gap-3">
                                 <NButton tertiary circle onClick={() => {
+                                  if (v.state != 'error') return
                                   v.retry = undefined
-                                  v.pc.reject()
-                                }} class="w-5! aspect-square!">{{
+                                  v.pc.reject(v.error)
+                                }} class="size-10!">{{
                                   icon: () => (<NIcon>
                                     <CloseRound />
                                   </NIcon>)
                                 }}</NButton>
-                                <NButton tertiary circle onClick={v.retry} class="w-5! aspect-square!">{{
+                                <NButton tertiary circle onClick={v.retry} class="size-10!">{{
                                   icon: () => (<NIcon>
                                     <ReloadOutlined />
                                   </NIcon>)
@@ -361,7 +362,6 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
   const controller = Promise.withResolvers<T>()
   bindInstance
     .then(async result => {
-      await until(() => messageList.every(v => !!v.state)).toBeTruthy()
       minsize.value = false // 最小化就展开提醒
       isAllDone.value = true // 展示完成标
       const maybeError = messageList.find(v => v.state == 'error')
@@ -379,6 +379,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
       allDownloadMessagesIsMinsize[index] = undefined
 
     })
+  bindInstance
     .catch(async err => {
       controller.reject(err)
       minsize.value = false // 最小化就展开提醒
