@@ -1,6 +1,6 @@
 # Delta Comic Core - _<span style="font-weight: lighter;font-size:16px">我曾亲眼见证神的熟视无睹</span>_
 
-[![GitHub](https://img.shields.io/github/license/wenxig/delta-comic-core)](https://raw.githubusercontent.com/wenxig/delta-comic-core/main/LICENSE)
+[![GitHub](https://img.shields.io/github/license/delta-comic/delta-comic-core)](https://raw.githubusercontent.com/delta-comic/delta-comic-core/main/LICENSE)
 
 - 工具库
 
@@ -11,20 +11,20 @@
 
 ## 如何使用
 
-  1. `git clone https://github.com/wenxig/delta-comic-core`
+  1. `git clone https://github.com/delta-comic/delta-comic-core`
   2. `bun run build`
-  3. `pnpm i "/path/to/delta-comic-core"`
+  3. `pnpm i "./delta-comic-core"`
 
 ## 为谁编写插件?
 
- [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=wenxig&repo=delta-comic)](https://github.com/wenxig/delta-comic)
+ [![Readme Card](https://wenxig-grs.vercel.app/api/pin/?username=delta-comic&repo=delta-comic&user&theme=transparent)](https://github.com/delta-comic/delta-comic)
 
-## 现成的插件
+## 辅助的插件
 
-### PicaAcg/bika/哔卡漫画
+### Layout
 
-   [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=wenxig&repo=delta-comic-plugin-bika&user)](https://github.com/wenxig/delta-comic-plugin-bika)  
+   [![Readme Card](https://wenxig-grs.vercel.app/api/pin/?username=delta-comic&repo=delta-comic-plugin-layout&user&theme=transparent)](https://github.com/delta-comic/delta-comic-plugin-bika)  
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=wenxig/delta-comic-core&type=Date)](https://www.star-history.com/#wenxig/delta-comic-core&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=delta-comic/delta-comic-core&type=Date)](https://www.star-history.com/#delta-comic/delta-comic-core&Date)
