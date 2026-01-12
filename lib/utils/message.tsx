@@ -243,7 +243,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
               <TransitionGroup name="list" tag="ul" class="w-full! h-fit ml-1!">
                 {
                   messageList.map((v, index) => (
-                    <div class="w=full py-1 van-hairline--bottom" key={index} >
+                    <div class="w-full py-1 van-hairline--bottom" key={index} >
                       <span class="font-semibold text-sm">{v.title}</span>
                       <div class="w-full h-fit relative">
                         <NProgress
@@ -266,12 +266,12 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
                                 <NButton tertiary circle onClick={() => {
                                   v.retry = undefined
                                   v.pc.reject()
-                                }} class="w-[18%]! aspect-square!">{{
+                                }} class="w-5! aspect-square!">{{
                                   icon: () => (<NIcon>
                                     <CloseRound />
                                   </NIcon>)
                                 }}</NButton>
-                                <NButton tertiary circle onClick={v.retry} class="w-[18%]! aspect-square!">{{
+                                <NButton tertiary circle onClick={v.retry} class="w-5! aspect-square!">{{
                                   icon: () => (<NIcon>
                                     <ReloadOutlined />
                                   </NIcon>)
@@ -345,9 +345,6 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
       }
     }
     call()
-    pc.promise.finally(() => {
-
-    })
     return pc.promise
   }
 
@@ -382,7 +379,20 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
       allDownloadMessagesIsMinsize[index] = undefined
 
     })
-    .catch(err => controller.reject(err))
+    .catch(async err => {
+      controller.reject(err)
+      minsize.value = false // 最小化就展开提醒
+
+      delay(3000).then(() => {
+        minsize.value = true
+      }) // 到时间自动关
+      await nextTick()
+      await until(minsize).toBeTruthy()
+
+      minsizeWatcher.stop()
+      message.destroy()
+      allDownloadMessagesIsMinsize[index] = undefined
+    })
 
   return controller.promise
 }

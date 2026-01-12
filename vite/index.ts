@@ -32,7 +32,7 @@ export const deltaComic = (config: {
   }
 
   const allDependencies = { ...packageJson.dependencies, ...packageJson.devDependencies }
-  externalDepends = Object.fromEntries(
+  const needExternalDepends = Object.fromEntries(
     Object.entries(externalDepends).filter(([key]) => key in allDependencies)
   )
 
@@ -51,12 +51,13 @@ export const deltaComic = (config: {
         author: config.author,
         description: config.description,
         require: ['core', ...(config.require ?? [])].map(v => {
-          if (typeof v == 'string') return `${v}:`
-          return `${v.id}:${v.download ?? ''}`
+          if (typeof v == 'string') return `dc|${v}:`
+          return `dc|${v.id}:${v.download ?? ''}`
         }),
       },
       build: {
-        externalGlobals: command == 'serve' ? {} : externalDepends,
+        externalGlobals: command == 'serve' ? {} : needExternalDepends,
+        systemjs: 'inline'
       },
       server: {
         mountGmApi: false,

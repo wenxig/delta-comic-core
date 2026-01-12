@@ -7,7 +7,7 @@ import { User } from "@/struct/user"
 import { Item } from "@/struct/item"
 import type { PluginConfig } from "./define"
 import { useConfig } from "@/config"
-import { isString } from "es-toolkit"
+import { isString, isUndefined } from "es-toolkit"
 
 export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginConfig)) => {
   if (isFunction(config)) var cfg = config(window.$$safe$$)
@@ -112,11 +112,12 @@ export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({
   description: v.description,
   require: (v.require ? isString(v.require) ? [v.require] : v.require : []).map(dep => {
     const [name, ...download] = dep.split(':')
+    if (!name.startsWith('dc|')) return
     return {
-      id: name,
+      id: name.replace(/^dc\|/, ''),
       download: download.join(':')
     }
-  }),
+  }).filter(v => !isUndefined(v)),
   version: {
     plugin: v.version.split('/')[0],
     supportCore: (() => {
