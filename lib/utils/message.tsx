@@ -3,7 +3,7 @@ import { isFunction } from "es-toolkit/compat"
 import type { DialogOptions, DialogReactive } from "naive-ui"
 import { noop } from "@vueuse/core"
 import { ReloadOutlined } from "@vicons/antd"
-import { DoneRound, FileDownloadRound } from "@vicons/material"
+import { CloseRound, DoneRound, FileDownloadRound } from "@vicons/material"
 import { until } from "@vueuse/core"
 import { isError, isUndefined, delay } from "es-toolkit"
 import { isNumber, toString } from "es-toolkit/compat"
@@ -157,11 +157,11 @@ export interface DownloadMessageLoading {
   retryable: boolean
 }
 export interface DownloadMessageBind {
-  createProgress<TResult>(title: string, fn: (ins: Reactive<DownloadMessageProgress>) => PromiseLike<TResult>): Promise<TResult>
-  createLoading<TResult>(title: string, fn: (ins: Reactive<DownloadMessageLoading>) => PromiseLike<TResult>): Promise<TResult>
+  createProgress<TResult>(title: string, fn: (ins: Reactive<DownloadMessageProgress>) => Promise<TResult>): Promise<TResult>
+  createLoading<TResult>(title: string, fn: (ins: Reactive<DownloadMessageLoading>) => Promise<TResult>): Promise<TResult>
 }
-const allDownloadMessagesIsMinsize = useGlobalVar(reactive(new Array<boolean | undefined>()), 'utils/messsage/allDownloadMessagesIsMinsize')
-export const createDownloadMessage = async <T,>(title: string, bind: (method: DownloadMessageBind) => PromiseLike<T>): Promise<T> => {
+const allDownloadMessagesIsMinsize = useGlobalVar(reactive(new Array<boolean | undefined>()), 'utils/message/allDownloadMessagesIsMinsize')
+export const createDownloadMessage = async <T,>(title: string, bind: (method: DownloadMessageBind) => Promise<T>): Promise<T> => {
   const index = allDownloadMessagesIsMinsize.length
   allDownloadMessagesIsMinsize[index] = false
   const isAllDone = ref(false)
@@ -170,6 +170,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
     description: string
     retry?: () => any
     progress?: number
+    pc: PromiseWithResolvers<any>
   } & ({
     state: 'success' | undefined
   } | {
@@ -219,7 +220,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
           minsize.value ?
             <div class="size-full relative" onClick={() => minsize.value = false}>
               <Loading class="absolute top-0 left-0 size-full" color="var(--p-color)" />
-              <NIcon class="!absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 " size="18px" color="var(--p-color)">
+              <NIcon class="absolute! top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 " size="18px" color="var(--p-color)">
                 {
                   messageList.some(v => v.state == 'error') ?
                     <Icon name="cross" />
@@ -239,7 +240,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
               </div>
               {/* content */}
               {/* @ts-ignore class应当存在 */}
-              <TransitionGroup name="list" tag="ul" class="!w-full h-fit !ml-1">
+              <TransitionGroup name="list" tag="ul" class="w-full! h-fit ml-1!">
                 {
                   messageList.map((v, index) => (
                     <div class="w=full py-1 van-hairline--bottom" key={index} >
@@ -252,8 +253,8 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
                           type="line"
                           showIndicator={false}
                           show-indicator={false}
-                          class={["**:in-[.n-progress-graph-line-fill]:!hidden transition-all",
-                            (v.state == 'error' && v.retry) ? '!w-[80%]' : '!w-[95%]'
+                          class={["**:in-[.n-progress-graph-line-fill]:hidden! transition-all",
+                            (v.state == 'error' && v.retry) ? 'w-[60%]!' : 'w-[95%]!'
                           ]}
                           height={7}
                           status={v.state}
@@ -261,17 +262,27 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
                         <Transition name="van-slide-right">
                           {
                             withDirectives(
-                              (<NButton tertiary circle onClick={v.retry} class="!absolute !ease-in-out right-[4%] w-[18%] top-1/2 -translate-y-1/2">{{
-                                icon: () => (<NIcon>
-                                  <ReloadOutlined />
-                                </NIcon>)
-                              }}</NButton>), [
+                              (<div class="absolute! ease-in-out! right-[4%] top-1/2 -translate-y-1/2 flex gap-3">
+                                <NButton tertiary circle onClick={() => {
+                                  v.retry = undefined
+                                  v.pc.reject()
+                                }} class="w-[18%]! aspect-square!">{{
+                                  icon: () => (<NIcon>
+                                    <CloseRound />
+                                  </NIcon>)
+                                }}</NButton>
+                                <NButton tertiary circle onClick={v.retry} class="w-[18%]! aspect-square!">{{
+                                  icon: () => (<NIcon>
+                                    <ReloadOutlined />
+                                  </NIcon>)
+                                }}</NButton>
+                              </div>), [
                               [vShow, (v.state == 'error' && v.retry)]
                             ])
                           }
                         </Transition>
                       </div>
-                      <div class="text-xs text-(--van-text-color-2) !h-[1rem]">{(v.state == 'error' && `${v.error.name}: ${v.error.message}`) || v.description || '...'}</div>
+                      <div class="text-xs text-(--van-text-color-2) h-4!">{(v.state == 'error' && `${v.error.name}: ${v.error.message}`) || v.description || '...'}</div>
                     </div>
                   ))
                 }
@@ -299,6 +310,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
         title,
         state,
         error,
+        pc,
         retry: _config.retryable ? call : undefined,
         ..._config
       }
@@ -345,27 +357,32 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
   const createLoading: DownloadMessageBind['createLoading'] = (title, fn) => {
     return createLine(title, {}, fn)
   }
-  const result = await bind({
+  const bindInstance = bind({
     createProgress,
     createLoading
   })
-  await until(() => messageList.every(v => !!v.state)).toBeTruthy()
-  minsize.value = false
-  isAllDone.value = true
+  const controller = Promise.withResolvers<T>()
+  bindInstance
+    .then(async result => {
+      await until(() => messageList.every(v => !!v.state)).toBeTruthy()
+      minsize.value = false // 最小化就展开提醒
+      isAllDone.value = true // 展示完成标
+      const maybeError = messageList.find(v => v.state == 'error')
+      if (maybeError) throw maybeError.error
+      controller.resolve(result)
 
-  delay(3000).then(() => {
-    minsize.value = true
-  })
+      delay(3000).then(() => {
+        minsize.value = true
+      }) // 到时间自动关
+      await nextTick()
+      await until(minsize).toBeTruthy()
 
-  await nextTick()
-  await until(minsize).toBeTruthy()
-  minsizeWatcher.stop()
-  message.destroy()
-  allDownloadMessagesIsMinsize[index] = undefined
+      minsizeWatcher.stop()
+      message.destroy()
+      allDownloadMessagesIsMinsize[index] = undefined
 
-  const maybeError = messageList.find(v => v.state == 'error')
-  console.log('[maybeError]', maybeError, messageList)
-  if (maybeError) throw maybeError.error
+    })
+    .catch(err => controller.reject(err))
 
-  return result
+  return controller.promise
 }
