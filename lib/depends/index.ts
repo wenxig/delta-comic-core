@@ -42,5 +42,7 @@ export const coreModule = declareDependType<{
     }>
   }
   db: ShallowRef<Kysely<any>, Kysely<any>>
-  useNativeStore: <T>(namespace: string, key: MaybeRefOrGetter<string>, defaultValue: MaybeRefOrGetter<T>) => RemovableRef<T>
+  useNativeStore: UseNativeStore
 }>('core')
+
+export type UseNativeStore = <T>(namespace: string, key: MaybeRefOrGetter<string>, defaultValue: MaybeRefOrGetter<T>) => RemovableRef<T>

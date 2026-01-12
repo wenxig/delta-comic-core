@@ -57,7 +57,6 @@ export const deltaComic = (config: {
       },
       build: {
         externalGlobals: command == 'serve' ? {} : needExternalDepends,
-        systemjs: 'inline'
       },
       server: {
         mountGmApi: false,

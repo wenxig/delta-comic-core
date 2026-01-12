@@ -3,7 +3,7 @@ import { usePreferredDark } from "@vueuse/core"
 import { computed, shallowReactive, type Ref } from "vue"
 import { fromPairs } from "es-toolkit/compat"
 import type { UniFormDescription, UniFormResult } from "@/plugin/define"
-import { coreModule, requireDepend } from "@/depends"
+import { type UseNativeStore } from "@/depends"
 const defaultConfig = {
   'app.easyTitle': false
 }
@@ -84,7 +84,7 @@ export const useConfig = defineStore('config', helper => {
     form.has(pointer.key)
     , 'isExistConfig')
   const $resignerConfig = helper.action((pointer: ConfigPointer) => {
-    const { useNativeStore } = requireDepend(coreModule)
+    const useNativeStore = window.$api.useNativeStore as UseNativeStore
     const cfg = useConfig()
     const store = useNativeStore(pointer.pluginName, 'config', fromPairs(Object.entries(pointer.config)
       .map(([name, desc]) => [name, desc.defaultValue])
