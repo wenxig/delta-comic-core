@@ -101,6 +101,13 @@ export interface PluginMeta {
     id: string
     download?: string | undefined
   }[]
+  entry?: {
+    path?: string
+  }
+  beforeBoot?: {
+    path: string
+    slot: string
+  }[]
 }
 
 export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({

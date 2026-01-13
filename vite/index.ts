@@ -1,5 +1,18 @@
+import { mergeConfig, type Plugin, type UserConfig, } from 'vite'
 import external from 'vite-plugin-external'
 import monkey from 'vite-plugin-monkey'
+
+const externalDepends: Record<string, string> = {
+  vue: 'window.$$lib$$.Vue',
+  vant: 'window.$$lib$$.Vant',
+  'naive-ui': 'window.$$lib$$.Naive',
+  axios: 'window.$$lib$$.Axios',
+  'es-toolkit': 'window.$$lib$$.EsKits',
+  'delta-comic-core': 'window.$$lib$$.Dcc',
+  'vue-router': 'window.$$lib$$.VR',
+  'crypto-js': 'window.$$lib$$.Crypto'
+}
+
 /** vite插件，自动配置了库的外部化与脚本头 */
 export const deltaComic = (config: {
   name: string
@@ -20,16 +33,7 @@ export const deltaComic = (config: {
   entry?: string
 },
   command: "build" | "serve", packageJson: { dependencies: Record<string, string>; devDependencies: Record<string, string> }): any => {
-  let externalDepends: Record<string, string> = {
-    vue: 'window.$$lib$$.Vue',
-    vant: 'window.$$lib$$.Vant',
-    'naive-ui': 'window.$$lib$$.Naive',
-    axios: 'window.$$lib$$.Axios',
-    'es-toolkit': 'window.$$lib$$.EsKits',
-    'delta-comic-core': 'window.$$lib$$.Dcc',
-    'vue-router': 'window.$$lib$$.VR',
-    'crypto-js': 'window.$$lib$$.Crypto'
-  }
+
 
   const allDependencies = { ...packageJson.dependencies, ...packageJson.devDependencies }
   const needExternalDepends = Object.fromEntries(
@@ -66,4 +70,66 @@ export const deltaComic = (config: {
     })
   ]
   return result
+}
+
+export const deltaComicPlus = (meta: {
+  name: {
+    display: string
+    id: string
+  }
+  version: {
+    plugin: string
+    supportCore: string
+  }
+  author: string
+  description: string
+  require: {
+    id: string
+    download?: string | undefined
+  }[]
+  entry?: {
+    path?: string
+  }
+  beforeBoot?: {
+    path: string
+    slot: string
+  }[]
+},
+  command: "build" | "serve") => {
+
+  const plugin: Plugin = {
+    name: 'delta-comic-helper',
+    config(config) {
+      return mergeConfig(config, <UserConfig>{
+        build: {
+          lib: {
+            entry: meta.entry?.path ?? './src/main.ts',
+            fileName: 'index',
+            cssFileName: 'index',
+            name: `$$lib$$.__DcPlugin__${meta.name.id.replace('-', '_')}__`,
+            formats: ['es']
+          },
+          rollupOptions: {
+            external: Object.keys(externalDepends),
+            output: {
+              globals: externalDepends
+            },
+          }
+        }
+      })
+    },
+    generateBundle() {
+      this.emitFile({
+        type: 'asset', // 指定类型为资源文件
+        fileName: 'manifest.json', // 输出的文件名
+        source: JSON.stringify(meta, null, 2) // 将 meta 对象转换为格式化的 JSON 字符串
+      })
+    }
+  }
+  return [
+    command == 'build' ? false : external({
+      externals: externalDepends
+    }),
+    plugin
+  ] as any
 }
