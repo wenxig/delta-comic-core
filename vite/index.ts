@@ -88,8 +88,8 @@ export const deltaComicPlus = (meta: {
     download?: string | undefined
   }[]
   entry: {
-    path: string
-    buildPath?: string
+    jsPath: string
+    cssPath?: string
   }
   beforeBoot?: {
     path: string
@@ -103,7 +103,7 @@ export const deltaComicPlus = (meta: {
       return mergeConfig(config, <UserConfig>{
         build: {
           lib: {
-            entry: meta.entry?.buildPath ?? './src/main.ts',
+            entry: './src/main.ts',
             fileName: 'index',
             cssFileName: 'index',
             name: `$$lib$$.__DcPlugin__${meta.name.id.replace('-', '_')}__`,

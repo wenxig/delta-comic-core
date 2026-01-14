@@ -102,7 +102,8 @@ export interface PluginMeta {
     download?: string | undefined
   }[]
   entry?: {
-    path?: string
+    jsPath: string
+    cssPath?: string
   }
   beforeBoot?: {
     path: string
