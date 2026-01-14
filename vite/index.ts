@@ -87,15 +87,15 @@ export const deltaComicPlus = (meta: {
     id: string
     download?: string | undefined
   }[]
-  entry?: {
-    path?: string
+  entry: {
+    path: string
+    buildPath?: string
   }
   beforeBoot?: {
     path: string
     slot: string
   }[]
-},
-  command: "build" | "serve") => {
+}) => {
 
   const plugin: Plugin = {
     name: 'delta-comic-helper',
@@ -103,17 +103,18 @@ export const deltaComicPlus = (meta: {
       return mergeConfig(config, <UserConfig>{
         build: {
           lib: {
-            entry: meta.entry?.path ?? './src/main.ts',
+            entry: meta.entry?.buildPath ?? './src/main.ts',
             fileName: 'index',
             cssFileName: 'index',
             name: `$$lib$$.__DcPlugin__${meta.name.id.replace('-', '_')}__`,
-            formats: ['es']
+            formats: ['iife']
           },
           rollupOptions: {
             external: Object.keys(externalDepends),
             output: {
               globals: externalDepends
             },
+
           }
         }
       })
@@ -127,7 +128,7 @@ export const deltaComicPlus = (meta: {
     }
   }
   return [
-    command == 'build' ? false : external({
+    external({
       externals: externalDepends
     }),
     plugin
