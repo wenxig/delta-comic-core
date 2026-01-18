@@ -35,7 +35,7 @@ export abstract class ContentPage<T extends object = any> {
   }
 
 
-  public static categories = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchCategory[]>()), 'uni/contentPage/tabbar')
+  public static categories = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchCategory[]>()), 'uni/contentPage/categories')
   public static addCategories(plugin: string, ...categories: PluginConfigSearchCategory[]) {
     this.categories.set(plugin, (this.categories.get(plugin) ?? []).concat(categories))
   }
@@ -44,7 +44,7 @@ export abstract class ContentPage<T extends object = any> {
 
   public static barcode = useGlobalVar(shallowReactive(new Map<string, PluginConfigSearchBarcode[]>()), 'uni/contentPage/barcode')
   public static addBarcode(plugin: string, cfg: PluginConfigSearchBarcode): string {
-    const old = this.barcode.get(plugin) ?? []
+    const old = this.barcode.get(plugin) ?? [] 
     old.push(cfg)
     this.barcode.set(plugin, old)
     return plugin

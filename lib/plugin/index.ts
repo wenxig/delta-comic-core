@@ -1,81 +1,16 @@
-import { ContentPage } from "@/struct/content"
 import { isFunction } from "es-toolkit/compat"
-import { Image } from "@/struct/image"
 import { SharedFunction } from "@/utils/eventBus"
-import { Comment } from "@/struct/comment"
-import { User } from "@/struct/user"
-import { Item } from "@/struct/item"
 import type { PluginConfig } from "./define"
-import { useConfig } from "@/config"
 import { isString, isUndefined } from "es-toolkit"
 
-export const definePlugin = (config: PluginConfig | ((safe: boolean) => PluginConfig)) => {
+export const definePlugin = async  <T extends PluginConfig>(config: T | ((safe: boolean) => T)) => {
   if (isFunction(config)) var cfg = config(window.$$safe$$)
   else var cfg = config
   console.log('[definePlugin] new plugin defining...', cfg)
-  const {
-    name: plugin,
-    content,
-    resource,
-    search,
-    user,
-    subscribe,
-    share,
-  } = cfg
-  if (content)
-    for (const [ct, { commentRow, contentPage, itemCard, layout, itemTranslator }] of Object.entries(content)) {
-      if (layout) ContentPage.viewLayout.set(ct, layout)
-      if (itemCard) Item.itemCard.set(ct, itemCard)
-      if (contentPage) ContentPage.contentPage.set(ct, contentPage)
-      if (commentRow) Comment.commentRow.set(ct, commentRow)
-      if (itemTranslator) Item.itemTranslator.set(ct, itemTranslator)
-    }
-
-  if (resource) {
-    if (resource.types) for (const type of resource.types) Image.fork.set([plugin, type.type], type)
-    if (resource.process) for (const [name, fn] of Object.entries(resource.process)) Image.processInstances.set([plugin, name], fn)
-  }
-  if (search) {
-    if (search.categories)
-      for (const c of search.categories) ContentPage.addCategories(plugin, c)
-    if (search.tabbar)
-      for (const c of search.tabbar) ContentPage.addTabbar(plugin, c)
-    if (search.hotPage) {
-      for (const mlc of search.hotPage.mainListCard ?? []) ContentPage.addMainList(plugin, mlc)
-      for (const lb of search.hotPage.levelBoard ?? []) ContentPage.addLevelboard(plugin, lb)
-      for (const tb of search.hotPage.topButton ?? []) ContentPage.addTopButton(plugin, tb)
-    }
-    if (search.barcode) {
-      for (const barcode of search.barcode ?? []) ContentPage.addBarcode(plugin, barcode)
-    }
-  }
-  if (user) {
-    if (user.edit) User.userEditorBase.set(plugin, user.edit)
-    if (user.authorActions)
-      for (const [type, value] of Object.entries(user.authorActions))
-        User.authorActions.set([plugin, type], value)
-    if (user.authorIcon)
-      for (const [key, value] of Object.entries(user.authorIcon))
-        Item.authorIcon.set([plugin, key], value)
-  }
-  if (subscribe) {
-    for (const [key, value] of Object.entries(subscribe))
-      User.subscribes.set([plugin, key], value)
-  }
-  if (cfg.config) {
-    for (const config of cfg.config) {
-      useConfig().$resignerConfig(config)
-    }
-  }
-  if (share) {
-    for (const v of share.initiative ?? [])
-      ContentPage.share.set([plugin, v.key], v)
-    for (const v of share.tokenListen ?? [])
-      ContentPage.shareToken.set([plugin, v.key], v)
-  }
-  return SharedFunction.call('addPlugin', cfg)
+  await SharedFunction.call('addPlugin', cfg)
+  return cfg
 }
-
+export type PluginExpose<T extends ReturnType<typeof definePlugin>> = Awaited<ReturnType<NonNullable<Awaited<T>['onBooted']>>>
 
 export interface RawPluginMeta {
   'name:display': string
