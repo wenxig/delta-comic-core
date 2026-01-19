@@ -1,6 +1,6 @@
 {
   "name": "delta-comic-core",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "我曾亲眼见证神的熟视无睹.",
   "homepage": "https://github.com/wenxig/delta-comic-core",
   "repository": {
@@ -37,9 +37,6 @@
   "peerDependencies": {
     "kysely": "^0.28.9",
     "axios": "^1.12.2",
-    "crypto-js": "4.2.0",
-    "es-toolkit": "^1.40.0",
-    "motion-v": "1.8.1",
     "naive-ui": "2.43.2",
     "pinia": "^3.0.4",
     "vant": "4.9.22",

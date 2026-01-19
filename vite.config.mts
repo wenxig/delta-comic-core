@@ -58,7 +58,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       external: [
-        'vue', 'axios', 'es-toolkit', 'naive-ui', 'vant', "motion-v", 'pinia', 'vue-router', 'crypto-js',
+        'vue', 'axios', 'naive-ui', 'vant', 'pinia', 'vue-router',
         'vite-plugin-external', 'vite-plugin-monkey', 'vite', 'rolldown-vite'
       ],
       output: {
@@ -66,12 +66,9 @@ export default defineConfig({
           vue: 'window.$$lib$$.Vue',
           vant: 'window.$$lib$$.Vant',
           'naive-ui': 'window.$$lib$$.Naive',
-          "motion-v": 'window.$$lib$$.Motion',
           axios: 'window.$$lib$$.Axios',
-          'es-toolkit': 'window.$$lib$$.EsKits',
           'pinia': 'window.$$lib$$.Pinia',
           'vue-router': 'window.$$lib$$.VR',
-          'crypto-js': 'window.$$lib$$.Crypto'
         },
       },
     }

@@ -7,10 +7,8 @@ const externalDepends: Record<string, string> = {
   vant: 'window.$$lib$$.Vant',
   'naive-ui': 'window.$$lib$$.Naive',
   axios: 'window.$$lib$$.Axios',
-  'es-toolkit': 'window.$$lib$$.EsKits',
   'delta-comic-core': 'window.$$lib$$.Dcc',
   'vue-router': 'window.$$lib$$.VR',
-  'crypto-js': 'window.$$lib$$.Crypto'
 }
 
 /** vite插件，自动配置了库的外部化与脚本头 */
