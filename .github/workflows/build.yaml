@@ -1,0 +1,51 @@
+name: 构建和发布
+
+on:
+  push:
+    branches:
+      - 'main'
+
+permissions:
+  id-token: write  # 用于OIDC令牌
+  contents: read   # 用于代码访问
+
+jobs:
+  build:
+    if: ${{ github.event.head_commit && startsWith(github.event.head_commit.message, 'v') }}
+    runs-on: ubuntu-latest
+    env:
+      ENV_STATE: github
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.27.0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Get package version
+        id: get_version
+        run: |
+          # 输出 package.json 中的 version 字段为 step 输出
+          echo "version=`sh ./script/getVersion.sh`" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Publish
+        run: |
+          pnpm profile enable-2fa auth-and-writes
+          pnpm profile set-oidc-issuer "https://token.actions.githubusercontent.com"
+          pnpm publish --provenance --access public
