@@ -1,6 +1,18 @@
-# Delta Comic Core - _<span style="font-weight: lighter;font-size:16px">我曾亲眼见证神的熟视无睹</span>_
+```python
+r"""
+  ___________________________
+ / ______\   |  __  | |  ____|
+| |    _____ | |__| | | |__
+| |   /  _  \|  __  \ |  __|
+| |___| |_| || |   \ \| |____ 
+ \__________/|_|    \________|
+==============================
+  空阙虱楼  Copyright © Wenxig
+"""
+```
 
 [![GitHub](https://img.shields.io/github/license/delta-comic/delta-comic-core)](https://raw.githubusercontent.com/delta-comic/delta-comic-core/main/LICENSE)
+[![NPM Downloads](https://img.shields.io/npm/dm/delta-comic-core)](https://www.npmjs.com/package/delta-comic-core)
 
 - 工具库
 
