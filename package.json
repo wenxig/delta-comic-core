@@ -2,11 +2,16 @@
   "name": "delta-comic-core",
   "version": "0.5.12",
   "description": "我曾亲眼见证神的熟视无睹.",
-  "homepage": "https://github.com/wenxig/delta-comic-core",
+  "homepage": "https://github.com/delta-comic/delta-comic-core",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wenxig/delta-comic-core.git"
+    "url": "https://github.com/delta-comic/delta-comic-core.git"
   },
+  "author": {
+    "email": "wenxinguo12@gmail.com",
+    "name": "wenxig"
+  },
+  "readme": "./README.md",
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {

@@ -11,9 +11,9 @@
 
 ## 如何使用
 
-  1. `git clone https://github.com/delta-comic/delta-comic-core`
-  2. `bun run build`
-  3. `pnpm i "./delta-comic-core"`
+```sh
+pnpm add delta-comic-core
+```
 
 ## 为谁编写插件?
 
