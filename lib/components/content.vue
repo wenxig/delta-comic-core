@@ -1,11 +1,10 @@
 <script setup lang='ts' generic="T">
 import { PromiseContent, Stream } from '@/utils/data'
-import { ReloadOutlined } from '@vicons/antd'
-import { WifiTetheringErrorRound } from '@vicons/material'
 import { isEmpty } from 'es-toolkit/compat'
 import { motion, VariantType } from 'motion-v'
 import { StyleValue, computed, useTemplateRef } from 'vue'
 import Loading from './loading.vue'
+import { ReloadOutlined, WifiTetheringErrorRound } from './icons'
 const $props = defineProps<{
   retriable?: boolean
   hideError?: boolean

@@ -2,8 +2,6 @@ import { computed, isRef, shallowRef, watch, type CSSProperties, type MaybeRefOr
 import { isFunction } from "es-toolkit/compat"
 import type { DialogOptions, DialogReactive } from "naive-ui"
 import { noop } from "@vueuse/core"
-import { ReloadOutlined } from "@vicons/antd"
-import { CloseRound, DoneRound, FileDownloadRound } from "@vicons/material"
 import { until } from "@vueuse/core"
 import { isError, isUndefined, delay } from "es-toolkit"
 import { isNumber, toString } from "es-toolkit/compat"
@@ -13,6 +11,7 @@ import { Icon, Loading } from "vant"
 import { nextTick, Transition, TransitionGroup, withDirectives, reactive, ref, type Reactive, vShow } from "vue"
 import { useZIndex } from "./layout"
 import { useGlobalVar } from "./plugin"
+import { CloseRound, ReloadOutlined, DoneRound, FileDownloadRound } from "@/components/icons"
 
 export type LoadingInstance = ReturnType<typeof createLoadingMessage>
 export const createLoadingMessage = (text: MaybeRefOrGetter<string> = '加载中', api = window.$message) => {

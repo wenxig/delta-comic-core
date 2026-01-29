@@ -1,3 +1,60 @@
+export { uni } from './struct/index'
+import { uni } from './struct/index'
+import type { useDialog, useLoadingBar, useMessage } from 'naive-ui'
+import type { Router } from 'vue-router'
+import type { Component, MaybeRefOrGetter } from 'vue'
+export interface ExternalLibKey {
+  vue: 'Vue',
+  vant: 'Vant',
+  'naive-ui': 'Naive',
+  axios: 'Axios',
+  'delta-comic-core': 'Dcc',
+  'vue-router': 'VR',
+  'pinia': 'Pinia'
+}
+
+declare global {
+  interface Window {
+    $message: ReturnType<typeof useMessage>
+    $loading: ReturnType<typeof useLoadingBar>
+    $dialog: ReturnType<typeof useDialog>
+    $api: Record<string, any>
+    $$lib$$: Record<ExternalLibKey[keyof ExternalLibKey], any>
+    $$safe$$: boolean
+    $router: Router
+    $layout: Record<string, uni.content.ViewLayoutComp>
+    $view: Record<string, uni.content.ViewComp>
+    $comp: {
+      Comment: Component<{
+        item: uni.item.Item
+        comments: Utils.data.RStream<uni.comment.Comment>
+      }>
+    }
+    $isDev: boolean
+  }
+}
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    __retryCount?: number
+    disretry?: boolean
+    allowEmpty?: boolean
+  }
+}
+
+declare module 'vue-router' {
+  interface Router {
+    force: {
+      push: Router['push']
+      replace: Router['replace']
+    }
+  }
+  interface RouteMeta {
+    statusBar?: MaybeRefOrGetter<'dark' | 'light' | 'auto'>
+    force?: boolean
+  }
+}
+
+
 import Await from './components/await.vue'
 import Loading from './components/loading.vue'
 import FloatPopup from './components/floatPopup.vue'
@@ -27,7 +84,6 @@ export const Comp = {
 }
 
 
-export { uni } from './struct/index'
 
 import * as uData from './utils/data'
 import * as uEventBus from './utils/eventBus'
