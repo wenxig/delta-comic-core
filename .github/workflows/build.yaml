@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    if: ${{ github.event.head_commit && startsWith(github.event.head_commit.message, 'v') }}
+    if: ${{ github.event.head_commit && contains(github.event.head_commit.message, '(publish)') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
