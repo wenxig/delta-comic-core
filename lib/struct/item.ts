@@ -16,11 +16,7 @@ import * as image from './image'
 export interface Category {
   name: string
   group: string
-  search: {
-    keyword: string
-    source: string
-    sort: string
-  }
+  search: { keyword: string; source: string; sort: string }
 }
 
 export interface Author {
@@ -73,14 +69,8 @@ export type ItemCardComp = Component<
   any,
   any,
   any,
-  {
-    click: []
-  },
-  {
-    default(): void
-    smallTopInfo(): void
-    cover(): void
-  }
+  { click: [] },
+  { default(): void; smallTopInfo(): void; cover(): void }
 >
 
 export type Description =

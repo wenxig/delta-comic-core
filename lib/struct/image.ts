@@ -21,10 +21,7 @@ export class Image extends Resource {
     if ('forkNamespace' in v)
       super({
         $$plugin: v.$$plugin,
-        $$meta: {
-          ...v.$$meta,
-          ...aspect
-        },
+        $$meta: { ...v.$$meta, ...aspect },
         pathname: v.path,
         type: v.forkNamespace,
         processSteps: v.processSteps

@@ -26,14 +26,9 @@ export type ContentPageLike = new (preload: PreloadValue, id: string, ep: string
 export type ContentType_ = SourcedKeyType<typeof ContentPage.contentPage>
 export type ContentType = Exclude<ContentType_, string>
 
-export type ViewComp = Component<{
-  page: ContentPage
-  isFullScreen: boolean
-}>
+export type ViewComp = Component<{ page: ContentPage; isFullScreen: boolean }>
 
-export type ViewLayoutComp = Component<{
-  page: ContentPage
-}>
+export type ViewLayoutComp = Component<{ page: ContentPage }>
 
 export abstract class ContentPage<T extends object = any> {
   public static viewLayout = useGlobalVar(
@@ -151,9 +146,7 @@ export abstract class ContentImagePage extends ContentPage {
   public images = PromiseContent.withResolvers<uni.image.Image[]>()
 }
 
-export type VideoConfig = {
-  textTrack?: TextTrackInit[]
-} & Exclude<MediaSrc, string | AudioSrc>[]
+export type VideoConfig = { textTrack?: TextTrackInit[] } & Exclude<MediaSrc, string | AudioSrc>[]
 export abstract class ContentVideoPage extends ContentPage {
   public videos = PromiseContent.withResolvers<VideoConfig>()
 }

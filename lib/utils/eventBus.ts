@@ -43,13 +43,7 @@ export type SharedFunctions = {
 
 export class SharedFunction {
   private static sharedFunctions = useGlobalVar(
-    new Map<
-      string,
-      {
-        fn: SharedFunctions[keyof SharedFunctions]
-        plugin: string
-      }[]
-    >(),
+    new Map<string, { fn: SharedFunctions[keyof SharedFunctions]; plugin: string }[]>(),
     'utils/SharedFunction/sharedFunctions'
   )
   public static define<TKey extends keyof SharedFunctions>(
@@ -58,13 +52,7 @@ export class SharedFunction {
     name: TKey
   ) {
     console.log('[SharedFunction.define] defined new function', plugin, ':', name, '->', fn)
-    this.sharedFunctions.set(name, [
-      ...(this.sharedFunctions.get(name) ?? []),
-      {
-        fn,
-        plugin
-      }
-    ])
+    this.sharedFunctions.set(name, [...(this.sharedFunctions.get(name) ?? []), { fn, plugin }])
     return fn
   }
   public static call<TKey extends keyof SharedFunctions>(
@@ -74,17 +62,9 @@ export class SharedFunction {
     const ins =
       this.sharedFunctions.get(name)?.map(v => {
         const result: ReturnType<SharedFunctions[TKey]> = (<any>v.fn)(...args)
-        return {
-          result,
-          ...v
-        }
+        return { result, ...v }
       }) ?? []
-    const results = Promise.all(
-      ins.map(async v => ({
-        ...v,
-        result: await v.result
-      }))
-    )
+    const results = Promise.all(ins.map(async v => ({ ...v, result: await v.result })))
     return Object.assign(ins, results)
   }
   public static callRandom<TKey extends keyof SharedFunctions>(
@@ -98,14 +78,8 @@ export class SharedFunction {
       throw new Error(`[SharedFunction.callRandom] call ${name}, but not resigner any function.`)
     console.log(`[SharedFunction.callRandom] call index: ${index} in ${all.length}`, it)
     const result: ReturnType<SharedFunctions[TKey]> = (<any>it.fn)(...args)
-    const ins = {
-      result,
-      ...it
-    }
-    const results = (async () => ({
-      ...it,
-      result: await result
-    }))()
+    const ins = { result, ...it }
+    const results = (async () => ({ ...it, result: await result }))()
     return Object.assign(ins, results)
   }
   public static callWitch<TKey extends keyof SharedFunctions>(
@@ -122,17 +96,9 @@ export class SharedFunction {
 
     const ins = them.map(v => {
       const result: ReturnType<SharedFunctions[TKey]> = (<any>v.fn)(...args)
-      return {
-        result,
-        ...v
-      }
+      return { result, ...v }
     })
-    const results = Promise.all(
-      ins.map(async v => ({
-        ...v,
-        result: await v.result
-      }))
-    )
+    const results = Promise.all(ins.map(async v => ({ ...v, result: await v.result })))
     return Object.assign(ins, results)
   }
 }

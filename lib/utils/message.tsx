@@ -31,9 +31,7 @@ export const createLoadingMessage = (
   api = window.$message
 ) => {
   const data = computed(() => (isRef(text) ? text.value : isFunction(text) ? text() : text))
-  let loading = api.loading(data.value, {
-    duration: 0
-  })
+  let loading = api.loading(data.value, { duration: 0 })
   const stop = watch(data, text => {
     loading.content = text
   })
@@ -144,10 +142,7 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
     positiveText: '确定',
     negativeText: '取消',
     ...options,
-    style: {
-      ...(options.style as CSSProperties),
-      zIndex: zIndex.value
-    },
+    style: { ...(options.style as CSSProperties), zIndex: zIndex.value },
     async onClose() {
       if ((await options.onClose?.()) === false) return false
       else show.value = false
@@ -215,15 +210,7 @@ export const createDownloadMessage = async <T,>(
         retry?: () => any
         progress?: number
         pc: PromiseWithResolvers<any>
-      } & (
-        | {
-            state: 'success' | undefined
-          }
-        | {
-            state: 'error'
-            error: Error
-          }
-      )
+      } & ({ state: 'success' | undefined } | { state: 'error'; error: Error })
     >()
   )
   const minsize = ref(false)
@@ -378,11 +365,7 @@ export const createDownloadMessage = async <T,>(
   ) => {
     const pc = Promise.withResolvers<Awaited<TResult>>()
     const state = ref<(typeof messageList)[number]['state']>()
-    const _config = reactive({
-      description: '',
-      retryable: false,
-      ...config
-    })
+    const _config = reactive({ description: '', retryable: false, ...config })
     let error = new Error()
     const index = messageList.length
     const watcher = watch(
@@ -438,10 +421,7 @@ export const createDownloadMessage = async <T,>(
   const createLoading: DownloadMessageBind['createLoading'] = (title, fn) => {
     return createLine(title, {}, fn)
   }
-  const bindInstance = bind({
-    createProgress,
-    createLoading
-  })
+  const bindInstance = bind({ createProgress, createLoading })
   const controller = Promise.withResolvers<T>()
   void bindInstance.then(async result => {
     minsize.value = false // 最小化就展开提醒

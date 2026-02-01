@@ -5,13 +5,13 @@ import type { Router } from 'vue-router'
 
 import { uni } from './struct/index'
 export interface ExternalLibKey {
-  vue: 'Vue'
-  vant: 'Vant'
+  'vue': 'Vue'
+  'vant': 'Vant'
   'naive-ui': 'Naive'
-  axios: 'Axios'
+  'axios': 'Axios'
   'delta-comic-core': 'Dcc'
   'vue-router': 'VR'
-  pinia: 'Pinia'
+  'pinia': 'Pinia'
 }
 
 declare global {
@@ -26,10 +26,7 @@ declare global {
     $layout: Record<string, uni.content.ViewLayoutComp>
     $view: Record<string, uni.content.ViewComp>
     $comp: {
-      Comment: Component<{
-        item: uni.item.Item
-        comments: Utils.data.RStream<uni.comment.Comment>
-      }>
+      Comment: Component<{ item: uni.item.Item; comments: Utils.data.RStream<uni.comment.Comment> }>
     }
     $isDev: boolean
   }
@@ -44,10 +41,7 @@ declare module 'axios' {
 
 declare module 'vue-router' {
   interface Router {
-    force: {
-      push: Router['push']
-      replace: Router['replace']
-    }
+    force: { push: Router['push']; replace: Router['replace'] }
   }
   interface RouteMeta {
     statusBar?: MaybeRefOrGetter<'dark' | 'light' | 'auto'>
@@ -102,12 +96,7 @@ export namespace Utils {
 }
 import { useConfig, ConfigPointer, appConfig } from './config'
 import { useTemp } from './stores/temp'
-export const Store = {
-  useTemp,
-  useConfig,
-  appConfig,
-  ConfigPointer
-}
+export const Store = { useTemp, useConfig, appConfig, ConfigPointer }
 
 import './index.css'
 

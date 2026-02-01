@@ -23,13 +23,8 @@ const $props = defineProps<
     styleLoading?: StyleValue
   }
 >()
-defineSlots<{
-  default(data: { data?: T }): any
-}>()
-defineEmits<{
-  retry: []
-  resetRetry: []
-}>()
+defineSlots<{ default(data: { data?: T }): any }>()
+defineEmits<{ retry: []; resetRetry: [] }>()
 const unionSource = computed(() =>
   Stream.isStream($props.source)
     ? {
@@ -160,9 +155,7 @@ const animateOn = computed<AllVariant>(() => {
 })
 
 const cont = useTemplateRef('cont')
-defineExpose({
-  cont
-})
+defineExpose({ cont })
 </script>
 
 <template>

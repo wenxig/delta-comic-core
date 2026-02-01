@@ -22,9 +22,7 @@
     "noImplicitOverride": true,
     "noImplicitThis": true,
     "jsxImportSource": "vue",
-    "paths": {
-      "@/*": ["./lib/*"]
-    },
+    "paths": { "@/*": ["./lib/*"] },
     "types": ["./env.d.ts", "./components.d.ts", "vue-component-type-helpers"]
   },
   "include": ["./lib/**/*", "./public/**/*"]

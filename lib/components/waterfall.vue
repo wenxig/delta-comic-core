@@ -20,12 +20,7 @@ import { useTemp } from '@/stores/temp'
 import { isArray } from 'es-toolkit/compat'
 const $props = withDefaults(
   defineProps<{
-    source:
-      | {
-          data: RPromiseContent<any, T[]>
-          isEnd?: boolean
-        }
-      | Stream<T>
+    source: { data: RPromiseContent<any, T[]>; isEnd?: boolean } | Stream<T>
     style?: StyleValue
     class?: any
     col?: [min: number, max: number] | number
@@ -35,12 +30,7 @@ const $props = withDefaults(
     dataProcessor?: PF
     unReloadable?: boolean
   }>(),
-  {
-    padding: 4,
-    col: 2,
-    gap: 4,
-    minHeight: 0
-  }
+  { padding: 4, col: 2, gap: 4, minHeight: 0 }
 )
 const $emit = defineEmits<{
   next: [then: () => void]
@@ -120,9 +110,7 @@ const handleScroll = () => {
     else next()
   }
 }
-useEventListener('scroll', handleScroll, {
-  target: <Ref<HTMLDivElement>>scrollParent
-})
+useEventListener('scroll', handleScroll, { target: <Ref<HTMLDivElement>>scrollParent })
 watch(
   () => $props.source,
   () => {
@@ -162,9 +150,7 @@ const observer = new MutationObserver(([mutation]) => {
 })
 watch(waterfallEl, waterfallEl => {
   if (!waterfallEl) return observer.disconnect()
-  observer.observe(waterfallEl.$el, {
-    childList: true
-  })
+  observer.observe(waterfallEl.$el, { childList: true })
 })
 onUnmounted(() => {
   observer.disconnect()

@@ -6,9 +6,7 @@ import { computed, shallowReactive, type Ref } from 'vue'
 import type { UniFormDescription, UniFormResult } from '@/plugin/define'
 
 import { type UseNativeStore } from '@/depends'
-const defaultConfig = {
-  'app.easyTitle': false
-}
+const defaultConfig = { 'app.easyTitle': false }
 export type ConfigType = typeof defaultConfig
 export type ConfigDescription = Record<
   string,
@@ -25,41 +23,20 @@ export class ConfigPointer<T extends ConfigDescription = ConfigDescription> {
 }
 
 export const appConfig = new ConfigPointer('core', {
-  recordHistory: {
-    type: 'switch',
-    defaultValue: true,
-    info: '记录历史记录'
-  },
-  showAIProject: {
-    type: 'switch',
-    defaultValue: true,
-    info: '展示AI作品'
-  },
+  recordHistory: { type: 'switch', defaultValue: true, info: '记录历史记录' },
+  showAIProject: { type: 'switch', defaultValue: true, info: '展示AI作品' },
   darkMode: {
     type: 'radio',
     defaultValue: 'system',
     info: '暗色模式配置',
     comp: 'select',
     selects: [
-      {
-        label: '浅色',
-        value: 'light'
-      },
-      {
-        label: '暗色',
-        value: 'dark'
-      },
-      {
-        label: '跟随系统',
-        value: 'system'
-      }
+      { label: '浅色', value: 'light' },
+      { label: '暗色', value: 'dark' },
+      { label: '跟随系统', value: 'system' }
     ]
   },
-  easilyTitle: {
-    type: 'switch',
-    defaultValue: false,
-    info: '简化标题(实验)'
-  }
+  easilyTitle: { type: 'switch', defaultValue: false, info: '简化标题(实验)' }
 })
 
 export const useConfig = defineStore('config', helper => {
@@ -105,10 +82,7 @@ export const useConfig = defineStore('config', helper => {
       'config',
       fromPairs(Object.entries(pointer.config).map(([name, desc]) => [name, desc.defaultValue]))
     )
-    cfg.form.set(pointer.key, {
-      form: pointer.config,
-      value: store
-    })
+    cfg.form.set(pointer.key, { form: pointer.config, value: store })
   }, 'resignerConfig')
   return { isDark, form, $load, $isExistConfig, $resignerConfig }
 })

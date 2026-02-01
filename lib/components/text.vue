@@ -2,15 +2,7 @@
 import { isNumber } from 'es-toolkit/compat'
 import { computed } from 'vue'
 
-const $props = withDefaults(
-  defineProps<{
-    text?: string
-    ellipsis?: number
-  }>(),
-  {
-    text: ''
-  }
-)
+const $props = withDefaults(defineProps<{ text?: string; ellipsis?: number }>(), { text: '' })
 const texts = computed(() =>
   $props.text
     .replace(
@@ -21,14 +13,8 @@ const texts = computed(() =>
     .filter(Boolean)
     .map(v =>
       /\[\[[^\[\]]+\]\]/g.test(v)
-        ? ({
-            value: v.substring(2, v.length - 2),
-            mode: 'link'
-          } as const)
-        : ({
-            value: v,
-            mode: 'text'
-          } as const)
+        ? ({ value: v.substring(2, v.length - 2), mode: 'link' } as const)
+        : ({ value: v, mode: 'text' } as const)
     )
 )
 </script>

@@ -54,12 +54,7 @@ export class Resource extends Struct<RawResource> implements RawResource {
     this.pathname = v.pathname
     this.type = v.type
     this.processSteps = (v.processSteps ?? []).map<ProcessStep>(v =>
-      isString(v)
-        ? {
-            referenceName: v,
-            ignoreExit: false
-          }
-        : v
+      isString(v) ? { referenceName: v, ignoreExit: false } : v
     )
   }
   public type: string

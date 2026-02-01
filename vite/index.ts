@@ -3,10 +3,10 @@ import external from 'vite-plugin-external'
 import monkey from 'vite-plugin-monkey'
 
 const externalDepends: Record<string, string> = {
-  vue: 'window.$$lib$$.Vue',
-  vant: 'window.$$lib$$.Vant',
+  'vue': 'window.$$lib$$.Vue',
+  'vant': 'window.$$lib$$.Vant',
   'naive-ui': 'window.$$lib$$.Naive',
-  axios: 'window.$$lib$$.Axios',
+  'axios': 'window.$$lib$$.Axios',
   'delta-comic-core': 'window.$$lib$$.Dcc',
   'vue-router': 'window.$$lib$$.VR'
 }
@@ -24,13 +24,7 @@ export const deltaComic = (
     /** 如果为`true`，则`supportCoreVersion`的`>=`不会替换为`^` */
     lockCoreVersion?: boolean
     /** @default ['core'] */
-    require?: (
-      | {
-          id: string
-          download?: string
-        }
-      | string
-    )[]
+    require?: ({ id: string; download?: string } | string)[]
     /** @default 'src/main.ts' */
     entry?: string
   },
@@ -43,18 +37,11 @@ export const deltaComic = (
   )
 
   const result = [
-    command == 'build'
-      ? false
-      : external({
-          externals: externalDepends
-        }),
+    command == 'build' ? false : external({ externals: externalDepends }),
     monkey({
       entry: config.entry ?? 'src/main.ts',
       userscript: {
-        name: {
-          display: config.displayName,
-          id: config.name
-        },
+        name: { display: config.displayName, id: config.name },
         version: `${config.version}/${config.supportCoreVersion}/${!!config.lockCoreVersion}`,
         author: config.author,
         description: config.description,
@@ -63,14 +50,8 @@ export const deltaComic = (
           return `dc|${v.id}:${v.download ?? ''}`
         })
       },
-      build: {
-        externalGlobals: command == 'serve' ? {} : needExternalDepends
-      },
-      server: {
-        mountGmApi: false,
-        open: false,
-        prefix: false
-      }
+      build: { externalGlobals: command == 'serve' ? {} : needExternalDepends },
+      server: { mountGmApi: false, open: false, prefix: false }
     })
   ]
   return result
@@ -78,28 +59,13 @@ export const deltaComic = (
 
 export const deltaComicPlus = (
   meta: {
-    name: {
-      display: string
-      id: string
-    }
-    version: {
-      plugin: string
-      supportCore: string
-    }
+    name: { display: string; id: string }
+    version: { plugin: string; supportCore: string }
     author: string
     description: string
-    require: {
-      id: string
-      download?: string | undefined
-    }[]
-    entry: {
-      jsPath: string
-      cssPath?: string
-    }
-    beforeBoot?: {
-      path: string
-      slot: string
-    }[]
+    require: { id: string; download?: string | undefined }[]
+    entry: { jsPath: string; cssPath?: string }
+    beforeBoot?: { path: string; slot: string }[]
   },
   command: 'build' | 'serve'
 ) => {
@@ -128,12 +94,7 @@ export const deltaComicPlus = (
     }
   }
   return command == 'build'
-    ? ([
-        external({
-          externals: externalDepends
-        }),
-        plugin
-      ] as any)
+    ? ([external({ externals: externalDepends }), plugin] as any)
     : deltaComic(
         {
           description: meta.description,

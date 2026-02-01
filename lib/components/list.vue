@@ -13,11 +13,7 @@ import Content from './content.vue'
 import Var from './var.vue'
 const $props = defineProps<{
   source:
-    | {
-        data: RPromiseContent<any, T[]>
-        isEnd?: boolean
-        reloadable?: boolean
-      }
+    | { data: RPromiseContent<any, T[]>; isEnd?: boolean; reloadable?: boolean }
     | Stream<T>
     | Array<T>
   itemHeight: number
@@ -30,11 +26,7 @@ const $props = defineProps<{
   style?: StyleValue
   class?: any
 }>()
-const $emit = defineEmits<{
-  next: [then: () => void]
-  reset: []
-  retry: [then: () => void]
-}>()
+const $emit = defineEmits<{ next: [then: () => void]; reset: []; retry: [then: () => void] }>()
 
 const dataProcessor = (v: T[]) => $props.dataProcessor?.(v) ?? v
 const unionSource = computed(() => ({
@@ -133,10 +125,7 @@ defineSlots<{
     data: { item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>; index: number }
   }): any
 }>()
-defineExpose({
-  scrollTop: listScrollTop,
-  listInstance: <Ref<VirtualListInst>>(<unknown>vList)
-})
+defineExpose({ scrollTop: listScrollTop, listInstance: <Ref<VirtualListInst>>(<unknown>vList) })
 </script>
 
 <template>

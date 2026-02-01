@@ -10,11 +10,7 @@ const $props = defineProps<{
   rowMode?: boolean
   padding?: boolean
 }>()
-const $emit = defineEmits<{
-  change: [mode: boolean]
-  click: [to: boolean]
-  longClick: []
-}>()
+const $emit = defineEmits<{ change: [mode: boolean]; click: [to: boolean]; longClick: [] }>()
 const mode = defineModel<boolean>({ default: false })
 watch(mode, mode => $emit('change', mode))
 const handleClick = () => {
@@ -28,17 +24,13 @@ onLongPress(
   () => {
     $emit('longClick')
   },
-  {
-    modifiers: {
-      prevent: true
-    }
-  }
+  { modifiers: { prevent: true } }
 )
 </script>
 
 <template>
   <div
-    class="flex items-center justify-center **:!transition-colors"
+    class="flex items-center justify-center **:transition-colors!"
     :class="[rowMode || 'flex-col', padding && 'px-4']"
     @click.stop="handleClick"
     ref="htmlRefHook"

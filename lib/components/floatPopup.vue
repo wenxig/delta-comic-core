@@ -13,10 +13,7 @@ const $props = withDefaults(
     style?: StyleValue
     overlay?: boolean
   }>(),
-  {
-    anchors: 'high',
-    lockScroll: false
-  }
+  { anchors: 'high', lockScroll: false }
 )
 const show = shallowRef(false)
 const { height: windowHeight } = useWindowSize()
@@ -60,9 +57,7 @@ defineExpose({
   isShowing: shallowReadonly(show),
   height: shallowReadonly(height)
 })
-defineSlots<{
-  default(arg: { height: number }): void
-}>()
+defineSlots<{ default(arg: { height: number }): void }>()
 </script>
 
 <template>

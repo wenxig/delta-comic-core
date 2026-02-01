@@ -40,7 +40,4 @@ export abstract class User {
   public $$plugin: string
   public abstract customUser: object
 }
-export type UserCardComp = Component<{
-  user: uni.user.User
-  isSmall?: boolean
-}>
+export type UserCardComp = Component<{ user: uni.user.User; isSmall?: boolean }>

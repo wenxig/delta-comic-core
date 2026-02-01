@@ -8,23 +8,12 @@ import { useRouter } from 'vue-router'
 const $router = useRouter()
 const $props = withDefaults(
   defineProps<
-    Partial<
-      PopupProps & {
-        noBorder?: boolean
-        useTrulyShow: boolean
-        style?: StyleValue
-      }
-    >
+    Partial<PopupProps & { noBorder?: boolean; useTrulyShow: boolean; style?: StyleValue }>
   >(),
-  {
-    position: 'center',
-    noBorder: false
-  }
+  { position: 'center', noBorder: false }
 )
 const show = defineModel<boolean>('show', { required: true })
-defineSlots<{
-  default(): void
-}>()
+defineSlots<{ default(): void }>()
 const trulyShow = shallowRef(show.value)
 const [zIndex, isLast] = useZIndex(
   computed(() => ($props.useTrulyShow ? trulyShow.value : show.value))
@@ -50,13 +39,8 @@ watch(
   },
   { immediate: true }
 )
-defineEmits<{
-  closed: []
-}>()
-defineExpose({
-  zIndex,
-  trulyShow
-})
+defineEmits<{ closed: [] }>()
+defineExpose({ zIndex, trulyShow })
 </script>
 
 <template>
@@ -72,7 +56,7 @@ defineExpose({
         $emit('closed')
       }
     "
-    class="max-h-screen overflow-hidden !overflow-y-auto"
+    class="max-h-screen overflow-hidden overflow-y-auto!"
     overlay
     close-on-click-overlay
     :class="!noBorder && 'border-0 border-t border-solid border-(--van-border-color)'"

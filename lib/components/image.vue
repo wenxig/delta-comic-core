@@ -29,17 +29,11 @@ const $props = withDefaults(
     inline?: boolean
     style?: StyleValue
     imgProp?: ImgHTMLAttributes
-    useList?: {
-      loaded: Set<string>
-      error: Set<string>
-    }
+    useList?: { loaded: Set<string>; error: Set<string> }
     fetchpriority?: 'high' | 'low' | 'auto'
     fallback?: uni.image.Image_
   }>(),
-  {
-    fetchpriority: 'auto',
-    retryMax: 2
-  }
+  { fetchpriority: 'auto', retryMax: 2 }
 )
 const src = computedAsync(async () => {
   try {
@@ -52,11 +46,7 @@ const src = computedAsync(async () => {
   return ''
 }, '')
 
-const $emit = defineEmits<{
-  load: any[]
-  click: []
-  error: []
-}>()
+const $emit = defineEmits<{ load: any[]; click: []; error: [] }>()
 let reloadTime = 0
 let isForkEmpty = false
 const handleFail = async () => {
@@ -94,10 +84,7 @@ const beginReload = () => {
   handleFail()
 }
 watch(src, beginReload)
-defineSlots<{
-  loading?(): any
-  fail?(): any
-}>()
+defineSlots<{ loading?(): any; fail?(): any }>()
 const isLoaded = computed(() => images.loaded.has(src.value))
 const fallbackSrc = computedAsync(async () => {
   try {
@@ -114,20 +101,14 @@ const handleClickImage = (e: Event) => {
   $emit('click')
   if (!$props.previewable) return
   e.stopPropagation()
-  showImagePreview([src.value], {
-    closeable: true
-  })
+  showImagePreview([src.value], { closeable: true })
 }
 const handleImageLoad = (...e: Event[]) => {
   $emit('load', ...e)
   images.loaded.add(src.value)
 }
 const img = useTemplateRef('img')
-defineExpose({
-  isLoaded,
-  imageEl: computed(() => img.value?.imageRef),
-  imageIns: img
-})
+defineExpose({ isLoaded, imageEl: computed(() => img.value?.imageRef), imageIns: img })
 const NImg = window.$api.NImage as typeof NImage
 </script>
 

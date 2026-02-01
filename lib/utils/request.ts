@@ -16,9 +16,7 @@ import { eventBus, type EventBus } from './eventBus'
 
 export class SmartAbortController implements AbortController {
   private _controller = new AbortController()
-  private mitt = mitt<{
-    abort: void
-  }>()
+  private mitt = mitt<{ abort: void }>()
   public get signal() {
     return this._controller.signal
   }

@@ -9,10 +9,7 @@ import { uni } from '.'
 
 export interface RawComment {
   sender: uni.user.User
-  content: {
-    type: 'string' | 'html'
-    text: string
-  }
+  content: { type: 'string' | 'html'; text: string }
   time: number
   id: string
   childrenCount: number
@@ -45,10 +42,7 @@ export abstract class Comment extends Struct<RawComment> implements RawComment {
     this.isTop = v.isTop
   }
   public abstract sender: User
-  public content: {
-    type: 'string' | 'html'
-    text: string
-  }
+  public content: { type: 'string' | 'html'; text: string }
   public time: number
   public $time() {
     return dayjs(this.time)

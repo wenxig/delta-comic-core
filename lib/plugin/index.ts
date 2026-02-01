@@ -19,52 +19,31 @@ export type PluginExpose<T extends ReturnType<typeof definePlugin>> = Awaited<
 export interface RawPluginMeta {
   'name:display': string
   'name:id': string
-  version: string
-  author: string | undefined
-  description: string
-  require?: string[] | string
+  'version': string
+  'author': string | undefined
+  'description': string
+  'require'?: string[] | string
 }
 
 export interface PluginMeta {
-  name: {
-    display: string
-    id: string
-  }
-  version: {
-    plugin: string
-    supportCore: string
-  }
+  name: { display: string; id: string }
+  version: { plugin: string; supportCore: string }
   author: string
   description: string
-  require: {
-    id: string
-    download?: string | undefined
-  }[]
-  entry?: {
-    jsPath: string
-    cssPath?: string
-  }
-  beforeBoot?: {
-    path: string
-    slot: string
-  }[]
+  require: { id: string; download?: string | undefined }[]
+  entry?: { jsPath: string; cssPath?: string }
+  beforeBoot?: { path: string; slot: string }[]
 }
 
 export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({
-  name: {
-    display: v['name:display'],
-    id: v['name:id']
-  },
+  name: { display: v['name:display'], id: v['name:id'] },
   author: v.author ?? '',
   description: v.description,
   require: (v.require ? (isString(v.require) ? [v.require] : v.require) : [])
     .map(dep => {
       const [name, ...download] = dep.split(':')
       if (!name.startsWith('dc|')) return
-      return {
-        id: name.replace(/^dc\|/, ''),
-        download: download.join(':')
-      }
+      return { id: name.replace(/^dc\|/, ''), download: download.join(':') }
     })
     .filter(v => !isUndefined(v)),
   version: {

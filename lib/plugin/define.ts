@@ -11,9 +11,7 @@ import { Item, RawItem, type Author, type ItemCardComp } from '@/struct/item'
 import { UserCardComp } from '@/struct/user'
 import { RStream, type RPromiseContent } from '@/utils/data'
 
-export type PluginDefineResult = {
-  api?: Record<string, string | undefined | false>
-}
+export type PluginDefineResult = { api?: Record<string, string | undefined | false> }
 
 export interface PluginConfig {
   name: string
@@ -70,10 +68,7 @@ export interface PluginConfigSubscribe {
   getUpdateList(
     olds: { author: Author; list: Item[] }[],
     signal?: AbortSignal
-  ): PromiseLike<{
-    isUpdated: boolean
-    whichUpdated: Author[]
-  }>
+  ): PromiseLike<{ isUpdated: boolean; whichUpdated: Author[] }>
   onAdd?(author: Author): any
   onRemove?(author: Author): any
   getListStream(author: Author): RStream<Item>
@@ -188,11 +183,7 @@ export interface PluginConfigSearchHotPageTopButton {
 export interface PluginConfigSearchCategory {
   title: string
   namespace: string
-  search: {
-    methodId: string
-    input: string
-    sort: string
-  }
+  search: { methodId: string; input: string; sort: string }
 }
 
 export interface PluginConfigSearchTabbar {
@@ -202,24 +193,13 @@ export interface PluginConfigSearchTabbar {
 }
 export interface PluginConfigSearchMethod {
   name: string
-  sorts: {
-    text: string
-    value: string
-  }[]
+  sorts: { text: string; value: string }[]
   defaultSort: string
   getStream(input: string, sort: string): RStream<Item>
   getAutoComplete(
     input: string,
     signal: AbortSignal
-  ): PromiseLike<
-    (
-      | {
-          text: string
-          value: string
-        }
-      | Component
-    )[]
-  >
+  ): PromiseLike<({ text: string; value: string } | Component)[]>
 }
 
 export interface PluginConfigApi {
@@ -289,17 +269,8 @@ export type UniFormDescription = {
    */
   required?: boolean
 } & (
-  | {
-      type: 'string'
-      patten?: RegExp
-      defaultValue?: string
-    }
-  | {
-      type: 'number'
-      range?: [number, number]
-      float?: boolean
-      defaultValue?: number
-    }
+  | { type: 'string'; patten?: RegExp; defaultValue?: string }
+  | { type: 'number'; range?: [number, number]; float?: boolean; defaultValue?: number }
   | {
       type: 'radio'
       selects: { label: string; value: string }[]
@@ -312,16 +283,8 @@ export type UniFormDescription = {
       comp: 'checkbox' | 'multipleSelect'
       defaultValue?: string[]
     }
-  | {
-      type: 'switch'
-      close?: string
-      open?: string
-      defaultValue?: boolean
-    }
-  | {
-      type: 'date'
-      defaultValue?: number
-    }
+  | { type: 'switch'; close?: string; open?: string; defaultValue?: boolean }
+  | { type: 'date'; defaultValue?: number }
 )
 export type UniFormResult<T extends UniFormDescription> = T['type'] extends 'string'
   ? string

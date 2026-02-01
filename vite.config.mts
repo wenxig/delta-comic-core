@@ -14,25 +14,15 @@ import dts from 'vite-plugin-dts'
 import _package from './package.json'
 export default defineConfig({
   plugins: [
-    dts({
-      include: ['./lib', './vite'],
-      tsconfigPath: './tsconfig.json'
-    }),
+    dts({ include: ['./lib', './vite'], tsconfigPath: './tsconfig.json' }),
     vue(),
     vueJsx(),
-    Components({
-      dts: true,
-      resolvers: [VantResolver(), MotionResolver(), NaiveUiResolver()]
-    }),
+    Components({ dts: true, resolvers: [VantResolver(), MotionResolver(), NaiveUiResolver()] }),
     tailwindcss()
   ],
-  experimental: {
-    enableNativePlugin: true
-  },
+  experimental: { enableNativePlugin: true },
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./lib', import.meta.url))
-    },
+    alias: { '@': fileURLToPath(new URL('./lib', import.meta.url)) },
     dedupe: ['vue', 'vue-router'],
     extensions: ['.ts', '.tsx', '.json', '.mjs', '.js', '.jsx', '.mts']
   },
@@ -65,11 +55,11 @@ export default defineConfig({
       ],
       output: {
         globals: {
-          vue: 'window.$$lib$$.Vue',
-          vant: 'window.$$lib$$.Vant',
+          'vue': 'window.$$lib$$.Vue',
+          'vant': 'window.$$lib$$.Vant',
           'naive-ui': 'window.$$lib$$.Naive',
-          axios: 'window.$$lib$$.Axios',
-          pinia: 'window.$$lib$$.Pinia',
+          'axios': 'window.$$lib$$.Axios',
+          'pinia': 'window.$$lib$$.Pinia',
           'vue-router': 'window.$$lib$$.VR'
         }
       }

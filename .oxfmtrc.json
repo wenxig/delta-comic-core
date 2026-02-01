@@ -21,5 +21,10 @@
   "experimentalSortImports": {},
   "bracketSameLine": false,
   "bracketSpacing": true,
-  "embeddedLanguageFormatting": "auto"
+  "embeddedLanguageFormatting": "auto",
+  "insertFinalNewline": false,
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "css",
+  "objectWrap": "collapse",
+  "quoteProps": "consistent"
 }

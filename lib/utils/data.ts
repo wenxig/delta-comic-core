@@ -106,11 +106,7 @@ export class SourcedKeyMap<TKey extends [string, string], TValue>
   }
 }
 
-type PromiseContentEmits<TR> = {
-  success: TR
-  error: any
-  finial: void
-}
+type PromiseContentEmits<TR> = { success: TR; error: any; finial: void }
 /**
  * 扩展内容的`Promise`，可视为普通`Promise`使用
  */

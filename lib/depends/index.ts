@@ -19,10 +19,7 @@ export const coreModule = declareDependType<{
   layout: Record<string, uni.content.ViewLayoutComp>
   view: Record<string, uni.content.ViewComp>
   comp: {
-    Comment: Component<{
-      item: uni.item.Item
-      comments: Utils.data.RStream<uni.comment.Comment>
-    }>
+    Comment: Component<{ item: uni.item.Item; comments: Utils.data.RStream<uni.comment.Comment> }>
     CommentRow: Component<
       {
         comment: uni.comment.Comment
@@ -33,21 +30,13 @@ export const coreModule = declareDependType<{
       any,
       any,
       any,
-      {
-        click: [c: uni.comment.Comment]
-        clickUser: [u: uni.user.User]
-      },
+      { click: [c: uni.comment.Comment]; clickUser: [u: uni.user.User] },
       SlotsType<{ userExtra(): any }>
     >
     ItemCard: uni.item.ItemCardComp
-    FavouriteSelect: Component<{
-      item: uni.item.Item
-    }>
+    FavouriteSelect: Component<{ item: uni.item.Item }>
     AuthorIcon: Component<{
-      author: {
-        $$plugin: string
-        icon: string | uni.resource.RawResource
-      }
+      author: { $$plugin: string; icon: string | uni.resource.RawResource }
       sizeSpacing: number
     }>
   }
