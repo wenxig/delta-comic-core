@@ -15,7 +15,11 @@
   "license": "AGPL-3.0-only",
   "type": "module",
   "scripts": {
-    "build": "vite build && pnpm pack --out ./dist/pack.tgz"
+    "build": "vite build && pnpm pack --out ./dist/pack.tgz",
+    "lint": "oxlint --type-aware",
+    "lint:fix": "oxlint --fix --type-aware",
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@lhlyu/vue-virtual-waterfall": "^1.0.8",
@@ -40,12 +44,23 @@
     "vue-router": "5.0.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.4.0",
+    "@commitlint/config-conventional": "^20.4.0",
+    "@commitlint/types": "^20.4.0",
+    "@cspell/dict-npm": "^5.2.31",
+    "@cspell/dict-rust": "^4.1.1",
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^25.0.6",
     "@vitejs/plugin-vue": "^6.0.3",
     "@vitejs/plugin-vue-jsx": "^5.1.3",
     "browserslist": "^4.28.1",
+    "commitlint-plugin-cspell": "^0.4.0",
+    "cspell": "^9.6.2",
+    "husky": "^9.1.7",
     "lightningcss": "^1.30.2",
+    "lint-staged": "^16.2.7",
+    "oxlint": "^1.42.0",
+    "oxlint-tsgolint": "^0.11.4",
     "tailwindcss": "^4.1.18",
     "unplugin-vue-components": "31.0.0",
     "vite": "^8.0.0-beta.11",

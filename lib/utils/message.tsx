@@ -28,10 +28,10 @@ export const createLoadingMessage = (text: MaybeRefOrGetter<string> = '加载中
   async function bind<T extends PromiseLike<any>,>(promise?: T, throwError = true, successText?: string, failText?: string): Promise<Awaited<T> | undefined> {
     try {
       const res = await promise
-      ctx.success(successText)
+      void ctx.success(successText)
       return res
     } catch (error) {
-      ctx.fail(failText)
+      void ctx.fail(failText)
       if (throwError)
         throw error
       return undefined
@@ -113,7 +113,7 @@ export const createDialog = (options: DialogOptions & { style?: CSSProperties })
     negativeText: '取消',
     ...options,
     style: {
-      ...(options.style ?? {}),
+      ...options.style as CSSProperties,
       zIndex: zIndex.value
     },
     async onClose() {
@@ -344,7 +344,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
         }
       }
     }
-    call()
+    void call()
     return pc.promise
   }
 
@@ -359,7 +359,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
     createLoading
   })
   const controller = Promise.withResolvers<T>()
-  bindInstance
+  void bindInstance
     .then(async result => {
       minsize.value = false // 最小化就展开提醒
       isAllDone.value = true // 展示完成标
@@ -367,7 +367,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
       if (maybeError) throw maybeError.error
       controller.resolve(result)
 
-      delay(3000).then(() => {
+      void delay(3000).then(() => {
         minsize.value = true
       }) // 到时间自动关
       await nextTick()
@@ -383,7 +383,7 @@ export const createDownloadMessage = async <T,>(title: string, bind: (method: Do
       controller.reject(err)
       minsize.value = false // 最小化就展开提醒
 
-      delay(3000).then(() => {
+      void delay(3000).then(() => {
         minsize.value = true
       }) // 到时间自动关
       await nextTick()

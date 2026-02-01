@@ -65,7 +65,7 @@ export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({
     plugin: v.version.split('/')[0],
     supportCore: (() => {
       const raw = v.version.split('/')[1]
-      if (Boolean(v.version.split('/')[2])) {
+      if (v.version.split('/')[2]) {
         return raw.replaceAll('>=', '^')
       }
       return raw

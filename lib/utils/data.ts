@@ -124,7 +124,7 @@ export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseConten
    * 使用`PromiseContent.fromPromise`或`PromiseContent.fromAsyncFunction`代替`new PromiseContent`
   */
   private constructor(private promise: Promise<T>, private processor: (v: T) => TPF = v => <any>v) {
-    this.loadPromise(promise)
+    void this.loadPromise(promise)
   }
   public async loadPromise(promise: Promise<T>) {
     this.data.value = undefined
@@ -169,13 +169,13 @@ export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseConten
   public setProcessor<TP>(processor: (val: T) => TP): RPromiseContent<T, TP> {
     return PromiseContent.fromPromise(this.promise, processor)
   }
-  public catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null | undefined): Promise<T | TResult> {
+  public catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null): Promise<T | TResult> {
     return this.promise.catch<TResult>(onrejected)
   }
-  public then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null | undefined): Promise<TResult1 | TResult2> {
+  public then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null): Promise<TResult1 | TResult2> {
     return this.promise.then<TResult1, TResult2>(onfulfilled, onrejected)
   }
-  public finally(onfinally?: (() => void) | null | undefined): Promise<T> {
+  public finally(onfinally?: (() => void) | null): Promise<T> {
     return this.promise.finally(onfinally)
   }
   public data = shallowRef<TPF>()
@@ -205,7 +205,7 @@ export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseConten
       },
       reset(isLoading = false) {
         withResolvers = Promise.withResolvers<T>()
-        content.loadPromise(withResolvers.promise)
+        void content.loadPromise(withResolvers.promise)
         content.isLoading.value = isLoading
       }
     }
