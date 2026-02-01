@@ -1,26 +1,28 @@
-<script setup lang='ts' generic="T">
+<script setup lang="ts" generic="T">
 import { PromiseContent, Stream } from '@/utils/data'
 import { isEmpty } from 'es-toolkit/compat'
 import { motion, VariantType } from 'motion-v'
 import { StyleValue, computed, useTemplateRef } from 'vue'
 import Loading from './loading.vue'
 import { ReloadOutlined, WifiTetheringErrorRound } from './icons'
-const $props = defineProps<{
-  retriable?: boolean
-  hideError?: boolean
-  hideEmpty?: boolean
-  hideLoading?: boolean
-  source: PromiseContent<any, T[]> | Stream<T> | T[] | T
-} & {
-  class?: any
-  classError?: any
-  classEmpty?: any
-  classLoading?: any
-  style?: StyleValue
-  styleError?: StyleValue
-  styleEmpty?: StyleValue
-  styleLoading?: StyleValue
-}>()
+const $props = defineProps<
+  {
+    retriable?: boolean
+    hideError?: boolean
+    hideEmpty?: boolean
+    hideLoading?: boolean
+    source: PromiseContent<any, T[]> | Stream<T> | T[] | T
+  } & {
+    class?: any
+    classError?: any
+    classEmpty?: any
+    classLoading?: any
+    style?: StyleValue
+    styleError?: StyleValue
+    styleEmpty?: StyleValue
+    styleLoading?: StyleValue
+  }
+>()
 defineSlots<{
   default(data: { data?: T }): any
 }>()
@@ -28,29 +30,41 @@ defineEmits<{
   retry: []
   resetRetry: []
 }>()
-const unionSource = computed(() => Stream.isStream($props.source) ? {
-  isLoading: $props.source.isRequesting.value,
-  isError: $props.source.error.value,
-  errorCause: $props.source.error.value?.message,
-  isEmpty: $props.source.isEmpty.value,
-  data: <T>$props.source.data.value,
-  isNoResult: $props.source.isNoData.value
-} : (PromiseContent.isPromiseContent($props.source) ? {
-  isLoading: $props.source.isLoading.value,
-  isError: $props.source.isError.value,
-  errorCause: $props.source.errorCause.value?.message,
-  isEmpty: $props.source.isEmpty.value,
-  data: <T>$props.source.data.value,
-  isNoResult: $props.source.isEmpty.value
-} : {
-  isLoading: false,
-  isError: false,
-  errorCause: undefined,
-  isEmpty: isEmpty($props.source),
-  data: <T>$props.source,
-  isNoResult: isEmpty($props.source)
-}))
-type AllVariant = 'isLoadingNoData' | 'isErrorNoData' | 'isLoadingData' | 'isErrorData' | 'isEmpty' | 'done'
+const unionSource = computed(() =>
+  Stream.isStream($props.source)
+    ? {
+        isLoading: $props.source.isRequesting.value,
+        isError: $props.source.error.value,
+        errorCause: $props.source.error.value?.message,
+        isEmpty: $props.source.isEmpty.value,
+        data: <T>$props.source.data.value,
+        isNoResult: $props.source.isNoData.value
+      }
+    : PromiseContent.isPromiseContent($props.source)
+      ? {
+          isLoading: $props.source.isLoading.value,
+          isError: $props.source.isError.value,
+          errorCause: $props.source.errorCause.value?.message,
+          isEmpty: $props.source.isEmpty.value,
+          data: <T>$props.source.data.value,
+          isNoResult: $props.source.isEmpty.value
+        }
+      : {
+          isLoading: false,
+          isError: false,
+          errorCause: undefined,
+          isEmpty: isEmpty($props.source),
+          data: <T>$props.source,
+          isNoResult: isEmpty($props.source)
+        }
+)
+type AllVariant =
+  | 'isLoadingNoData'
+  | 'isErrorNoData'
+  | 'isLoadingData'
+  | 'isErrorData'
+  | 'isEmpty'
+  | 'done'
 
 const loadingVariants: Record<AllVariant, VariantType> = {
   isLoadingNoData: {
@@ -80,8 +94,8 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     borderRadius: '4px'
   },
   isLoadingData: {
-    opacity: .7,
-    translateY: "0%",
+    opacity: 0.7,
+    translateY: '0%',
     width: '4rem',
     height: '1.3rem',
     paddingBlock: '2px',
@@ -93,7 +107,7 @@ const loadingVariants: Record<AllVariant, VariantType> = {
     borderRadius: '1.3rem'
   },
   isErrorData: {
-    opacity: .7,
+    opacity: 0.7,
     translateY: '0%',
     width: 'fit-content',
     height: '4rem',
@@ -136,12 +150,10 @@ const animateOn = computed<AllVariant>(() => {
   if (!$props.hideLoading && unionSource.value.isLoading) {
     if (unionSource.value.isEmpty) return 'isLoadingNoData'
     else return 'isLoadingData'
-  }
-  else if (!$props.hideError && unionSource.value.isError) {
+  } else if (!$props.hideError && unionSource.value.isError) {
     if (unionSource.value.isEmpty) return 'isErrorNoData'
     else return 'isErrorData'
-  }
-  else if (!$props.hideEmpty && unionSource.value.isNoResult) {
+  } else if (!$props.hideEmpty && unionSource.value.isNoResult) {
     return 'isEmpty'
   }
   return 'done'
@@ -155,25 +167,38 @@ defineExpose({
 
 <template>
   <div class="relative size-full overflow-hidden">
-    <div class="relative size-full " :class="[$props.class]" ref="cont">
+    <div class="relative size-full" :class="[$props.class]" ref="cont">
       <slot v-if="!unionSource.isEmpty" :data="unionSource.data" />
-
     </div>
     <AnimatePresence>
-      <motion.div :initial="{ opacity: 0, translateY: '-100%', left: '50%', translateX: '-50%' }"
-        :variants="loadingVariants" :animate="animateOn"
-        class=" shadow flex justify-center items-center scale-100 absolute whitespace-nowrap">
+      <motion.div
+        :initial="{ opacity: 0, translateY: '-100%', left: '50%', translateX: '-50%' }"
+        :variants="loadingVariants"
+        :animate="animateOn"
+        class="absolute flex scale-100 items-center justify-center whitespace-nowrap shadow"
+      >
         <Transition name="van-fade">
           <VanLoading size="25px" color="var(--p-color)" v-if="animateOn === 'isLoadingNoData'" />
-          <Loading size="10px" color="white" v-else-if="animateOn === 'isLoadingData'">加载中</Loading>
+          <Loading size="10px" color="white" v-else-if="animateOn === 'isLoadingData'"
+            >加载中</Loading
+          >
           <div v-else-if="animateOn === 'isEmpty'">
-            <NEmpty description="无结果" class="w-full justify-center!" :class="[classEmpty]"
-              :style="[style, styleEmpty]" />
+            <NEmpty
+              description="无结果"
+              class="w-full justify-center!"
+              :class="[classEmpty]"
+              :style="[style, styleEmpty]"
+            />
           </div>
           <div v-else-if="animateOn === 'isErrorNoData'" class="size-full">
-            <NResult class="items-center! justify-center! flex flex-col size-full! *:w-full text-wrap" status="error"
-              title="网络错误" :class="[classError]" :style="[style, styleError]"
-              :description="unionSource.errorCause ?? '未知原因'">
+            <NResult
+              class="flex size-full! flex-col items-center! justify-center! text-wrap *:w-full"
+              status="error"
+              title="网络错误"
+              :class="[classError]"
+              :style="[style, styleError]"
+              :description="unionSource.errorCause ?? '未知原因'"
+            >
               <template #footer>
                 <NButton v-if="retriable" @click="$emit('resetRetry')" type="primary">重试</NButton>
               </template>
@@ -184,12 +209,15 @@ defineExpose({
               </template>
             </NResult>
           </div>
-          <div v-else-if="animateOn === 'isErrorData'" class="flex items-center gap-3 justify-around">
+          <div
+            v-else-if="animateOn === 'isErrorData'"
+            class="flex items-center justify-around gap-3"
+          >
             <NIcon size="3rem" color="white">
               <WifiTetheringErrorRound />
             </NIcon>
-            <div class="flex gap-2 flex-col justify-center text-white">
-              <div class=" text-sm">网络错误</div>
+            <div class="flex flex-col justify-center gap-2 text-white">
+              <div class="text-sm">网络错误</div>
               <div class="text-xs text-wrap">{{ unionSource.errorCause ?? '未知原因' }}</div>
             </div>
             <NButton circle type="error" size="large" @click="$emit('retry')">

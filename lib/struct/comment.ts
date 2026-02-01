@@ -1,8 +1,11 @@
-import { SourcedKeyMap, Struct, type MetaData, type RStream } from "@/utils/data"
-import { type Component } from "vue"
-import { uni } from "."
-import dayjs from "dayjs"
-import type { User } from "./user"
+import dayjs from 'dayjs'
+import { type Component } from 'vue'
+
+import { SourcedKeyMap, Struct, type MetaData, type RStream } from '@/utils/data'
+
+import type { User } from './user'
+
+import { uni } from '.'
 
 export interface RawComment {
   sender: uni.user.User

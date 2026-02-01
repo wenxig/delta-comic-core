@@ -1,16 +1,20 @@
-import { isFunction } from "es-toolkit/compat"
-import { SharedFunction } from "@/utils/eventBus"
-import type { PluginConfig } from "./define"
-import { isString, isUndefined } from "es-toolkit"
+import { isString, isUndefined } from 'es-toolkit'
+import { isFunction } from 'es-toolkit/compat'
 
-export const definePlugin = async  <T extends PluginConfig>(config: T | ((safe: boolean) => T)) => {
+import { SharedFunction } from '@/utils/eventBus'
+
+import type { PluginConfig } from './define'
+
+export const definePlugin = async <T extends PluginConfig>(config: T | ((safe: boolean) => T)) => {
   if (isFunction(config)) var cfg = config(window.$$safe$$)
   else var cfg = config
   console.log('[definePlugin] new plugin defining...', cfg)
   await SharedFunction.call('addPlugin', cfg)
   return cfg
 }
-export type PluginExpose<T extends ReturnType<typeof definePlugin>> = Awaited<ReturnType<NonNullable<Awaited<T>['onBooted']>>>
+export type PluginExpose<T extends ReturnType<typeof definePlugin>> = Awaited<
+  ReturnType<NonNullable<Awaited<T>['onBooted']>>
+>
 
 export interface RawPluginMeta {
   'name:display': string
@@ -48,19 +52,21 @@ export interface PluginMeta {
 
 export const decodePluginMeta = (v: RawPluginMeta): PluginMeta => ({
   name: {
-    display: v["name:display"],
-    id: v["name:id"],
+    display: v['name:display'],
+    id: v['name:id']
   },
   author: v.author ?? '',
   description: v.description,
-  require: (v.require ? isString(v.require) ? [v.require] : v.require : []).map(dep => {
-    const [name, ...download] = dep.split(':')
-    if (!name.startsWith('dc|')) return
-    return {
-      id: name.replace(/^dc\|/, ''),
-      download: download.join(':')
-    }
-  }).filter(v => !isUndefined(v)),
+  require: (v.require ? (isString(v.require) ? [v.require] : v.require) : [])
+    .map(dep => {
+      const [name, ...download] = dep.split(':')
+      if (!name.startsWith('dc|')) return
+      return {
+        id: name.replace(/^dc\|/, ''),
+        download: download.join(':')
+      }
+    })
+    .filter(v => !isUndefined(v)),
   version: {
     plugin: v.version.split('/')[0],
     supportCore: (() => {

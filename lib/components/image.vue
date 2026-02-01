@@ -1,5 +1,13 @@
-<script setup lang='ts'>
-import { ImgHTMLAttributes, StyleValue, computed, nextTick, shallowRef, useTemplateRef, watch } from 'vue'
+<script setup lang="ts">
+import {
+  ImgHTMLAttributes,
+  StyleValue,
+  computed,
+  nextTick,
+  shallowRef,
+  useTemplateRef,
+  watch
+} from 'vue'
 import { ImageProps, NImage } from 'naive-ui'
 import { isString } from 'es-toolkit/compat'
 import { showImagePreview } from '@/utils/image'
@@ -7,30 +15,32 @@ import { useTemp } from '@/stores/temp'
 import { computedAsync } from '@vueuse/core'
 import { uni } from '@/struct'
 import Loading from './loading.vue'
-const $props = withDefaults(defineProps<{
-  src?: uni.image.Image_
-  alt?: string
-  previewable?: boolean
-  retryMax?: number
-  round?: boolean
-  fit?: ImageProps['objectFit']
-  class?: any,
-  hideLoading?: boolean
-  hideError?: boolean
-  inline?: boolean
-  style?: StyleValue
-  imgProp?: ImgHTMLAttributes
-  useList?: {
-    loaded: Set<string>
-    error: Set<string>
+const $props = withDefaults(
+  defineProps<{
+    src?: uni.image.Image_
+    alt?: string
+    previewable?: boolean
+    retryMax?: number
+    round?: boolean
+    fit?: ImageProps['objectFit']
+    class?: any
+    hideLoading?: boolean
+    hideError?: boolean
+    inline?: boolean
+    style?: StyleValue
+    imgProp?: ImgHTMLAttributes
+    useList?: {
+      loaded: Set<string>
+      error: Set<string>
+    }
+    fetchpriority?: 'high' | 'low' | 'auto'
+    fallback?: uni.image.Image_
+  }>(),
+  {
+    fetchpriority: 'auto',
+    retryMax: 2
   }
-  fetchpriority?: 'high' | 'low' | 'auto'
-  fallback?: uni.image.Image_
-
-}>(), {
-  fetchpriority: 'auto',
-  retryMax: 2,
-})
+)
 const src = computedAsync(async () => {
   try {
     if (!$props.src) return ''
@@ -62,7 +72,7 @@ const handleFail = async () => {
       handleFail()
       return
     }
-    if(!$props.src.localChangeFork()) {
+    if (!$props.src.localChangeFork()) {
       isForkEmpty = true
       handleFail()
       return
@@ -105,7 +115,7 @@ const handleClickImage = (e: Event) => {
   if (!$props.previewable) return
   e.stopPropagation()
   showImagePreview([src.value], {
-    closeable: true,
+    closeable: true
   })
 }
 const handleImageLoad = (...e: Event[]) => {
@@ -122,27 +132,65 @@ const NImg = window.$api.NImage as typeof NImage
 </script>
 
 <template>
-  <NImg @error="handleFail" v-bind="$props" :object-fit="fit" preview-disabled :alt ref="img"
-    :img-props="{ ...(imgProp ?? {}), class: 'w-full', ['fetchpriority' as any]: $props.fetchpriority }"
-    :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style
-    v-show="!images.error.has(src) && images.loaded.has(src)" v-if="show" @load="handleImageLoad"
-    @click="handleClickImage" :src>
+  <NImg
+    @error="handleFail"
+    v-bind="$props"
+    :object-fit="fit"
+    preview-disabled
+    :alt
+    ref="img"
+    :img-props="{
+      ...(imgProp ?? {}),
+      class: 'w-full',
+      ['fetchpriority' as any]: $props.fetchpriority
+    }"
+    :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]"
+    :style
+    v-show="!images.error.has(src) && images.loaded.has(src)"
+    v-if="show"
+    @load="handleImageLoad"
+    @click="handleClickImage"
+    :src
+  >
   </NImg>
-  <div class="justify-center items-center" v-if="!images.loaded.has(src) && !images.error.has(src) && !hideLoading"
-    :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style
-    @click="$emit('click')">
+  <div
+    class="items-center justify-center"
+    v-if="!images.loaded.has(src) && !images.error.has(src) && !hideLoading"
+    :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]"
+    :style
+    @click="$emit('click')"
+  >
     <slot name="loading" v-if="$slots.loading"></slot>
     <Loading v-else />
   </div>
   <template v-if="images.error.has(src) && !hideError">
-    <NImg @error="handleFail" v-bind="$props" :object-fit="fit" preview-disabled :alt
-      :img-props="{ ...(imgProp ?? {}), class: 'w-full', ['fetchpriority' as any]: $props.fetchpriority }"
-      :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]" :style v-if="fallback"
-      :src="fallbackSrc" />
-    <div class="justify-center items-center flex-col" @click.stop="() => {
-      images.error.delete(src)
-      beginReload()
-    }" v-else :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]">
+    <NImg
+      @error="handleFail"
+      v-bind="$props"
+      :object-fit="fit"
+      preview-disabled
+      :alt
+      :img-props="{
+        ...(imgProp ?? {}),
+        class: 'w-full',
+        ['fetchpriority' as any]: $props.fetchpriority
+      }"
+      :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]"
+      :style
+      v-if="fallback"
+      :src="fallbackSrc"
+    />
+    <div
+      class="flex-col items-center justify-center"
+      @click.stop="
+        () => {
+          images.error.delete(src)
+          beginReload()
+        }
+      "
+      v-else
+      :class="[{ 'rounded-full!': !!round }, inline ? 'inline-flex' : 'flex', $props.class]"
+    >
       <slot name="loading" v-if="$slots.loading"></slot>
       <template v-else>
         <VanIcon name="warning-o" size="2.5rem" color="var(--van-text-color-2)" />

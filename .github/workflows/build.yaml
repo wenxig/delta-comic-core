@@ -2,12 +2,12 @@ name: 构建和发布
 
 on:
   push:
-    branches: 
+    branches:
       - 'main'
 
 permissions:
-  id-token: write  # 用于OIDC令牌
-  contents: read   # 用于代码访问
+  id-token: write # 用于OIDC令牌
+  contents: read # 用于代码访问
 
 jobs:
   build:

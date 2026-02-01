@@ -1,16 +1,17 @@
 export { uni } from './struct/index'
-import { uni } from './struct/index'
 import type { useDialog, useLoadingBar, useMessage } from 'naive-ui'
-import type { Router } from 'vue-router'
 import type { Component, MaybeRefOrGetter } from 'vue'
+import type { Router } from 'vue-router'
+
+import { uni } from './struct/index'
 export interface ExternalLibKey {
-  vue: 'Vue',
-  vant: 'Vant',
-  'naive-ui': 'Naive',
-  axios: 'Axios',
-  'delta-comic-core': 'Dcc',
-  'vue-router': 'VR',
-  'pinia': 'Pinia'
+  vue: 'Vue'
+  vant: 'Vant'
+  'naive-ui': 'Naive'
+  axios: 'Axios'
+  'delta-comic-core': 'Dcc'
+  'vue-router': 'VR'
+  pinia: 'Pinia'
 }
 
 declare global {
@@ -54,19 +55,18 @@ declare module 'vue-router' {
   }
 }
 
-
 import Await from './components/await.vue'
-import Loading from './components/loading.vue'
+import Content from './components/content.vue'
 import FloatPopup from './components/floatPopup.vue'
 import Image from './components/image.vue'
 import List from './components/list.vue'
+import Loading from './components/loading.vue'
 import Popup from './components/popup.vue'
 import RouterTab from './components/routerTab.vue'
 import Text from './components/text.vue'
 import ToggleIcon from './components/toggleIcon.vue'
 import Var from './components/var.vue'
 import Waterfall from './components/waterfall.vue'
-import Content from './components/content.vue'
 
 export const Comp = {
   Await,
@@ -80,18 +80,16 @@ export const Comp = {
   Text,
   ToggleIcon,
   Var,
-  Waterfall,
+  Waterfall
 }
-
-
 
 import * as uData from './utils/data'
 import * as uEventBus from './utils/eventBus'
 import * as uImage from './utils/image'
 import * as uLayout from './utils/layout'
+import * as uMessage from './utils/message'
 import * as uRequest from './utils/request'
 import * as uTranslate from './utils/translate'
-import * as uMessage from './utils/message'
 
 export namespace Utils {
   export import data = uData
@@ -102,8 +100,8 @@ export namespace Utils {
   export import translate = uTranslate
   export import message = uMessage
 }
-import { useTemp } from './stores/temp'
 import { useConfig, ConfigPointer, appConfig } from './config'
+import { useTemp } from './stores/temp'
 export const Store = {
   useTemp,
   useConfig,
@@ -113,11 +111,11 @@ export const Store = {
 
 import './index.css'
 
-export * from "./plugin/index"
+export * from './plugin/index'
 
 export * from './depends'
 
-export * from "./plugin/define.ts"
+export * from './plugin/define.ts'
 
 import _package from '../package.json'
 export const version = _package.version

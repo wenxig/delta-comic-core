@@ -1,10 +1,13 @@
-import { SourcedKeyMap, Struct, type MetaData } from "@/utils/data"
-import { useGlobalVar } from "@/utils/plugin"
-import { isString } from "es-toolkit/compat"
-import { shallowReactive } from "vue"
+import { isString } from 'es-toolkit/compat'
+import { shallowReactive } from 'vue'
 
+import { SourcedKeyMap, Struct, type MetaData } from '@/utils/data'
+import { useGlobalVar } from '@/utils/plugin'
 
-export type ProcessInstance = (nowPath: string, resource: Resource) => Promise<[path: string, exit: boolean]>
+export type ProcessInstance = (
+  nowPath: string,
+  resource: Resource
+) => Promise<[path: string, exit: boolean]>
 export interface ProcessStep {
   referenceName: string
   ignoreExit?: boolean
@@ -24,10 +27,19 @@ export interface RawResource {
   processSteps?: ProcessStep_[]
 }
 export class Resource extends Struct<RawResource> implements RawResource {
-  public static processInstances = useGlobalVar(SourcedKeyMap.create<[plugin: string, referenceName: string], ProcessInstance>(), 'uni/resource/processInstances')
+  public static processInstances = useGlobalVar(
+    SourcedKeyMap.create<[plugin: string, referenceName: string], ProcessInstance>(),
+    'uni/resource/processInstances'
+  )
 
-  public static fork = useGlobalVar(SourcedKeyMap.create<[plugin: string, type: string], ResourceType>(), 'uni/resource/fork')
-  public static precedenceFork = useGlobalVar(SourcedKeyMap.create<[plugin: string, type: string], string>(), 'uni/resource/precedenceFork')
+  public static fork = useGlobalVar(
+    SourcedKeyMap.create<[plugin: string, type: string], ResourceType>(),
+    'uni/resource/fork'
+  )
+  public static precedenceFork = useGlobalVar(
+    SourcedKeyMap.create<[plugin: string, type: string], string>(),
+    'uni/resource/precedenceFork'
+  )
 
   public static is(value: unknown): value is Resource {
     return value instanceof this
@@ -41,10 +53,14 @@ export class Resource extends Struct<RawResource> implements RawResource {
     this.$$meta = v.$$meta
     this.pathname = v.pathname
     this.type = v.type
-    this.processSteps = (v.processSteps ?? []).map<ProcessStep>(v => isString(v) ? {
-      referenceName: v,
-      ignoreExit: false
-    } : v)
+    this.processSteps = (v.processSteps ?? []).map<ProcessStep>(v =>
+      isString(v)
+        ? {
+            referenceName: v,
+            ignoreExit: false
+          }
+        : v
+    )
   }
   public type: string
   public pathname: string
@@ -57,7 +73,9 @@ export class Resource extends Struct<RawResource> implements RawResource {
       // preflight
       const instance = Resource.processInstances.get([this.$$plugin, option.referenceName])
       if (!instance) {
-        console.warn(`[Resource.getUrl] process not found, fullname: [${this.$$plugin}, ${option.referenceName}]`)
+        console.warn(
+          `[Resource.getUrl] process not found, fullname: [${this.$$plugin}, ${option.referenceName}]`
+        )
         continue
       }
 
@@ -67,8 +85,7 @@ export class Resource extends Struct<RawResource> implements RawResource {
       if (option.ignoreExit || !result[1]) continue
       break
     }
-    if (!URL.canParse(resultPath))
-      return `${this.getThisFork()}/${resultPath}`
+    if (!URL.canParse(resultPath)) return `${this.getThisFork()}/${resultPath}`
     return resultPath
   }
   public omittedForks = shallowReactive(new Set<string>())
@@ -80,7 +97,10 @@ export class Resource extends Struct<RawResource> implements RawResource {
       const diff = Array.from(all.difference(this.omittedForks).values())
       var fork: string | undefined = diff[0]
     }
-    if (!fork) throw new Error(`[Resource.getThisFork] fork not found, type: [${this.$$plugin}, ${this.type}]`)
+    if (!fork)
+      throw new Error(
+        `[Resource.getThisFork] fork not found, type: [${this.$$plugin}, ${this.type}]`
+      )
     return fork
   }
   public localChangeFork() {

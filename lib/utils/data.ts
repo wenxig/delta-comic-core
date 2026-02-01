@@ -1,19 +1,20 @@
-import { until } from "@vueuse/core"
-import { isEmpty, isError } from "es-toolkit/compat"
-import { computed, markRaw, ref, shallowReactive, shallowRef, type Raw, type Ref } from "vue"
-import { SmartAbortController } from "./request"
-import { useGlobalVar } from "./plugin"
-import mitt from "mitt"
-import { isString } from "es-toolkit"
+import { until } from '@vueuse/core'
+import { isString } from 'es-toolkit'
+import { isEmpty, isError } from 'es-toolkit/compat'
+import mitt from 'mitt'
+import { computed, markRaw, ref, shallowReactive, shallowRef, type Raw, type Ref } from 'vue'
+
+import { useGlobalVar } from './plugin'
+import { SmartAbortController } from './request'
 
 /**
  * 可以结构化的数据
-*/
+ */
 export class Struct<TRaw extends object> {
   public toJSON() {
     return <TRaw>JSON.parse(JSON.stringify(this.$$raw))
   }
-  constructor(protected $$raw: TRaw) { }
+  constructor(protected $$raw: TRaw) {}
   public static toRaw<T extends object, TRaw = T extends Struct<infer TR> ? TR : T>(item: T): TRaw {
     if (item instanceof Struct) return item.toJSON()
     return item as any
@@ -24,7 +25,7 @@ export type MetaData = Record<string | number, any>
 
 /**
  * 比如有很多需要注明来自哪个插件的值都可以用
-*/
+ */
 export class SourcedValue<T extends [string, string]> {
   public toJSON(value: T | string) {
     if (isString(value)) return this.parse(value)
@@ -41,16 +42,20 @@ export class SourcedValue<T extends [string, string]> {
   public stringify(value: T) {
     return value.join(this.separator)
   }
-  constructor(public separator = ':') { }
+  constructor(public separator = ':') {}
 }
-export type SourcedKeyType<T extends SourcedKeyMap<[string, string], any> | SourcedValue<any>> = T extends SourcedKeyMap<[string, string], any> ?
-  Parameters<T['get']>[0]
-  : Parameters<T['toJSON']>[0]
+export type SourcedKeyType<T extends SourcedKeyMap<[string, string], any> | SourcedValue<any>> =
+  T extends SourcedKeyMap<[string, string], any>
+    ? Parameters<T['get']>[0]
+    : Parameters<T['toJSON']>[0]
 /**
- * 相比较于普通的Map，这个元素的key操作可以是`TKey | string`  
+ * 相比较于普通的Map，这个元素的key操作可以是`TKey | string`
  * _但内部保存仍使用`SourcedValue.toString`作为key_
-*/
-export class SourcedKeyMap<TKey extends [string, string], TValue> extends SourcedValue<TKey> implements Map<string, TValue> {
+ */
+export class SourcedKeyMap<TKey extends [string, string], TValue>
+  extends SourcedValue<TKey>
+  implements Map<string, TValue>
+{
   public static create<TKey extends [string, string], TValue>(separator = ':') {
     return shallowReactive(new this<TKey, TValue>(separator))
   }
@@ -68,7 +73,10 @@ export class SourcedKeyMap<TKey extends [string, string], TValue> extends Source
   public delete(key: string | TKey): boolean {
     return this.store.delete(this.toString(key))
   }
-  public forEach(callbackfn: (value: TValue, key: string, map: Map<string, TValue>) => void, thisArg?: any): void {
+  public forEach(
+    callbackfn: (value: TValue, key: string, map: Map<string, TValue>) => void,
+    thisArg?: any
+  ): void {
     // Map.prototype.forEach iterates value, key, map
     this.store.forEach((v, k) => {
       callbackfn.call(thisArg, v, k, this)
@@ -98,7 +106,6 @@ export class SourcedKeyMap<TKey extends [string, string], TValue> extends Source
   }
 }
 
-
 type PromiseContentEmits<TR> = {
   success: TR
   error: any
@@ -106,8 +113,12 @@ type PromiseContentEmits<TR> = {
 }
 /**
  * 扩展内容的`Promise`，可视为普通`Promise`使用
-*/
-export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseContentEmits<TPF> = PromiseContentEmits<TPF>> implements PromiseLike<T> {
+ */
+export class PromiseContent<
+  T,
+  TPF extends any = T,
+  TEmits extends PromiseContentEmits<TPF> = PromiseContentEmits<TPF>
+> implements PromiseLike<T> {
   [Symbol.toStringTag] = 'PromiseContent'
   private static _this
   static {
@@ -116,14 +127,20 @@ export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseConten
   public static isPromiseContent(value: unknown): value is PromiseContent<any> {
     return value instanceof this._this
   }
-  public static fromPromise<T, TP = T>(promise: Promise<T>, processor: (val: T) => TP = v => <any>v): RPromiseContent<T, TP> {
+  public static fromPromise<T, TP = T>(
+    promise: Promise<T>,
+    processor: (val: T) => TP = v => <any>v
+  ): RPromiseContent<T, TP> {
     const v = new this._this<T, TP>(promise, processor)
     return markRaw(v)
   }
   /**
    * 使用`PromiseContent.fromPromise`或`PromiseContent.fromAsyncFunction`代替`new PromiseContent`
-  */
-  private constructor(private promise: Promise<T>, private processor: (v: T) => TPF = v => <any>v) {
+   */
+  private constructor(
+    private promise: Promise<T>,
+    private processor: (v: T) => TPF = v => <any>v
+  ) {
     void this.loadPromise(promise)
   }
   public async loadPromise(promise: Promise<T>) {
@@ -165,14 +182,19 @@ export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseConten
 
   /**
    * 对`this.data.value`做出处理，多次调用仅最后一次生效
-  */
+   */
   public setProcessor<TP>(processor: (val: T) => TP): RPromiseContent<T, TP> {
     return PromiseContent.fromPromise(this.promise, processor)
   }
-  public catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null): Promise<T | TResult> {
+  public catch<TResult = never>(
+    onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null
+  ): Promise<T | TResult> {
     return this.promise.catch<TResult>(onrejected)
   }
-  public then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null): Promise<TResult1 | TResult2> {
+  public then<TResult1 = T, TResult2 = never>(
+    onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | null,
+    onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | null
+  ): Promise<TResult1 | TResult2> {
     return this.promise.then<TResult1, TResult2>(onfulfilled, onrejected)
   }
   public finally(onfinally?: (() => void) | null): Promise<T> {
@@ -184,7 +206,8 @@ export class PromiseContent<T, TPF extends any = T, TEmits extends PromiseConten
   public errorCause = shallowRef<Error>()
   public isEmpty = shallowRef(true)
   public static fromAsyncFunction<T extends (...args: any[]) => Promise<any>>(asyncFunction: T) {
-    return (...args: Parameters<T>): RPromiseContent<Awaited<ReturnType<T>>> => this.fromPromise((() => asyncFunction(...args))())
+    return (...args: Parameters<T>): RPromiseContent<Awaited<ReturnType<T>>> =>
+      this.fromPromise((() => asyncFunction(...args))())
   }
   public static resolve<T>(data: T) {
     const pc = this.fromPromise(Promise.resolve(data))
@@ -219,17 +242,20 @@ export type PromiseWithResolvers<T> = {
 }
 
 export type RPromiseContent<T, PTF = T> = Raw<PromiseContent<T, PTF>>
-type RawGenerator<T> = (abortSignal: AbortSignal, that: Stream<T>) => (IterableIterator<T[], void, Stream<T>> | AsyncIterableIterator<T[], void, Stream<T>>)
+type RawGenerator<T> = (
+  abortSignal: AbortSignal,
+  that: Stream<T>
+) => IterableIterator<T[], void, Stream<T>> | AsyncIterableIterator<T[], void, Stream<T>>
 const generatorMap = new Map<Stream<any>, RawGenerator<any>>()
 /**
  * _(网络)_ 数据流
-*/
+ */
 export type RStream<T> = Raw<Stream<T>>
 /**
  * 可迭代 _(网络)_ 数据流
-*/
+ */
 export class Stream<T> implements AsyncIterableIterator<T[], void> {
-  /** 
+  /**
    * 使用`Stream.create`代替`new Stream`
    */
   private constructor(rawGenerator: RawGenerator<T>) {
@@ -282,10 +308,10 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
     }
   }
   public async return(): Promise<IteratorResult<T[], void>> {
-    return await this.generator.return?.() ?? { value: undefined, done: true }
+    return (await this.generator.return?.()) ?? { value: undefined, done: true }
   }
   public async throw(e?: any): Promise<IteratorResult<T[], void>> {
-    return await this.generator.throw?.(e) ?? { value: undefined, done: true }
+    return (await this.generator.throw?.(e)) ?? { value: undefined, done: true }
   }
   /** 重置 */
   public reset() {
@@ -310,7 +336,7 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
     if (isNaN(this._pages)) await this.next(true)
     const promises = []
     // e.g. p:1 ps:20 2->20
-    for (let index = this._page + 1; index <= this._pages; index++)  promises.push(this.next(true))
+    for (let index = this._page + 1; index <= this._pages; index++) promises.push(this.next(true))
     await Promise.all(promises)
     return this._data
   }
@@ -388,7 +414,9 @@ export class Stream<T> implements AsyncIterableIterator<T[], void> {
     return this.isEmpty.value
   }
 }
-export const callbackToPromise = <T = void>(fn: (resolve: (result: T | PromiseLike<T>) => void) => any) => {
+export const callbackToPromise = <T = void>(
+  fn: (resolve: (result: T | PromiseLike<T>) => void) => any
+) => {
   const { resolve, promise } = Promise.withResolvers<T>()
   fn(resolve)
   return promise

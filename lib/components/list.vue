@@ -1,4 +1,8 @@
-<script setup lang='ts' generic="T extends NonNullable<VirtualListProps['items']>[number],PF extends ((d: T[])=>any[])">
+<script
+  setup
+  lang="ts"
+  generic="T extends NonNullable<VirtualListProps['items']>[number], PF extends (d: T[]) => any[]"
+>
 import { VirtualListInst, VirtualListProps } from 'naive-ui'
 import { ceil, debounce, isArray, isEmpty } from 'es-toolkit/compat'
 import { Ref, StyleValue, shallowRef, useTemplateRef, watch } from 'vue'
@@ -8,11 +12,14 @@ import { computed } from 'vue'
 import Content from './content.vue'
 import Var from './var.vue'
 const $props = defineProps<{
-  source: {
-    data: RPromiseContent<any, T[]>
-    isEnd?: boolean
-    reloadable?: boolean
-  } | Stream<T> | Array<T>
+  source:
+    | {
+        data: RPromiseContent<any, T[]>
+        isEnd?: boolean
+        reloadable?: boolean
+      }
+    | Stream<T>
+    | Array<T>
   itemHeight: number
   listProp?: Partial<VirtualListProps>
   goBottom?: boolean
@@ -31,48 +38,66 @@ const $emit = defineEmits<{
 
 const dataProcessor = (v: T[]) => $props.dataProcessor?.(v) ?? v
 const unionSource = computed(() => ({
-  ...Stream.isStream($props.source) ? {
-    data: dataProcessor($props.source.data.value),
-    isDone: $props.source.isDone.value,
-    isRequesting: $props.source.isRequesting.value,
-    isError: !!$props.source.error.value,
-    length: dataProcessor($props.source.data.value).length,
-    isEmpty: $props.source.isEmpty.value,
-    source: $props.source
-  } : (isArray($props.source) ?
-    {
-      data: dataProcessor($props.source),
-      isDone: true,
-      isRequesting: false,
-      isError: false,
-      length: dataProcessor($props.source).length,
-      isEmpty: isEmpty($props.source),
-      source: $props.source
-    } :
-    {
-      data: dataProcessor($props.source.data.data.value ?? []),
-      isDone: $props.source.isEnd,
-      isRequesting: $props.source.data.isLoading.value,
-      isError: $props.source.data.isError.value,
-      length: dataProcessor($props.source.data.data.value ?? []).length,
-      isEmpty: $props.source.data.isEmpty.value,
-      source: $props.source.data
-    }
-  ),
-  next: () => Stream.isStream($props.source) ? $props.source.next() : callbackToPromise(r => $emit('next', r)),
-  retry: () => Stream.isStream($props.source) ? $props.source.retry() : callbackToPromise(r => $emit('retry', r)),
-  reset: () => Stream.isStream($props.source) ? $props.source.reset() : $emit('reset'),
+  ...(Stream.isStream($props.source)
+    ? {
+        data: dataProcessor($props.source.data.value),
+        isDone: $props.source.isDone.value,
+        isRequesting: $props.source.isRequesting.value,
+        isError: !!$props.source.error.value,
+        length: dataProcessor($props.source.data.value).length,
+        isEmpty: $props.source.isEmpty.value,
+        source: $props.source
+      }
+    : isArray($props.source)
+      ? {
+          data: dataProcessor($props.source),
+          isDone: true,
+          isRequesting: false,
+          isError: false,
+          length: dataProcessor($props.source).length,
+          isEmpty: isEmpty($props.source),
+          source: $props.source
+        }
+      : {
+          data: dataProcessor($props.source.data.data.value ?? []),
+          isDone: $props.source.isEnd,
+          isRequesting: $props.source.data.isLoading.value,
+          isError: $props.source.data.isError.value,
+          length: dataProcessor($props.source.data.data.value ?? []).length,
+          isEmpty: $props.source.data.isEmpty.value,
+          source: $props.source.data
+        }),
+  next: () =>
+    Stream.isStream($props.source)
+      ? $props.source.next()
+      : callbackToPromise(r => $emit('next', r)),
+  retry: () =>
+    Stream.isStream($props.source)
+      ? $props.source.retry()
+      : callbackToPromise(r => $emit('retry', r)),
+  reset: () => (Stream.isStream($props.source) ? $props.source.reset() : $emit('reset'))
 }))
-watch(() => unionSource.value.data, () => {
-  if ($props.goBottom) vList.value?.scrollTo({ position: 'bottom', behavior: 'instant' })
-}, { flush: 'post', deep: true, immediate: true })
-watch(unionSource, unionSource => {
-  if (!unionSource.isRequesting) if (((ceil(window.innerHeight / $props.itemHeight) + 2) > unionSource.length) && !unionSource.isDone) {
-    if (unionSource.isError) unionSource.retry()
-    else unionSource.next()
-  }
-}, { immediate: true })
-
+watch(
+  () => unionSource.value.data,
+  () => {
+    if ($props.goBottom) vList.value?.scrollTo({ position: 'bottom', behavior: 'instant' })
+  },
+  { flush: 'post', deep: true, immediate: true }
+)
+watch(
+  unionSource,
+  unionSource => {
+    if (!unionSource.isRequesting)
+      if (
+        ceil(window.innerHeight / $props.itemHeight) + 2 > unionSource.length &&
+        !unionSource.isDone
+      ) {
+        if (unionSource.isError) unionSource.retry()
+        else unionSource.next()
+      }
+  },
+  { immediate: true }
+)
 
 const vList = useTemplateRef('vList')
 const { y: listScrollTop } = useScroll(() => vList.value?.getScrollContainer())
@@ -83,7 +108,12 @@ const handleScroll: VirtualListProps['onScroll'] = debounce(async () => {
   const { itemHeight } = $props
   const { data, isDone, isError, isRequesting, retry, next, length } = unionSource.value
   if (!data) return
-  if (!isRequesting && !isDone && (itemHeight * (length - 2)) < (listScrollTop.value + (list?.children?.length ?? window.innerHeight / itemHeight) * itemHeight)) {
+  if (
+    !isRequesting &&
+    !isDone &&
+    itemHeight * (length - 2) <
+      listScrollTop.value + (list?.children?.length ?? window.innerHeight / itemHeight) * itemHeight
+  ) {
     if (isError) retry()
     else next()
   }
@@ -97,28 +127,55 @@ const handleRefresh = async () => {
   isRefreshing.value = false
 }
 
-
 defineSlots<{
-  default(props: { height: number, data: { item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>, index: number } }): any
+  default(props: {
+    height: number
+    data: { item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>; index: number }
+  }): any
 }>()
 defineExpose({
   scrollTop: listScrollTop,
-  listInstance: <Ref<VirtualListInst>><unknown>vList,
+  listInstance: <Ref<VirtualListInst>>(<unknown>vList)
 })
 </script>
 
 <template>
-  <VanPullRefresh v-model="isRefreshing" :class="['relative', $props.class]" @refresh="handleRefresh"
-    :disabled="unReloadable || (Stream.isStream(source) ? false : (isArray(source) ? true : (source.reloadable ?? true))) || (unionSource.isError || unionSource.isRequesting || (!!listScrollTop && !isPullRefreshHold))"
-    @change="({ distance }) => isPullRefreshHold = !!distance" :style>
-    <Content retriable :source="Stream.isStream(source) ? source : (isArray(source) ? source : source.data)"
-      class-loading="mt-2 !h-[24px]" class-empty="!h-full" class-error="!h-full" @reset-retry="handleRefresh"
-      :hide-loading="isPullRefreshHold && unionSource.isRequesting" @retry="unionSource.retry()">
+  <VanPullRefresh
+    v-model="isRefreshing"
+    :class="['relative', $props.class]"
+    @refresh="handleRefresh"
+    :disabled="
+      unReloadable ||
+      (Stream.isStream(source) ? false : isArray(source) ? true : (source.reloadable ?? true)) ||
+      unionSource.isError ||
+      unionSource.isRequesting ||
+      (!!listScrollTop && !isPullRefreshHold)
+    "
+    @change="({ distance }) => (isPullRefreshHold = !!distance)"
+    :style
+  >
+    <Content
+      retriable
+      :source="Stream.isStream(source) ? source : isArray(source) ? source : source.data"
+      class-loading="mt-2 !h-[24px]"
+      class-empty="!h-full"
+      class-error="!h-full"
+      @reset-retry="handleRefresh"
+      :hide-loading="isPullRefreshHold && unionSource.isRequesting"
+      @retry="unionSource.retry()"
+    >
       <Var :value="unionSource.data" v-slot="{ value }">
-        <NVirtualList :="(listProp ?? {})" :item-resizable :item-size="itemHeight" @scroll="handleScroll"
-          class="overflow-x-hidden h-full" :items="value"
-          v-slot="{ item }: { item: (IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>) }" ref="vList"
-          :class="[isPullRefreshHold ? 'overflow-y-hidden' : 'overflow-y-auto']">
+        <NVirtualList
+          :="listProp ?? {}"
+          :item-resizable
+          :item-size="itemHeight"
+          @scroll="handleScroll"
+          class="h-full overflow-x-hidden"
+          :items="value"
+          v-slot="{ item }: { item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]> }"
+          ref="vList"
+          :class="[isPullRefreshHold ? 'overflow-y-hidden' : 'overflow-y-auto']"
+        >
           <slot :height="itemHeight" :data="{ item: item, index: value.indexOf(item) }" />
         </NVirtualList>
       </Var>

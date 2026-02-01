@@ -4,7 +4,7 @@ r"""
  / ______\   |  __  | |  ____|
 | |    _____ | |__| | | |__
 | |   /  _  \|  __  \ |  __|
-| |___| |_| || |   \ \| |____ 
+| |___| |_| || |   \ \| |____
  \__________/|_|    \________|
 ==============================
   空阙虱楼  Copyright © Wenxig
@@ -29,13 +29,13 @@ pnpm add delta-comic-core
 
 ## 为谁编写插件?
 
- [![Readme Card](https://wenxig-grs.vercel.app/api/pin/?username=delta-comic&repo=delta-comic&user&theme=transparent)](https://github.com/delta-comic/delta-comic)
+[![Readme Card](https://wenxig-grs.vercel.app/api/pin/?username=delta-comic&repo=delta-comic&user&theme=transparent)](https://github.com/delta-comic/delta-comic)
 
 ## 辅助的插件
 
 ### Layout
 
-[![Readme Card](https://wenxig-grs.vercel.app/api/pin/?username=delta-comic&repo=delta-comic-plugin-layout&user&theme=transparent)](https://github.com/delta-comic/delta-comic-plugin-bika)  
+[![Readme Card](https://wenxig-grs.vercel.app/api/pin/?username=delta-comic&repo=delta-comic-plugin-layout&user&theme=transparent)](https://github.com/delta-comic/delta-comic-plugin-bika)
 
 ## Star History
 

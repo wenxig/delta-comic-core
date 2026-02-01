@@ -8,20 +8,7 @@
       "addWords": true
     }
   ],
-  "import": [
-    "@cspell/dict-rust/cspell-ext.json",
-    "@cspell/dict-npm/cspell-ext.json"
-  ],
-  "dictionaries": [
-    "words",
-    "npm",
-    "rust",
-    "rust-crates"
-  ],
-  "ignorePaths": [
-    "node_modules",
-    "/words.txt",
-    "./dist",
-    "./README.md"
-  ],
+  "import": ["@cspell/dict-rust/cspell-ext.json", "@cspell/dict-npm/cspell-ext.json"],
+  "dictionaries": ["words", "npm", "rust", "rust-crates"],
+  "ignorePaths": ["node_modules", "/words.txt", "./dist", "./README.md"]
 }

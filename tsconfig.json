@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "preserve",
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "strict": true,
     "target": "ESNext",
     "useDefineForClassFields": true,
@@ -27,18 +23,9 @@
     "noImplicitThis": true,
     "jsxImportSource": "vue",
     "paths": {
-      "@/*": [
-        "./lib/*"
-      ]
+      "@/*": ["./lib/*"]
     },
-    "types": [
-      "./env.d.ts",
-      "./components.d.ts",
-      "vue-component-type-helpers",
-    ],
+    "types": ["./env.d.ts", "./components.d.ts", "vue-component-type-helpers"]
   },
-  "include": [
-    "./lib/**/*",
-    "./public/**/*"
-  ]
+  "include": ["./lib/**/*", "./public/**/*"]
 }

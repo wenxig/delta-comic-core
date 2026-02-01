@@ -3,17 +3,35 @@
   "version": "0.5.14",
   "description": "空阙虱楼",
   "homepage": "https://github.com/delta-comic/delta-comic-core",
+  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "wenxig",
+    "email": "wenxinguo12@gmail.com"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/delta-comic/delta-comic-core.git"
   },
-  "author": {
-    "email": "wenxinguo12@gmail.com",
-    "name": "wenxig"
-  },
-  "readme": "./README.md",
-  "license": "AGPL-3.0-only",
+  "files": [
+    "dist"
+  ],
   "type": "module",
+  "main": "./dist/bundle.js",
+  "module": "./dist/bundle.js",
+  "types": "./dist/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/bundle.js",
+      "require": "./dist/bundle.cjs"
+    },
+    "./vite": {
+      "types": "./dist/vite/index.d.ts",
+      "import": "./dist/bundle2.js",
+      "require": "./dist/bundle2.cjs"
+    },
+    "./style.css": "./dist/bundle.css"
+  },
   "scripts": {
     "build": "vite build && pnpm pack --out ./dist/pack.tgz",
     "lint": "oxlint --type-aware",
@@ -33,15 +51,6 @@
     "vidstack": "^1.12.13",
     "vite-plugin-external": "^6.2.2",
     "vite-plugin-monkey": "^7.1.8"
-  },
-  "peerDependencies": {
-    "axios": "^1.13.4",
-    "kysely": "^0.28.10",
-    "naive-ui": "2.43.2",
-    "pinia": "^3.0.4",
-    "vant": "4.9.22",
-    "vue": "3.5.27",
-    "vue-router": "5.0.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.0",
@@ -68,25 +77,15 @@
     "vite-plugin-dts": "^4.5.4",
     "vue-component-type-helpers": "^3.2.2"
   },
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/bundle.js",
-  "module": "./dist/bundle.js",
-  "exports": {
-    ".": {
-      "import": "./dist/bundle.js",
-      "require": "./dist/bundle.cjs",
-      "types": "./dist/lib/index.d.ts"
-    },
-    "./vite": {
-      "import": "./dist/bundle2.js",
-      "require": "./dist/bundle2.cjs",
-      "types": "./dist/vite/index.d.ts"
-    },
-    "./style.css": "./dist/bundle.css"
+  "peerDependencies": {
+    "axios": "^1.13.4",
+    "kysely": "^0.28.10",
+    "naive-ui": "2.43.2",
+    "pinia": "^3.0.4",
+    "vant": "4.9.22",
+    "vue": "3.5.27",
+    "vue-router": "5.0.1"
   },
-  "types": "./dist/lib/index.d.ts",
   "pnpm": {
     "overrides": {
       "vite": "^8.0.0-beta.11"
@@ -96,5 +95,6 @@
       "@tailwindcss/oxide",
       "esbuild"
     ]
-  }
+  },
+  "readme": "./README.md"
 }

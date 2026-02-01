@@ -1,6 +1,6 @@
-import type { MetaData } from "@/utils/data"
-import { Resource, RawResource, type ProcessStep_ } from "./resource"
+import type { MetaData } from '@/utils/data'
 
+import { Resource, RawResource, type ProcessStep_ } from './resource'
 
 export interface RawImage {
   $$plugin: string
@@ -18,16 +18,17 @@ export class Image extends Resource {
     return new this(v, aspect)
   }
   protected constructor(v: RawResource | RawImage, aspect?: ImageAspect) {
-    if ('forkNamespace' in v) super({
-      $$plugin: v.$$plugin,
-      $$meta: {
-        ...v.$$meta,
-        ...aspect
-      },
-      pathname: v.path,
-      type: v.forkNamespace,
-      processSteps: v.processSteps
-    })
+    if ('forkNamespace' in v)
+      super({
+        $$plugin: v.$$plugin,
+        $$meta: {
+          ...v.$$meta,
+          ...aspect
+        },
+        pathname: v.path,
+        type: v.forkNamespace,
+        processSteps: v.processSteps
+      })
     else super(v)
   }
   public get aspect() {

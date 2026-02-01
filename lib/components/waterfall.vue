@@ -1,6 +1,15 @@
-<script setup lang='ts' generic="T = any, PF extends ((d: T[]) => any[]) = ((d: T[]) => T[])">
+<script setup lang="ts" generic="T = any, PF extends (d: T[]) => any[] = (d: T[]) => T[]">
 import { callbackToPromise, RPromiseContent, Stream } from '@/utils/data'
-import { computed, nextTick,  onUnmounted, Ref, shallowReactive, shallowRef, StyleValue, watch } from 'vue'
+import {
+  computed,
+  nextTick,
+  onUnmounted,
+  Ref,
+  shallowReactive,
+  shallowRef,
+  StyleValue,
+  watch
+} from 'vue'
 import { VirtualWaterfall } from '@lhlyu/vue-virtual-waterfall'
 import { useEventListener } from '@vant/use'
 import Content from './content.vue'
@@ -9,25 +18,30 @@ import { IfAny, useResizeObserver, useScroll } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
 import { useTemp } from '@/stores/temp'
 import { isArray } from 'es-toolkit/compat'
-const $props = withDefaults(defineProps<{
-  source: {
-    data: RPromiseContent<any, T[]>
-    isEnd?: boolean
-  } | Stream<T>
-  style?: StyleValue
-  class?: any
-  col?: [min: number, max: number] | number
-  padding?: number
-  gap?: number
-  minHeight?: number
-  dataProcessor?: PF
-  unReloadable?: boolean
-}>(), {
-  padding: 4,
-  col: 2,
-  gap: 4,
-  minHeight: 0
-})
+const $props = withDefaults(
+  defineProps<{
+    source:
+      | {
+          data: RPromiseContent<any, T[]>
+          isEnd?: boolean
+        }
+      | Stream<T>
+    style?: StyleValue
+    class?: any
+    col?: [min: number, max: number] | number
+    padding?: number
+    gap?: number
+    minHeight?: number
+    dataProcessor?: PF
+    unReloadable?: boolean
+  }>(),
+  {
+    padding: 4,
+    col: 2,
+    gap: 4,
+    minHeight: 0
+  }
+)
 const $emit = defineEmits<{
   next: [then: () => void]
   reset: []
@@ -36,30 +50,39 @@ const $emit = defineEmits<{
 }>()
 const dataProcessor = (v: T[]) => $props.dataProcessor?.(v) ?? v
 
-
-const column = computed(() => (isArray($props.col) ? $props.col : [$props.col, $props.col]) as [min: number, max: number])
+const column = computed(
+  () => (isArray($props.col) ? $props.col : [$props.col, $props.col]) as [min: number, max: number]
+)
 
 const unionSource = computed(() => ({
-  ...Stream.isStream($props.source) ? {
-    data: dataProcessor($props.source.data.value),
-    isDone: $props.source.isDone.value,
-    isRequesting: $props.source.isRequesting.value,
-    isError: !!$props.source.error.value,
-    length: dataProcessor($props.source.data.value).length,
-    isEmpty: $props.source.isEmpty.value,
-    source: $props.source
-  } : {
-    data: dataProcessor($props.source.data.data.value ?? []),
-    isDone: $props.source.isEnd,
-    isRequesting: $props.source.data.isLoading.value,
-    isError: $props.source.data.isError.value,
-    length: dataProcessor(($props.source.data.data.value) ?? []).length,
-    isEmpty: $props.source.data.isEmpty.value,
-    source: $props.source.data
-  },
-  next: () => Stream.isStream($props.source) ? $props.source.next() : callbackToPromise(r => $emit('next', r)),
-  retry: () => Stream.isStream($props.source) ? $props.source.retry() : callbackToPromise(r => $emit('retry', r)),
-  reset: () => Stream.isStream($props.source) ? $props.source.reset() : $emit('reset'),
+  ...(Stream.isStream($props.source)
+    ? {
+        data: dataProcessor($props.source.data.value),
+        isDone: $props.source.isDone.value,
+        isRequesting: $props.source.isRequesting.value,
+        isError: !!$props.source.error.value,
+        length: dataProcessor($props.source.data.value).length,
+        isEmpty: $props.source.isEmpty.value,
+        source: $props.source
+      }
+    : {
+        data: dataProcessor($props.source.data.data.value ?? []),
+        isDone: $props.source.isEnd,
+        isRequesting: $props.source.data.isLoading.value,
+        isError: $props.source.data.isError.value,
+        length: dataProcessor($props.source.data.data.value ?? []).length,
+        isEmpty: $props.source.data.isEmpty.value,
+        source: $props.source.data
+      }),
+  next: () =>
+    Stream.isStream($props.source)
+      ? $props.source.next()
+      : callbackToPromise(r => $emit('next', r)),
+  retry: () =>
+    Stream.isStream($props.source)
+      ? $props.source.retry()
+      : callbackToPromise(r => $emit('retry', r)),
+  reset: () => (Stream.isStream($props.source) ? $props.source.reset() : $emit('reset'))
 }))
 
 const isPullRefreshHold = shallowRef(false)
@@ -71,7 +94,13 @@ const handleRefresh = async () => {
   isRefreshing.value = false
 }
 defineSlots<{
-  default(props: { item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>, index: number, height?: number, minHeight: number, length: number }): any
+  default(props: {
+    item: IfAny<ReturnType<PF>[number], T, ReturnType<PF>[number]>
+    index: number
+    height?: number
+    minHeight: number
+    length: number
+  }): any
 }>()
 const content = useTemplateRef<ComponentExposed<typeof Content>>('content')
 const scrollParent = computed(() => content.value?.cont)
@@ -92,20 +121,26 @@ const handleScroll = () => {
   }
 }
 useEventListener('scroll', handleScroll, {
-  target: <Ref<HTMLDivElement>>scrollParent,
+  target: <Ref<HTMLDivElement>>scrollParent
 })
-watch(() => $props.source, () => {
-  const { isError, retry, next, isEmpty } = unionSource.value
-  if (!isEmpty) return
-  if (isError) retry()
-  else next()
-}, { deep: 1, immediate: true })
+watch(
+  () => $props.source,
+  () => {
+    const { isError, retry, next, isEmpty } = unionSource.value
+    if (!isEmpty) return
+    if (isError) retry()
+    else next()
+  },
+  { deep: 1, immediate: true }
+)
 
 const waterfallEl = useTemplateRef('waterfallEl')
 
 const waterfallIndex = useTemp().$apply('waterfall', () => ({ top: 0 }))
 const thisIndex = waterfallIndex.top++
-const sizeMapTemp = useTemp().$applyRaw(`waterfall:${thisIndex}`, () => shallowReactive(new Map<T, number>()))
+const sizeMapTemp = useTemp().$applyRaw(`waterfall:${thisIndex}`, () =>
+  shallowReactive(new Map<T, number>())
+)
 
 const sizeWatcherCleaner = new Array<VoidFunction>()
 const observer = new MutationObserver(([mutation]) => {
@@ -150,17 +185,48 @@ defineExpose({
 </script>
 
 <template>
-  <VanPullRefresh v-model="isRefreshing" :class="['relative h-full', $props.class]" v-if="reloadController"
-    :disabled="unReloadable || unionSource.isRequesting || (!!contentScrollTop && !isPullRefreshHold)"
-    @refresh="handleRefresh" @change="({ distance }) => isPullRefreshHold = !!distance" :style>
-    <Content retriable :source="Stream.isStream(source) ? source : source.data" class-loading="mt-2 !h-[24px]"
-      class-empty="h-full!" class-error="h-full!" class="h-full overflow-auto w-full" @retry="unionSource.retry()"
-      @reset-retry="handleRefresh" :hide-loading="isPullRefreshHold && unionSource.isRequesting" ref="content">
-      <VirtualWaterfall :items="unionSource.data" :gap :padding :preload-screen-count="[0, 1]" ref="waterfallEl"
-        v-slot="{ item, index }: { item: T, index: number }"
-        :calc-item-height="item => sizeMapTemp.get(item) ?? minHeight" class="waterfall" :min-column-count="column[0]"
-        :max-column-count="column[1]">
-        <slot :item :index :height="sizeMapTemp.get(item)" :length="unionSource.length" :minHeight />
+  <VanPullRefresh
+    v-model="isRefreshing"
+    :class="['relative h-full', $props.class]"
+    v-if="reloadController"
+    :disabled="
+      unReloadable || unionSource.isRequesting || (!!contentScrollTop && !isPullRefreshHold)
+    "
+    @refresh="handleRefresh"
+    @change="({ distance }) => (isPullRefreshHold = !!distance)"
+    :style
+  >
+    <Content
+      retriable
+      :source="Stream.isStream(source) ? source : source.data"
+      class-loading="mt-2 !h-[24px]"
+      class-empty="h-full!"
+      class-error="h-full!"
+      class="h-full w-full overflow-auto"
+      @retry="unionSource.retry()"
+      @reset-retry="handleRefresh"
+      :hide-loading="isPullRefreshHold && unionSource.isRequesting"
+      ref="content"
+    >
+      <VirtualWaterfall
+        :items="unionSource.data"
+        :gap
+        :padding
+        :preload-screen-count="[0, 1]"
+        ref="waterfallEl"
+        v-slot="{ item, index }: { item: T; index: number }"
+        :calc-item-height="item => sizeMapTemp.get(item) ?? minHeight"
+        class="waterfall"
+        :min-column-count="column[0]"
+        :max-column-count="column[1]"
+      >
+        <slot
+          :item
+          :index
+          :height="sizeMapTemp.get(item)"
+          :length="unionSource.length"
+          :minHeight
+        />
       </VirtualWaterfall>
     </Content>
   </VanPullRefresh>

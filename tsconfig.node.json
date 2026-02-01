@@ -22,18 +22,8 @@
     "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitThis": true,
-    "types": [
-      "@types/node"
-    ],
+    "types": ["@types/node"]
   },
-  "include": [
-    "vite.config.mts",
-    "./scripts/**/*",
-    "./scripts/*",
-    "./vite/**/*",
-    "./*.ts"
-  ],
-  "exclude": [
-    "./src/**/*"
-  ]
+  "include": ["vite.config.mts", "./scripts/**/*", "./scripts/*", "./vite/**/*", "./*.ts"],
+  "exclude": ["./src/**/*"]
 }

@@ -1,4 +1,3 @@
-
 export abstract class Downloader {
   public abstract id: string
   public abstract name: string

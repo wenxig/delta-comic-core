@@ -1,4 +1,4 @@
-<script setup lang='ts'>
+<script setup lang="ts">
 import { Component as _Component, watch } from 'vue'
 import { onLongPress } from '@vueuse/core'
 import { useTemplateRef } from 'vue'
@@ -23,22 +23,30 @@ const handleClick = () => {
 }
 
 const htmlRefHook = useTemplateRef('htmlRefHook')
-onLongPress(htmlRefHook, () => {
-  $emit('longClick')
-}, {
-  modifiers: {
-    prevent: true
+onLongPress(
+  htmlRefHook,
+  () => {
+    $emit('longClick')
+  },
+  {
+    modifiers: {
+      prevent: true
+    }
   }
-})
+)
 </script>
 
 <template>
-  <div class="flex items-center justify-center **:!transition-colors"
-    :class="[rowMode || 'flex-col', padding && 'px-4']" @click.stop="handleClick" ref="htmlRefHook">
-    <NIcon :size :color="mode ? 'var(--p-color)' : ('var(--van-gray-7)')">
+  <div
+    class="flex items-center justify-center **:!transition-colors"
+    :class="[rowMode || 'flex-col', padding && 'px-4']"
+    @click.stop="handleClick"
+    ref="htmlRefHook"
+  >
+    <NIcon :size :color="mode ? 'var(--p-color)' : 'var(--van-gray-7)'">
       <component :is="icon" />
     </NIcon>
-    <span class="mt-1 text-(--van-text-color-2) text-xs">
+    <span class="mt-1 text-xs text-(--van-text-color-2)">
       <slot />
     </span>
   </div>

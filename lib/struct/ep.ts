@@ -1,4 +1,4 @@
-import { Struct, type MetaData } from "@/utils/data"
+import { Struct, type MetaData } from '@/utils/data'
 export interface RawEp {
   name: string
   index: string

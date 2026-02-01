@@ -1,13 +1,15 @@
-import { ContentPageLike, ViewLayoutComp, type ContentPage } from "@/struct/content"
-import { CommentRow } from "@/struct/comment"
-import { UserCardComp } from "@/struct/user"
-import { RStream, type RPromiseContent } from "@/utils/data"
-import { Item, RawItem, type Author, type ItemCardComp } from "@/struct/item"
-import { Component, type MaybeRefOrGetter } from "vue"
-import type { ConfigPointer } from "@/config"
-import type { SharedFunctions } from "@/utils/eventBus"
-import type { ProcessInstance, ResourceType } from "@/struct/resource"
-import type { Image } from "@/struct/image"
+import { Component, type MaybeRefOrGetter } from 'vue'
+
+import type { ConfigPointer } from '@/config'
+import type { Image } from '@/struct/image'
+import type { ProcessInstance, ResourceType } from '@/struct/resource'
+import type { SharedFunctions } from '@/utils/eventBus'
+
+import { CommentRow } from '@/struct/comment'
+import { ContentPageLike, ViewLayoutComp, type ContentPage } from '@/struct/content'
+import { Item, RawItem, type Author, type ItemCardComp } from '@/struct/item'
+import { UserCardComp } from '@/struct/user'
+import { RStream, type RPromiseContent } from '@/utils/data'
 
 export type PluginDefineResult = {
   api?: Record<string, string | undefined | false>
@@ -26,8 +28,8 @@ export interface PluginConfig {
    */
   onBooted?(ins: PluginDefineResult): (PromiseLike<object> | object) | void
   search?: PluginConfigSearch
-  /** 
-   * 插件的配置项需在此处注册  
+  /**
+   * 插件的配置项需在此处注册
    * 传入`Store.ConfigPointer`
    */
   config?: ConfigPointer[]
@@ -65,7 +67,10 @@ export interface PluginShareInitiativeItem {
 }
 
 export interface PluginConfigSubscribe {
-  getUpdateList(olds: { author: Author, list: Item[] }[], signal?: AbortSignal): PromiseLike<{
+  getUpdateList(
+    olds: { author: Author; list: Item[] }[],
+    signal?: AbortSignal
+  ): PromiseLike<{
     isUpdated: boolean
     whichUpdated: Author[]
   }>
@@ -85,7 +90,7 @@ export interface PluginConfigUser {
   /**
    * 1. download
    * 2. upload (收藏那些云端未收藏的漫画)
-  */
+   */
   syncFavourite?: {
     download: () => PromiseLike<Item[]>
     upload: (items: RawItem[]) => PromiseLike<any>
@@ -93,7 +98,7 @@ export interface PluginConfigUser {
 
   /**
    * 在用户界面，在历史记录那个板块的下方，你希望展示的自己的板块
-  */
+   */
   userActionPages?: PluginUserActionPage[]
 
   authorActions?: Record<string, AuthorAction>
@@ -114,27 +119,29 @@ export interface PluginUserActionPage {
   clickPage?: Component
   clickText?: string
 }
-export type PluginUserActionPageItem = {
-  name: string
-  key: string
-  type: 'button'
-  icon: Component
+export type PluginUserActionPageItem =
+  | {
+      name: string
+      key: string
+      type: 'button'
+      icon: Component
 
-  page: Component
-} | {
-  name: string
-  key: string
-  type: 'statistic'
-  icon?: Component
+      page: Component
+    }
+  | {
+      name: string
+      key: string
+      type: 'statistic'
+      icon?: Component
 
-  value: MaybeRefOrGetter<string | number>
-}
+      value: MaybeRefOrGetter<string | number>
+    }
 
 export interface PluginConfigSearch {
   /**
-  * @description
-  * key: id  
-  */
+   * @description
+   * key: id
+   */
   methods?: Record<string, PluginConfigSearchMethod>
 
   tabbar?: PluginConfigSearchTabbar[]
@@ -154,18 +161,21 @@ export interface PluginConfigSearchBarcode {
   match: (searchText: string) => boolean
   /**
    * 选中后返回路由信息
-  */
-  getContent: (searchText: string, signal: AbortSignal) => PromiseLike<Parameters<SharedFunctions['routeToContent']>>
+   */
+  getContent: (
+    searchText: string,
+    signal: AbortSignal
+  ) => PromiseLike<Parameters<SharedFunctions['routeToContent']>>
   name: string
 }
 
 export interface PluginConfigSearchHotPageLevelboard {
   name: string
-  content: () => (RStream<Item> | RPromiseContent<any, Item[]>)
+  content: () => RStream<Item> | RPromiseContent<any, Item[]>
 }
 export interface PluginConfigSearchHotPageMainList {
   name: string
-  content: () => (RStream<Item> | RPromiseContent<any, Item[]>)
+  content: () => RStream<Item> | RPromiseContent<any, Item[]>
   onClick?(): any
 }
 export interface PluginConfigSearchHotPageTopButton {
@@ -188,7 +198,7 @@ export interface PluginConfigSearchCategory {
 export interface PluginConfigSearchTabbar {
   title: string
   id: string
-  comp: Component<{ isActive: boolean, tabbar: PluginConfigSearchTabbar }>
+  comp: Component<{ isActive: boolean; tabbar: PluginConfigSearchTabbar }>
 }
 export interface PluginConfigSearchMethod {
   name: string
@@ -198,18 +208,26 @@ export interface PluginConfigSearchMethod {
   }[]
   defaultSort: string
   getStream(input: string, sort: string): RStream<Item>
-  getAutoComplete(input: string, signal: AbortSignal): PromiseLike<({
-    text: string
-    value: string
-  } | Component)[]>
+  getAutoComplete(
+    input: string,
+    signal: AbortSignal
+  ): PromiseLike<
+    (
+      | {
+          text: string
+          value: string
+        }
+      | Component
+    )[]
+  >
 }
 
 export interface PluginConfigApi {
-  forks: () => (PromiseLike<string[]> | string[])
+  forks: () => PromiseLike<string[]> | string[]
   /**
    * error -> 不可用
    * other -> 可用并比对时间
-  */
+   */
   test: (fork: string, signal: AbortSignal) => PromiseLike<void>
 }
 
@@ -218,46 +236,49 @@ export interface PluginConfigResource {
   types?: ResourceType[]
 }
 
-export type PluginConfigContent = Record<string, {
-  /**
-   * @description
-   * key: contentType  
-   * value: component  
-   * 与`ContentPage.setItemCard(key, value)`等价
-  */
-  itemCard?: ItemCardComp
+export type PluginConfigContent = Record<
+  string,
+  {
+    /**
+     * @description
+     * key: contentType
+     * value: component
+     * 与`ContentPage.setItemCard(key, value)`等价
+     */
+    itemCard?: ItemCardComp
 
-  /**
-   * @description
-   * key: contentType  
-   * value: component  
-   * 与`Comment.setCommentRow(key, value)`等价
-  */
-  commentRow?: CommentRow
+    /**
+     * @description
+     * key: contentType
+     * value: component
+     * 与`Comment.setCommentRow(key, value)`等价
+     */
+    commentRow?: CommentRow
 
-  /**
-   * @description
-   * key: contentType  
-   * value: component  
-   * 与`ContentPage.setViewLayout(key, value)`等价
-  */
-  layout?: ViewLayoutComp
+    /**
+     * @description
+     * key: contentType
+     * value: component
+     * 与`ContentPage.setViewLayout(key, value)`等价
+     */
+    layout?: ViewLayoutComp
 
-  /**
-   * @description
-   * key: name 
-   * value: ContentPage  
-   * 与`ContentPage.setContentPage(key, value)`等价  
-   * _不需要提供viewLayout_
-  */
-  contentPage?: ContentPageLike
+    /**
+     * @description
+     * key: name
+     * value: ContentPage
+     * 与`ContentPage.setContentPage(key, value)`等价
+     * _不需要提供viewLayout_
+     */
+    contentPage?: ContentPageLike
 
-  /**
-   * @description
-   * 将原始对象转换为类
-  */
-  itemTranslator?: PluginConfigContentItemTranslator
-}>
+    /**
+     * @description
+     * 将原始对象转换为类
+     */
+    itemTranslator?: PluginConfigContentItemTranslator
+  }
+>
 export type PluginConfigContentItemTranslator = (raw: RawItem) => Item
 
 export type UniFormDescription = {
@@ -265,51 +286,65 @@ export type UniFormDescription = {
   placeholder?: string
   /**
    * @default true
-  */
+   */
   required?: boolean
-} & ({
-  type: 'string'
-  patten?: RegExp
-  defaultValue?: string
-} | {
-  type: 'number'
-  range?: [number, number]
-  float?: boolean
-  defaultValue?: number
-} | {
-  type: 'radio'
-  selects: { label: string, value: string }[]
-  comp: 'radio' | 'select'
-  defaultValue?: string
-} | {
-  type: 'checkbox'
-  selects: { label: string, value: string }[]
-  comp: 'checkbox' | 'multipleSelect'
-  defaultValue?: string[]
-} | {
-  type: 'switch'
-  close?: string
-  open?: string
-  defaultValue?: boolean
-} | {
-  type: 'date'
-  defaultValue?: number
-})
-export type UniFormResult<T extends UniFormDescription> =
-  T['type'] extends 'string' ? string :
-  T['type'] extends 'number' ? number :
-  T['type'] extends 'radio' ? string :
-  T['type'] extends 'checkbox' ? string[] :
-  T['type'] extends 'switch' ? boolean :
-  T['type'] extends 'date' ? number :
-  never
+} & (
+  | {
+      type: 'string'
+      patten?: RegExp
+      defaultValue?: string
+    }
+  | {
+      type: 'number'
+      range?: [number, number]
+      float?: boolean
+      defaultValue?: number
+    }
+  | {
+      type: 'radio'
+      selects: { label: string; value: string }[]
+      comp: 'radio' | 'select'
+      defaultValue?: string
+    }
+  | {
+      type: 'checkbox'
+      selects: { label: string; value: string }[]
+      comp: 'checkbox' | 'multipleSelect'
+      defaultValue?: string[]
+    }
+  | {
+      type: 'switch'
+      close?: string
+      open?: string
+      defaultValue?: boolean
+    }
+  | {
+      type: 'date'
+      defaultValue?: number
+    }
+)
+export type UniFormResult<T extends UniFormDescription> = T['type'] extends 'string'
+  ? string
+  : T['type'] extends 'number'
+    ? number
+    : T['type'] extends 'radio'
+      ? string
+      : T['type'] extends 'checkbox'
+        ? string[]
+        : T['type'] extends 'switch'
+          ? boolean
+          : T['type'] extends 'date'
+            ? number
+            : never
 export type PluginConfigAuthMethod = {
-  form<T extends Record<string, UniFormDescription>>(form: T): Promise<{
+  form<T extends Record<string, UniFormDescription>>(
+    form: T
+  ): Promise<{
     [x in keyof T]: UniFormResult<T[x]>
   }>
   /**
    * sandbox: "allow-forms allow-modals allow-orientation-lock allow-popups-to-escape-sandbox  allow-pointer-lock"
-  */
+   */
   website(url: string): Window
 }
 export interface PluginConfigAuth {

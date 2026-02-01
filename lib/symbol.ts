@@ -1,5 +1,8 @@
-import { useGlobalVar } from "./utils/plugin"
+import { useGlobalVar } from './utils/plugin'
 
-export const symbol = useGlobalVar(Object.freeze({
-  thisNamespace: 'core'
-}), 'symbol')
+export const symbol = useGlobalVar(
+  Object.freeze({
+    thisNamespace: 'core'
+  }),
+  'symbol'
+)

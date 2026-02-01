@@ -1,13 +1,17 @@
-import * as image from "./image"
-import { SourcedKeyMap, Struct, type MetaData } from "@/utils/data"
-import dayjs from "dayjs"
-import { ContentPage, type ContentType, type ContentType_ } from "./content"
-import { Ep, type RawEp } from "./ep"
-import { type Component } from "vue"
-import type { PluginConfigContentItemTranslator } from "@/plugin/define"
-import { useGlobalVar } from "@/utils/plugin"
-import type { uni } from "."
-import type { RawResource } from "./resource"
+import dayjs from 'dayjs'
+import { type Component } from 'vue'
+
+import type { PluginConfigContentItemTranslator } from '@/plugin/define'
+
+import { SourcedKeyMap, Struct, type MetaData } from '@/utils/data'
+import { useGlobalVar } from '@/utils/plugin'
+
+import type { uni } from '.'
+import type { RawResource } from './resource'
+
+import { ContentPage, type ContentType, type ContentType_ } from './content'
+import { Ep, type RawEp } from './ep'
+import * as image from './image'
 
 export interface Category {
   name: string
@@ -23,10 +27,10 @@ export interface Author {
   label: string
   icon: RawResource | string
   description: string
- /**
-  * 为空则不可订阅
-  * 否则传入的为`defineConfig`中定义的`subscribe.type`
-  */ subscribe?: string
+  /**
+   * 为空则不可订阅
+   * 否则传入的为`defineConfig`中定义的`subscribe.type`
+   */ subscribe?: string
   actions?: string[]
   $$meta?: MetaData
   $$plugin: string
@@ -56,34 +60,52 @@ export interface RawItem {
   customIsSafe?: boolean
 }
 
-export type ItemCardComp = Component<{
-  item: uni.item.Item
-  freeHeight?: boolean
-  disabled?: boolean
-  type?: 'default' | 'big' | 'small'
-  class?: any
-  style?: any
-}, any, any, any, any, {
-  click: []
-}, {
-  default(): void
-  smallTopInfo(): void
-  cover(): void
-}>
+export type ItemCardComp = Component<
+  {
+    item: uni.item.Item
+    freeHeight?: boolean
+    disabled?: boolean
+    type?: 'default' | 'big' | 'small'
+    class?: any
+    style?: any
+  },
+  any,
+  any,
+  any,
+  any,
+  {
+    click: []
+  },
+  {
+    default(): void
+    smallTopInfo(): void
+    cover(): void
+  }
+>
 
-
-
-export type Description = string | { type: 'html', content: string } | { type: 'text', content: string }
+export type Description =
+  | string
+  | { type: 'html'; content: string }
+  | { type: 'text'; content: string }
 export abstract class Item extends Struct<RawItem> implements RawItem {
-  public static itemTranslator = SourcedKeyMap.create<[plugin: string, name: string], PluginConfigContentItemTranslator>()
+  public static itemTranslator = SourcedKeyMap.create<
+    [plugin: string, name: string],
+    PluginConfigContentItemTranslator
+  >()
   public static create(raw: RawItem) {
     const translator = this.itemTranslator.get(raw.contentType)
-    if (!translator) throw new Error(`can not found itemTranslator contentType:"${ContentPage.contentPage.toString(raw.contentType)}"`)
+    if (!translator)
+      throw new Error(
+        `can not found itemTranslator contentType:"${ContentPage.contentPage.toString(raw.contentType)}"`
+      )
     return translator(raw)
   }
   public static authorIcon = SourcedKeyMap.create<[plugin: string, name: string], Component>()
 
-  public static itemCard = useGlobalVar(SourcedKeyMap.create<ContentType, ItemCardComp>(), 'uni/item/itemCard')
+  public static itemCard = useGlobalVar(
+    SourcedKeyMap.create<ContentType, ItemCardComp>(),
+    'uni/item/itemCard'
+  )
 
   public abstract like(signal?: AbortSignal): PromiseLike<boolean>
   public abstract report(signal?: AbortSignal): PromiseLike<any>
@@ -146,8 +168,11 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public commentSendable: boolean
   public customIsAI?: boolean
   public get $isAi() {
-    const check = (str: string) => (/(^|[\(（\[\s【])ai[】\)）\]\s]?/ig).test(str)
-    return this.customIsAI || check(this.title) || this.author.some(author => check(`${author.label}\u1145${author.description}`))
+    const check = (str: string) => /(^|[\(（\[\s【])ai[】\)）\]\s]?/gi.test(str)
+    return (
+      this.customIsAI ||
+      check(this.title) ||
+      this.author.some(author => check(`${author.label}\u1145${author.description}`))
+    )
   }
 }
-

@@ -1,1 +1,2 @@
-export const useGlobalVar = <T>(val: T, key: string): T => (window.$api.__core_lib__ ??= {})[key] ??= val
+export const useGlobalVar = <T>(val: T, key: string): T =>
+  ((window.$api.__core_lib__ ??= {})[key] ??= val)
