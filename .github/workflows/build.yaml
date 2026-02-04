@@ -38,7 +38,7 @@ jobs:
       - name: Change version
         id: set-version
         run: |
-          $OLD_VERSION="`node ./script/update-version.mts`"
+          OLD_VERSION="$(node ./script/update-version.mts)"
           echo "old_version=$OLD_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build
