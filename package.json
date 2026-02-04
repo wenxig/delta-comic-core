@@ -104,5 +104,6 @@
       "esbuild"
     ]
   },
+  "dist": {"tarball": "./dist/pack.tgz"},
   "readme": "./README.md"
 }
