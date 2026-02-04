@@ -6,12 +6,12 @@ on:
       - 'main'
 
 permissions:
-  id-token: write # 用于OIDC令牌
-  contents: read # 用于代码访问
+  id-token: write
+  contents: write
 
 jobs:
   build:
-    if: ${{ github.event.head_commit && contains(github.event.head_commit.message, '(publish)') }}
+    if: ${{ github.event.head_commit && contains(github.event.head_commit.message, '(pub)') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,15 +34,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Get package version
-        id: get_version
+      # build
+      - name: Change version
+        id: set-version
         run: |
-          # 输出 package.json 中的 version 字段为 step 输出
-          echo "version=`sh ./script/getVersion.sh`" >> "$GITHUB_OUTPUT"
+          $OLD_VERSION = "$(node ~/script/update-version.mts)"
+          echo "old_version=$OLD_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build
         run: pnpm run build
 
-      - name: Publish
+      - name: Restore version
         run: |
-          pnpm publish
+          node ~/script/set-version.mts ${{ steps.set-version.outputs.old_version }}
+
+      #publish
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 用于在 GitHub 上创建 release 与 tag
+        run: pnpm exec semantic-release
