@@ -17,5 +17,5 @@ export default {
       }
     ]
   ],
-  tagFormat: '${nextRelease.version}'
+  tagFormat: '${version}'
 }
