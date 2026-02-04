@@ -47,6 +47,7 @@
     "es-toolkit": "^1.40.0",
     "mitt": "^3.0.1",
     "motion-v": "1.7.3",
+    "semver": "^7.7.3",
     "tailwindcss-safe-area-capacitor": "^0.5.1",
     "vidstack": "^1.12.13",
     "vite-plugin-external": "^6.2.2",
@@ -104,6 +105,8 @@
       "esbuild"
     ]
   },
-  "dist": {"tarball": "./dist/pack.tgz"},
+  "dist": {
+    "tarball": "./dist/pack.tgz"
+  },
   "readme": "./README.md"
 }

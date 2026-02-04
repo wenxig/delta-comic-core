@@ -44,6 +44,9 @@ importers:
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@5.8.2)(vue@3.5.27(typescript@5.8.2))
+      semver:
+        specifier: ^7.7.3
+        version: 7.7.3
       tailwindcss-safe-area-capacitor:
         specifier: ^0.5.1
         version: 0.5.1(tailwindcss@4.1.18)
