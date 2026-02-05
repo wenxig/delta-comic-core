@@ -12,6 +12,7 @@ import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
 import _package from './package.json'
+
 export default defineConfig({
   plugins: [
     dts({ include: ['./lib', './vite'], tsconfigPath: './tsconfig.json' }),
