@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/delta-comic/delta-comic-core/compare/1.0.2...1.1.0) (2026-02-05)
+
+
+### Features
+
+* **pub:** add expose last ([7628712](https://github.com/delta-comic/delta-comic-core/commit/7628712f3fbf7f6edffab7972a2c41a22bfe4398))
+
 ## [1.0.2](https://github.com/delta-comic/delta-comic-core/compare/v1.0.1...1.0.2) (2026-02-04)
 
 
