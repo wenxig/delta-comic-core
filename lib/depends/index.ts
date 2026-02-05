@@ -39,6 +39,11 @@ export const coreModule = declareDependType<{
       author: { $$plugin: string; icon: string | uni.resource.RawResource }
       sizeSpacing: number
     }>
+    ImagedIcon: Component<{
+      author: { $$plugin: string; icon: string | uni.resource.RawResource }
+      sizeSpacing: number
+      bgColor?: string
+    }>
   }
   db: ShallowRef<Kysely<any>, Kysely<any>>
   useNativeStore: UseNativeStore

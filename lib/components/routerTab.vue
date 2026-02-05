@@ -3,8 +3,7 @@
   lang="ts"
   generic="T extends { name: string; title: string; queries?: Record<string, string> }"
 >
-import { TabsInstance } from 'vant'
-import { onUnmounted, ref, useTemplateRef, watch } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const $props = defineProps<{ items: T[]; routerBase: string }>()
 const $route = useRoute()
@@ -12,7 +11,6 @@ const defaultRouter = decodeURI($route.path.replaceAll($props.routerBase + '/', 
 const select = ref(defaultRouter)
 defineSlots<{ default(arg: { itemName: T }): any; left(): any; right(): any; bottom(): any }>()
 const $router = useRouter()
-const tab = useTemplateRef<TabsInstance>('tab')
 const beforeChange = async (aim: string) => {
   let queryString = '?'
   const aimItem = $props.items.find(v => v.name == aim)!
