@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/delta-comic/delta-comic-core/compare/1.1.0...1.1.1) (2026-02-09)
+
+
+### Bug Fixes
+
+* **struct:** [pub] item is allow raw-image ([2fbc69a](https://github.com/delta-comic/delta-comic-core/commit/2fbc69aa87d9ed4078ac52cc5caf500896b2444b))
+
 # [1.1.0](https://github.com/delta-comic/delta-comic-core/compare/1.0.2...1.1.0) (2026-02-05)
 
 
