@@ -21,7 +21,7 @@ export interface Category {
 
 export interface Author {
   label: string
-  icon: RawResource | string
+  icon: RawResource | image.RawImage | string
   description: string
   /**
    * 为空则不可订阅
@@ -33,7 +33,7 @@ export interface Author {
 }
 
 export interface RawItem {
-  cover: RawResource
+  cover: RawResource | image.RawImage
   title: string
   id: string
   /** @alias tags  */
@@ -104,7 +104,7 @@ export abstract class Item extends Struct<RawItem> implements RawItem {
   public static is(value: unknown): value is Item {
     return value instanceof this
   }
-  public cover: RawResource
+  public cover: RawResource | image.RawImage
   public get $cover() {
     return image.Image.create(this.cover)
   }
