@@ -51,7 +51,7 @@ export class SharedFunction {
     plugin: string,
     name: TKey
   ) {
-    console.log('[SharedFunction.define] defined new function', plugin, ':', name, '->', fn)
+    console.debug('[SharedFunction.define] defined new function', plugin, ':', name, '->', fn)
     this.sharedFunctions.set(name, [...(this.sharedFunctions.get(name) ?? []), { fn, plugin }])
     return fn
   }
