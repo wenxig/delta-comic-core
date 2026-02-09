@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/delta-comic/delta-comic-core/compare/1.1.1...1.1.2) (2026-02-09)
+
+
+### Bug Fixes
+
+* [pub] expose ([f8a0f22](https://github.com/delta-comic/delta-comic-core/commit/f8a0f224a8700caaa6e1a890ffa85e8dc91e075f))
+
 ## [1.1.1](https://github.com/delta-comic/delta-comic-core/compare/1.1.0...1.1.1) (2026-02-09)
 
 
