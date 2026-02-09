@@ -40,9 +40,9 @@ export const coreModule = declareDependType<{
       sizeSpacing: number
     }>
     ImagedIcon: Component<{
-      author: { $$plugin: string; icon: string | uni.resource.RawResource }
-      sizeSpacing: number
+      icon: Component | uni.image.Image
       bgColor?: string
+      sizeSpacing: number
     }>
   }
   db: ShallowRef<Kysely<any>, Kysely<any>>
