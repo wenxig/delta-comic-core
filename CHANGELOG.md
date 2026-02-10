@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/delta-comic/delta-comic-core/compare/1.1.2...1.1.3) (2026-02-10)
+
+
+### Bug Fixes
+
+* **deps:** [pub] peers deps range too small ([2af2c1e](https://github.com/delta-comic/delta-comic-core/commit/2af2c1e5bd02dc59376f55be77d633e9d9310b86))
+
 ## [1.1.2](https://github.com/delta-comic/delta-comic-core/compare/1.1.1...1.1.2) (2026-02-09)
 
 
