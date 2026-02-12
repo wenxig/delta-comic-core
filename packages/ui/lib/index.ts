@@ -64,4 +64,4 @@ export {
   DcFormSwitch
 }
 
-export * as DcFormType from './form/type'
+export * as FormType from './form/type'

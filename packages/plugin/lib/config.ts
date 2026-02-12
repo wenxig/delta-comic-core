@@ -1,16 +1,15 @@
+import type { FormType } from '@delta-comic/ui'
+
 import { usePreferredDark } from '@vueuse/core'
 import { fromPairs } from 'es-toolkit/compat'
 import { defineStore } from 'pinia'
 import { computed, shallowReactive, type Ref } from 'vue'
 
-import type { UniFormDescription, UniFormResult } from '@/plugin/define'
+import { type UseNativeStore } from '@delta-comic/utils'
 
-import { type UseNativeStore } from '@/depends'
-const defaultConfig = { 'app.easyTitle': false }
-export type ConfigType = typeof defaultConfig
 export type ConfigDescription = Record<
   string,
-  Required<Pick<UniFormDescription, 'defaultValue'>> & UniFormDescription
+  Required<Pick<FormType.SingleConfigure, 'defaultValue'>> & FormType.SingleConfigure
 >
 export class ConfigPointer<T extends ConfigDescription = ConfigDescription> {
   constructor(
@@ -43,11 +42,7 @@ export const useConfig = defineStore('config', helper => {
   const form = shallowReactive(new Map<symbol, { form: ConfigDescription; value: Ref<any> }>())
 
   const $load = helper.action(
-    <T extends ConfigPointer>(
-      pointer: T
-    ): Ref<{
-      [K in keyof T['config']]: UniFormResult<T['config'][K]>
-    }> => {
+    <T extends ConfigPointer>(pointer: T): Ref<FormType.Result<T['config']>> => {
       const v = form.get(pointer.key)
       if (!v) throw new Error(`not found config by plugin "${pointer.pluginName}"`)
       return v.value

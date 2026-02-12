@@ -30,6 +30,8 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
+    "@delta-comic/ui": "workspace:*",
+    "@delta-comic/core": "workspace:*",
     "@delta-comic/utils": "workspace:*",
     "@delta-comic/model": "workspace:*",
     "@vueuse/core": "14.1.0",

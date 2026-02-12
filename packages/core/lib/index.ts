@@ -1,1 +1,2 @@
-export { useTemp } from './temp'
+export * from './temp'
+export * from './ipc'

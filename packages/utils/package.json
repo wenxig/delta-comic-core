@@ -30,6 +30,7 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
+    "@vueuse/core": "14.1.0",
     "mitt": "^3.0.1"
   },
   "devDependencies": {

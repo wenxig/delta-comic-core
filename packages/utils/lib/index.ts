@@ -1,5 +1,6 @@
 import type { useDialog, useLoadingBar, useMessage } from 'naive-ui'
 import type { Router } from 'vue-router'
+
 import {} from 'axios'
 
 declare global {
@@ -32,6 +33,9 @@ export interface ExternalLibKey {
   'pinia': 'Pinia'
   '@delta-comic/ui': 'DcUi'
   '@delta-comic/model': 'DcModel'
+  '@delta-comic/core': 'DcCore'
+  '@delta-comic/plugin': 'DcPlugin'
+  '@delta-comic/utils': 'DcUtils'
 }
 export const extendsDepends: {
   [K in keyof ExternalLibKey]: `window.$$lib$$.${ExternalLibKey[K]}`
@@ -43,10 +47,15 @@ export const extendsDepends: {
   'pinia': 'window.$$lib$$.Pinia',
   'vue-router': 'window.$$lib$$.VR',
   '@delta-comic/ui': 'window.$$lib$$.DcUi',
-  '@delta-comic/model': 'window.$$lib$$.DcModel'
+  '@delta-comic/model': 'window.$$lib$$.DcModel',
+  '@delta-comic/core': 'window.$$lib$$.DcCore',
+  '@delta-comic/plugin': 'window.$$lib$$.DcPlugin',
+  '@delta-comic/utils': 'window.$$lib$$.DcUtils'
 }
 
 export const useGlobalVar = <T>(val: T, key: string): T =>
   ((window.$api.__core_lib__ ??= {})[key] ??= val)
 
 export { SmartAbortController } from './request'
+
+export * from './store'
