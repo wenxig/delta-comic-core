@@ -1,0 +1,47 @@
+{
+  "name": "@delta-comic/plugin",
+  "version": "1.0.0",
+  "description": "空阙虱楼",
+  "homepage": "https://github.com/delta-comic/delta-comic-core",
+  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "wenxig",
+    "email": "wenxinguo12@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/delta-comic/delta-comic-core.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "vite build && pnpm pack --out ./dist/pack.tgz"
+  },
+  "dependencies": {
+    "@delta-comic/utils": "workspace:*",
+    "@delta-comic/model": "workspace:*",
+    "@vueuse/core": "14.1.0",
+    "mitt": "^3.0.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.5",
+    "pinia": "^3.0",
+    "vue-router": "^5.0"
+  },
+  "dist": {
+    "tarball": "./dist/pack.tgz"
+  },
+  "readme": "./README.md"
+}

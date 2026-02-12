@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "composite": true,
+    "paths": { "@/*": ["./lib/*"] }
+  },
+  "include": ["./lib/**/*"]
+}

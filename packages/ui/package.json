@@ -1,0 +1,72 @@
+{
+  "name": "@delta-comic/ui",
+  "version": "1.0.0",
+  "description": "空阙虱楼",
+  "homepage": "https://github.com/delta-comic/delta-comic-core",
+  "license": "AGPL-3.0-only",
+  "author": {
+    "name": "wenxig",
+    "email": "wenxinguo12@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/delta-comic/delta-comic-core.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./vite": {
+      "types": "./dist/vite/index.d.ts",
+      "import": "./dist/index2.js",
+      "require": "./dist/index2.cjs"
+    },
+    "./style.css": "./dist/index.css"
+  },
+  "scripts": {
+    "build": "vite build && pnpm pack --out ./dist/pack.tgz"
+  },
+  "dependencies": {
+    "@lhlyu/vue-virtual-waterfall": "^1.0.9",
+    "@vant/use": "^1.6.0",
+    "@vueuse/core": "14.1.0",
+    "dayjs": "^1.11.19",
+    "mitt": "^3.0.1",
+    "motion-v": "1.10.3",
+    "tailwindcss-safe-area-capacitor": "^0.5.1"
+  },
+  "devDependencies": {
+    "@delta-comic/core": "workspace:*",
+    "@delta-comic/model": "workspace:*",
+    "@delta-comic/utils": "workspace:*",
+    "@tailwindcss/vite": "^4.1.18",
+    "@vitejs/plugin-vue": "^6.0.3",
+    "@vitejs/plugin-vue-jsx": "^5.1.3",
+    "browserslist": "^4.28.1",
+    "lightningcss": "^1.30.2",
+    "oxfmt": "^0.31.0",
+    "tailwindcss": "^4.1.18",
+    "unplugin-vue-components": "31.0.0",
+    "vue-component-type-helpers": "^3.2.4"
+  },
+  "peerDependencies": {
+    "naive-ui": "^2.43",
+    "pinia": "^3.0",
+    "vant": "^4.9",
+    "vue": "^3.5",
+    "vue-router": "^5.0"
+  },
+  "dist": {
+    "tarball": "./dist/pack.tgz"
+  },
+  "readme": "./README.md"
+}

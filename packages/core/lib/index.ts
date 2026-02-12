@@ -1,0 +1,1 @@
+export { useTemp } from './temp'
