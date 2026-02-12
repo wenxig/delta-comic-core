@@ -1,6 +1,5 @@
 {
   "name": "@delta-comic/monorepo",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/delta-comic/delta-comic-core.git"
