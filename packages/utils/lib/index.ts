@@ -28,10 +28,14 @@ export interface ExternalLibKey {
   '@delta-comic/core': 'DcCore'
   '@delta-comic/plugin': 'DcPlugin'
   '@delta-comic/utils': 'DcUtils'
+  '@delta-comic/require': 'DcRequire'
 }
-export const extendsDepends: {
+
+export type ExternalLib = {
   [K in keyof ExternalLibKey]: `window.$$lib$$.${ExternalLibKey[K]}`
-} = {
+}
+
+export const extendsDepends: ExternalLib = {
   'vue': 'window.$$lib$$.Vue',
   'vant': 'window.$$lib$$.Vant',
   'naive-ui': 'window.$$lib$$.Naive',
@@ -42,7 +46,8 @@ export const extendsDepends: {
   '@delta-comic/model': 'window.$$lib$$.DcModel',
   '@delta-comic/core': 'window.$$lib$$.DcCore',
   '@delta-comic/plugin': 'window.$$lib$$.DcPlugin',
-  '@delta-comic/utils': 'window.$$lib$$.DcUtils'
+  '@delta-comic/utils': 'window.$$lib$$.DcUtils',
+  '@delta-comic/require': 'window.$$lib$$.DcRequire'
 }
 
 export const useGlobalVar = <T>(val: T, key: string): T =>

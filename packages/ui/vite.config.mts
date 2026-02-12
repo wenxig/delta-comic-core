@@ -5,7 +5,6 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import browserslist from 'browserslist'
 import { browserslistToTargets } from 'lightningcss'
 import MotionResolver from 'motion-v/resolver'
-import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import { NaiveUiResolver, VantResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
@@ -25,7 +24,6 @@ export default defineConfig({
   experimental: { enableNativePlugin: true },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./lib', import.meta.url)) },
-    dedupe: ['vue', 'vue-router'],
     extensions: ['.ts', '.tsx', '.json', '.mjs', '.js', '.jsx', '.mts']
   },
   css: {
@@ -36,11 +34,7 @@ export default defineConfig({
   },
   base: '/',
   build: {
-    lib: {
-      entry: [resolve(__dirname, 'lib/index.ts'), resolve(__dirname, 'vite/index.ts')],
-      name: 'DcUi',
-      fileName: 'index'
-    },
+    lib: { entry: ['lib/index.ts', 'vite/index.ts'], name: 'DcUi', fileName: 'index' },
     sourcemap: true,
     rollupOptions: { external: Object.keys(extendsDepends), output: { globals: extendsDepends } }
   }

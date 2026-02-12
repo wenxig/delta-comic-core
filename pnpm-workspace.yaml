@@ -1,25 +1,25 @@
 packages:
-  - 'packages/*'
+  - packages/*
 
 catalog:
-  axios: ^1.13.5
-  naive-ui: ^2.43.2
-  vue: ^3.5.28
-  vue-router: ^5.0.2
   '@vueuse/core': ^14.2.1
+  axios: ^1.13.5
   dayjs: ^1.11.19
   mitt: ^3.0.1
+  naive-ui: ^2.43.2
   pinia: ^3.0.4
   vant: ^4.9.22
+  vue: ^3.5.28
+  vue-router: ^5.0.2
 
 catalogs:
   share:
-    axios: ^1.13
-    naive-ui: ^2.43
-    vue: ^3.5,
-    vue-router: ^5.0
     '@vueuse/core': ^14.1
+    axios: ^1.13
     dayjs: ^1.11
     mitt: ^3.0
+    naive-ui: ^2.43
     pinia: ^3.0
     vant: ^4.9
+    vue: ^3.5,
+    vue-router: ^5.0

@@ -1,5 +1,5 @@
 {
-  "name": "@delta-comic/request",
+  "name": "@delta-comic/vite",
   "version": "0.0.0-semantically-released",
   "description": "空阙虱楼",
   "homepage": "https://github.com/delta-comic/delta-comic-core",
@@ -33,19 +33,19 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
-    "@vueuse/core": "catalog:",
-    "mitt": "catalog:"
+    "@delta-comic/plugin": "workspace:*",
+    "@delta-comic/utils": "workspace:*"
   },
   "devDependencies": {
-    "@delta-comic/utils": "workspace:*",
-    "axios": "catalog:"
+    "lightningcss": "^1.30.2"
   },
   "peerDependencies": {
-    "axios": "^1.13"
+    "vite-plugin-external": "^6.2.2",
+    "vite-plugin-monkey": "^7.1.8"
   },
   "release": {
     "extends": "../../release.config.js",
-    "tagFormat": "request-${version}"
+    "tagFormat": "vite-${version}"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"

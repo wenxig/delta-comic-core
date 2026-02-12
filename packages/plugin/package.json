@@ -41,6 +41,7 @@
     "mitt": "catalog:"
   },
   "peerDependencies": {
+    "kysely": "^0.28",
     "pinia": "^3.0",
     "vue": "^3.5",
     "vue-router": "^5.0"

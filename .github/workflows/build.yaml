@@ -32,6 +32,8 @@ jobs:
               - 'packages/ui/**'
             utils:
               - 'packages/utils/**'
+            vite:
+              - 'packages/vite/**'
 
       - name: Build matrix JSON
         id: set-matrix
@@ -42,6 +44,7 @@ jobs:
           REQUEST: ${{ steps.filter.outputs.request }}
           UI: ${{ steps.filter.outputs.ui }}
           UTILS: ${{ steps.filter.outputs.utils }}
+          VITE: ${{ steps.filter.outputs.vite }}
         run: |
           node -e '
           const map = [
@@ -50,10 +53,11 @@ jobs:
             ["plugin","packages/plugin"],
             ["request","packages/request"],
             ["ui","packages/ui"],
-            ["utils","packages/utils"]
+            ["utils","packages/utils"],
+            ["vite","packages/vite"]
           ];
           const out = [];
-          for (const [name,path] of map) {
+          for (const [name, path] of map) {
             const flag = process.env[name.toUpperCase()] === "true";
             if (flag) out.push({ name, path });
           }
