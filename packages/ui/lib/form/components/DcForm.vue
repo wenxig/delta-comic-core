@@ -4,7 +4,7 @@ import DcFormItem from './DcFormItem.vue'
 import type { Configure, Result, SingleResult } from '../type'
 import { isArray } from 'es-toolkit/compat'
 
-const $props = defineProps<{
+defineProps<{
   configs: T
   /**
    * 设置为`true`，则所有的`DcFormItem`都会替换；如果是数组，则它仅替换数组内包含的`key`的`DcFormItem`

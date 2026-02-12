@@ -34,6 +34,8 @@ jobs:
               - 'packages/utils/**'
             vite:
               - 'packages/vite/**'
+            db:
+              - 'packages/db/**'
 
       - name: Build matrix JSON
         id: set-matrix
@@ -45,6 +47,7 @@ jobs:
           UI: ${{ steps.filter.outputs.ui }}
           UTILS: ${{ steps.filter.outputs.utils }}
           VITE: ${{ steps.filter.outputs.vite }}
+          VDBE: ${{ steps.filter.outputs.vite }}
         run: |
           node -e '
           const map = [
@@ -54,7 +57,8 @@ jobs:
             ["request","packages/request"],
             ["ui","packages/ui"],
             ["utils","packages/utils"],
-            ["vite","packages/vite"]
+            ["vite","packages/vite"],
+            ["db","packages/db"]
           ];
           const out = [];
           for (const [name, path] of map) {

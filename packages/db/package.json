@@ -1,5 +1,5 @@
 {
-  "name": "@delta-comic/ui",
+  "name": "@delta-comic/db",
   "version": "0.0.0-semantically-released",
   "description": "空阙虱楼",
   "homepage": "https://github.com/delta-comic/delta-comic-core",
@@ -24,13 +24,7 @@
       "types": "./dist/lib/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    },
-    "./vite": {
-      "types": "./dist/vite/index.d.ts",
-      "import": "./dist/index2.js",
-      "require": "./dist/index2.cjs"
-    },
-    "./style.css": "./dist/index.css"
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -39,38 +33,23 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
-    "@lhlyu/vue-virtual-waterfall": "1.0.8",
-    "@vant/use": "^1.6.0",
-    "@vueuse/core": "catalog:",
-    "dayjs": "catalog:",
-    "mitt": "catalog:",
-    "motion-v": "1.10.3",
-    "tailwindcss-safe-area-capacitor": "^0.5.1"
-  },
-  "devDependencies": {
-    "@delta-comic/core": "workspace:*",
     "@delta-comic/model": "workspace:*",
     "@delta-comic/utils": "workspace:*",
-    "@tailwindcss/vite": "^4.1.18",
-    "@vitejs/plugin-vue": "^6.0.3",
-    "@vitejs/plugin-vue-jsx": "^5.1.3",
-    "browserslist": "^4.28.1",
-    "lightningcss": "^1.30.2",
-    "oxfmt": "^0.32.0",
-    "tailwindcss": "^4.1.18",
-    "unplugin-vue-components": "31.0.0",
-    "vue-component-type-helpers": "^3.2.4"
+    "@delta-comic/plugin": "workspace:*",
+    "@tauri-apps/plugin-sql": "^2.3.2",
+    "@tauri-apps/plugin-store": "^2.4.2",
+    "@vueuse/core": "catalog:",
+    "kysely-dialect-tauri": "^1.2.1",
+    "kysely-plugin-serialize": "^0.8.2",
+    "mitt": "catalog:"
   },
   "peerDependencies": {
-    "naive-ui": "^2.43",
-    "pinia": "^3.0",
-    "vant": "^4.9",
-    "vue": "^3.5",
-    "vue-router": "^5.0"
+    "kysely": "^0.28",
+    "vue": "^3.5"
   },
   "release": {
     "extends": "../../release.config.js",
-    "tagFormat": "ui-${version}"
+    "tagFormat": "model-${version}"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"
