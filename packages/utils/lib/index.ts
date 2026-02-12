@@ -16,14 +16,6 @@ declare global {
   }
 }
 
-declare module 'axios' {
-  interface AxiosRequestConfig {
-    __retryCount?: number
-    disretry?: boolean
-    allowEmpty?: boolean
-  }
-}
-
 export interface ExternalLibKey {
   'vue': 'Vue'
   'vant': 'Vant'
@@ -55,7 +47,5 @@ export const extendsDepends: {
 
 export const useGlobalVar = <T>(val: T, key: string): T =>
   ((window.$api.__core_lib__ ??= {})[key] ??= val)
-
-export { SmartAbortController } from './request'
 
 export * from './store'

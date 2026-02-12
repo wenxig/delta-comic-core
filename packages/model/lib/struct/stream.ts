@@ -1,4 +1,5 @@
-import { SmartAbortController, useGlobalVar } from '@delta-comic/utils'
+import { SmartAbortController } from '@delta-comic/request'
+import { useGlobalVar } from '@delta-comic/utils'
 import { until } from '@vueuse/core'
 import { markRaw, shallowRef, type Raw, ref, type Ref, computed } from 'vue'
 
