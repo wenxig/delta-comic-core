@@ -26,6 +26,9 @@
       "require": "./dist/index.cjs"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },

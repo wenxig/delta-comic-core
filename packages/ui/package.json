@@ -32,6 +32,9 @@
     },
     "./style.css": "./dist/index.css"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
