@@ -2,23 +2,77 @@ name: 构建和发布
 
 on:
   push:
-    branches:
-      - 'main'
-
-permissions:
-  id-token: write
-  contents: write
+    branches: [main]
 
 jobs:
-  build:
+  detect:
     if: ${{ github.event.head_commit && contains(github.event.head_commit.message, '[pub]') }}
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          persist-credentials: true
+
+      - name: Filter changed packages
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            core:
+              - 'packages/core/**'
+            model:
+              - 'packages/model/**'
+            plugin:
+              - 'packages/plugin/**'
+            request:
+              - 'packages/request/**'
+            ui:
+              - 'packages/ui/**'
+            utils:
+              - 'packages/utils/**'
+
+      - name: Build matrix JSON
+        id: set-matrix
+        env:
+          CORE: ${{ steps.filter.outputs.core }}
+          MODEL: ${{ steps.filter.outputs.model }}
+          PLUGIN: ${{ steps.filter.outputs.plugin }}
+          REQUEST: ${{ steps.filter.outputs.request }}
+          UI: ${{ steps.filter.outputs.ui }}
+          UTILS: ${{ steps.filter.outputs.utils }}
+        run: |
+          node -e '
+          const map = [
+            ["core","packages/core"],
+            ["model","packages/model"],
+            ["plugin","packages/plugin"],
+            ["request","packages/request"],
+            ["ui","packages/ui"],
+            ["utils","packages/utils"]
+          ];
+          const out = [];
+          for (const [name,path] of map) {
+            const flag = process.env[name.toUpperCase()] === "true";
+            if (flag) out.push({ name, path });
+          }
+          const json = JSON.stringify(out);
+          require("fs").writeFileSync(process.env.GITHUB_OUTPUT, `matrix=${json}\n`);
+          console.log("matrix:", json);
+          '
+
+  release:
+    needs: detect
+    runs-on: ubuntu-latest
+    # 使用 detect job 输出的 matrix（只有发生变更的包会出现在数组里）
+    strategy:
+      matrix: ${{ fromJson(needs.detect.outputs.matrix) }}
+    # 如果 matrix 为空，这个 job 不会产生任何矩阵项 —— 等于跳过发布
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Configure git author
         run: |
@@ -26,37 +80,25 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4.2.0
         with:
           version: 10.27.0
 
-      - name: Use Node.js
-        uses: actions/setup-node@v6
+      - name: Node setup
+        uses: actions/setup-node@v6.2.0
         with:
           node-version: 24
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
+          cache: pnpm
 
-      - name: Install dependencies
-        run: pnpm install
-
-      # build
-      - name: Change version
-        id: set-version
-        run: |
-          OLD_VERSION="$(node ./script/update-version.mts)"
-          echo "old_version=$OLD_VERSION" >> "$GITHUB_OUTPUT"
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm run build
 
-      - name: Restore version
-        run: |
-          node ./script/set-version.mts ${{ steps.set-version.outputs.old_version }}
-
-      #publish
-      - name: Run semantic-release
+      - name: Run semantic-release for package
+        working-directory: ${{ matrix.path }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 用于在 GitHub 上创建 release 与 tag
-          DEBUG: semantic-release:*
-        run: pnpm exec semantic-release
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pnpm exec semantic-release

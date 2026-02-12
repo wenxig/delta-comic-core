@@ -30,6 +30,7 @@
     { "path": "./packages/model/tsconfig.json" },
     { "path": "./packages/plugin/tsconfig.json" },
     { "path": "./packages/request/tsconfig.json" },
-    { "path": "./packages/core/tsconfig.json" }
+    { "path": "./packages/core/tsconfig.json" },
+    { "path": "./tsconfig.node.json" }
   ]
 }

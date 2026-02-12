@@ -1,6 +1,6 @@
 {
   "name": "@delta-comic/core",
-  "version": "1.0.0",
+  "version": "0.0.0-semantically-released",
   "description": "空阙虱楼",
   "homepage": "https://github.com/delta-comic/delta-comic-core",
   "license": "AGPL-3.0-only",
@@ -31,12 +31,15 @@
   },
   "dependencies": {
     "@delta-comic/model": "workspace:*",
-    "@delta-comic/utils": "workspace:*",
-    "@delta-comic/plugin": "workspace:*"
+    "@delta-comic/plugin": "workspace:*",
+    "@delta-comic/utils": "workspace:*"
   },
   "peerDependencies": {
     "pinia": "^3.0",
     "vue": "^3.5"
+  },
+  "release": {
+    "extends": "../../release.config.js"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"

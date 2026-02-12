@@ -1,6 +1,6 @@
 {
   "name": "@delta-comic/request",
-  "version": "1.0.0",
+  "version": "0.0.0-semantically-released",
   "description": "空阙虱楼",
   "homepage": "https://github.com/delta-comic/delta-comic-core",
   "license": "AGPL-3.0-only",
@@ -38,6 +38,9 @@
   },
   "peerDependencies": {
     "axios": "^1.13"
+  },
+  "release": {
+    "extends": "../../release.config.js"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"
