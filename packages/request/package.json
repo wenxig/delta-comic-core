@@ -30,17 +30,18 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
-    "@vueuse/core": "14.1.0",
-    "mitt": "^3.0.1"
+    "@vueuse/core": "catalog:",
+    "mitt": "catalog:"
   },
   "devDependencies": {
-    "axios": "^1.13.5"
+    "axios": "catalog:"
   },
   "peerDependencies": {
     "axios": "^1.13"
   },
   "release": {
-    "extends": "../../release.config.js"
+    "extends": "../../release.config.js",
+    "tagFormat": "request-${version}"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"

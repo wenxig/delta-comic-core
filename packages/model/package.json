@@ -32,16 +32,17 @@
   "dependencies": {
     "@delta-comic/request": "workspace:*",
     "@delta-comic/utils": "workspace:*",
-    "@vueuse/core": "14.1.0",
-    "dayjs": "^1.11.19",
-    "mitt": "^3.0.1",
+    "@vueuse/core": "catalog:",
+    "dayjs": "catalog:",
+    "mitt": "catalog:",
     "vidstack": "^1.12.13"
   },
   "peerDependencies": {
     "vue": "^3.5"
   },
   "release": {
-    "extends": "../../release.config.js"
+    "extends": "../../release.config.js",
+    "tagFormat": "model-${version}"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"

@@ -65,3 +65,5 @@ export {
 }
 
 export * as FormType from './form/type'
+
+export * from './message'

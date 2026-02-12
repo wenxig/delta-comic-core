@@ -30,12 +30,12 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
-    "@vueuse/core": "14.1.0",
-    "dayjs": "^1.11.19",
-    "mitt": "^3.0.1"
+    "@vueuse/core": "catalog:",
+    "dayjs": "catalog:",
+    "mitt": "catalog:"
   },
   "devDependencies": {
-    "axios": "^1.13.5"
+    "axios": "catalog:"
   },
   "peerDependencies": {
     "axios": "^1.13",
@@ -44,7 +44,8 @@
     "vue-router": "^5.0"
   },
   "release": {
-    "extends": "../../release.config.js"
+    "extends": "../../release.config.js",
+    "tagFormat": "utils-${version}"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"

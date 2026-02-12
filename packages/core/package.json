@@ -39,7 +39,8 @@
     "vue": "^3.5"
   },
   "release": {
-    "extends": "../../release.config.js"
+    "extends": "../../release.config.js",
+    "tagFormat": "core-${version}"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"
