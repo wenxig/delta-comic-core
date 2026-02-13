@@ -1,9 +1,5 @@
-import type { AudioSrc, MediaSrc, TextTrackInit } from 'vidstack'
-
 import { useGlobalVar } from '@delta-comic/utils'
 import { computed, shallowRef, type Component } from 'vue'
-
-import type { Image } from './image'
 
 import { PromiseContent, SourcedKeyMap, type RStream, type SourcedKeyType } from '../struct'
 import * as comment from './comment'
@@ -60,13 +56,4 @@ export abstract class ContentPage<T extends object = any> {
   public abstract exportOffline(): Promise<T>
 
   public abstract ViewComp: ViewComp
-}
-
-export abstract class ContentImagePage extends ContentPage {
-  public images = PromiseContent.withResolvers<Image[]>()
-}
-
-export type VideoConfig = { textTrack?: TextTrackInit[] } & Exclude<MediaSrc, string | AudioSrc>[]
-export abstract class ContentVideoPage extends ContentPage {
-  public videos = PromiseContent.withResolvers<VideoConfig>()
 }

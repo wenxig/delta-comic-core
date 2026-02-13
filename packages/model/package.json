@@ -18,10 +18,10 @@
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "types": "./dist/lib/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/lib/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     }
@@ -38,8 +38,7 @@
   "dependencies": {
     "@vueuse/core": "catalog:",
     "dayjs": "catalog:",
-    "mitt": "catalog:",
-    "vidstack": "^1.12.13"
+    "mitt": "catalog:"
   },
   "peerDependencies": {
     "@delta-comic/request": "workspace:*",
