@@ -1,9 +1,11 @@
 import type { MaybeRefOrGetter } from 'vue'
 
+import DcAuthorIcon from './components/DcAuthorIcon.vue'
 import DcAwait from './components/DcAwait.vue'
 import DcContent from './components/DcContent.vue'
 import DcFloatPopup from './components/DcFloatPopup.vue'
 import DcImage from './components/DcImage.vue'
+import DcImagedIcon from './components/DcImagedIcon.vue'
 import DcList from './components/DcList.vue'
 import DcLoading from './components/DcLoading.vue'
 import DcPopup from './components/DcPopup.vue'
@@ -14,6 +16,8 @@ import DcVar from './components/DcVar.vue'
 import DcWaterfall from './components/DcWaterfall.vue'
 
 export {
+  DcAuthorIcon,
+  DcImagedIcon,
   DcAwait,
   DcContent,
   DcImage,
