@@ -21,9 +21,7 @@
     "noImplicitOverride": true,
     "noImplicitThis": true,
     "jsxImportSource": "vue",
-    "types": [
-      "./env.d.ts",
-    ],
+    "types": ["./env.d.ts"],
     "verbatimModuleSyntax": true
   },
   "files": [],
@@ -35,6 +33,7 @@
     { "path": "./packages/request/tsconfig.json" },
     { "path": "./packages/core/tsconfig.json" },
     { "path": "./packages/vite/tsconfig.json" },
+    { "path": "./packages/db/tsconfig.json" },
     { "path": "./tsconfig.node.json" }
   ]
 }

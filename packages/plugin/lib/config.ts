@@ -1,11 +1,11 @@
 import type { FormType } from '@delta-comic/ui'
 
+import { useNativeStore } from '@delta-comic/db'
+import { useGlobalVar } from '@delta-comic/utils'
 import { usePreferredDark } from '@vueuse/core'
 import { fromPairs } from 'es-toolkit/compat'
 import { defineStore } from 'pinia'
 import { computed, shallowReactive, type Ref } from 'vue'
-
-import { type UseNativeStore } from '@delta-comic/utils'
 
 export type ConfigDescription = Record<
   string,
@@ -14,29 +14,43 @@ export type ConfigDescription = Record<
 export class ConfigPointer<T extends ConfigDescription = ConfigDescription> {
   constructor(
     public pluginName: string,
-    public config: T
+    public config: T,
+    public configName: string
   ) {
     this.key = Symbol.for(`config:${pluginName}`)
   }
   public readonly key: symbol
 }
 
-export const appConfig = new ConfigPointer('core', {
-  recordHistory: { type: 'switch', defaultValue: true, info: '记录历史记录' },
-  showAIProject: { type: 'switch', defaultValue: true, info: '展示AI作品' },
-  darkMode: {
-    type: 'radio',
-    defaultValue: 'system',
-    info: '暗色模式配置',
-    comp: 'select',
-    selects: [
-      { label: '浅色', value: 'light' },
-      { label: '暗色', value: 'dark' },
-      { label: '跟随系统', value: 'system' }
-    ]
-  },
-  easilyTitle: { type: 'switch', defaultValue: false, info: '简化标题(实验)' }
-})
+export const appConfig = useGlobalVar(
+  new ConfigPointer(
+    'core',
+    {
+      recordHistory: { type: 'switch', defaultValue: true, info: '记录历史记录' },
+      showAIProject: { type: 'switch', defaultValue: true, info: '展示AI作品' },
+      darkMode: {
+        type: 'radio',
+        defaultValue: 'system',
+        info: '暗色模式配置',
+        comp: 'select',
+        selects: [
+          { label: '浅色', value: 'light' },
+          { label: '暗色', value: 'dark' },
+          { label: '跟随系统', value: 'system' }
+        ]
+      },
+      easilyTitle: { type: 'switch', defaultValue: false, info: '简化标题(实验)' },
+      githubToken: {
+        type: 'string',
+        defaultValue: '',
+        info: 'github的token',
+        placeholder: '仅用于解除api访问限制'
+      }
+    },
+    '核心'
+  ),
+  'core/plugin/config'
+)
 
 export const useConfig = defineStore('config', helper => {
   const form = shallowReactive(new Map<symbol, { form: ConfigDescription; value: Ref<any> }>())
@@ -70,7 +84,6 @@ export const useConfig = defineStore('config', helper => {
     'isExistConfig'
   )
   const $resignerConfig = helper.action((pointer: ConfigPointer) => {
-    const useNativeStore = window.$api.useNativeStore as UseNativeStore
     const cfg = useConfig()
     const store = useNativeStore(
       pointer.pluginName,

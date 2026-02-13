@@ -14,7 +14,7 @@ export default defineConfig({
     extensions: ['.ts', '.tsx', '.json', '.mjs', '.js', '.jsx', '.mts']
   },
   build: {
-    lib: { entry: ['./lib/index.ts'], name: 'DcPlugin', fileName: 'index' },
+    lib: { entry: ['./lib/index.ts'], name: 'DcPlugin', fileName: 'index', formats: ['es'] },
     sourcemap: true,
     rollupOptions: {
       external: Object.keys(extendsDepends).concat(['lightningcss']),

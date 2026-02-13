@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends Configure, O extends (keyof T)[] = (keyof T)[]">
 import { NForm } from 'naive-ui'
 import DcFormItem from './DcFormItem.vue'
-import type { Configure, Result, SingleResult } from '../type'
+import type { Configure, FormRowSlot, Result } from '../type'
 import { isArray } from 'es-toolkit/compat'
 
 defineProps<{
@@ -14,26 +14,25 @@ defineProps<{
 const result = defineModel<Result<T>>({ default: {} })
 
 const slots = defineSlots<{
-  default?<K extends O[number], S extends T[K]>(args: {
-    config: S
-    path: K
-    modelValue: SingleResult<S>
-    setModelValue(value: SingleResult<S>): void
-  }): any
+  row?<K extends O[number]>(args: FormRowSlot<T,O,K>): any
+  top?(args: { config: T }): any
+  bottom?(args: { config: T }): any
 }>()
 </script>
 
 <template>
   <NForm :model="result">
+    <slot name="top" :config="configs" />
     <template v-for="[path, config] of Object.entries(configs)">
-      <slot
+      <slot name="row"
         :modelValue="result[path]"
         :setModelValue="v => ((result[path] as any) = v)"
         :path
         :config="config as any"
-        v-if="slots.default && (isArray(overrideRow) ? overrideRow.includes(path) : overrideRow)"
+        v-if="slots.row && (isArray(overrideRow) ? overrideRow.includes(path) : overrideRow)"
       />
       <DcFormItem v-model="result[path]" :path :config v-else />
     </template>
+    <slot name="bottom" :config="configs" />
   </NForm>
 </template>

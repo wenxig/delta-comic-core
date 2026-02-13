@@ -21,3 +21,10 @@ export type Result<T extends Configure> = {
 }
 
 export * as Type from './row'
+
+export interface FormRowSlot<T extends Configure, O extends (keyof T)[], K extends O[number]> {
+  config: T[K]
+  path: K
+  modelValue: SingleResult<T[K]>
+  setModelValue(value: SingleResult<T[K]>): void
+}

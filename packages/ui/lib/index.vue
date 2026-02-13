@@ -20,7 +20,7 @@ const config = {
 </script>
 
 <template>
-  <DcForm :configs="config" :override-row="['gay', 'name']" v-slot="{ config, path, modelValue }">
+  <DcForm :configs="config" :override-row="['gay', 'name']" row="{ config, path, modelValue }">
     <DcFormItem :config :path v-model="modelValue" v-if="path == 'gay'" />
     <div v-else>{{ config }}</div>
   </DcForm>

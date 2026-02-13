@@ -27,11 +27,12 @@ export type * as Search from './search'
 import type * as Auth from './auth'
 export type * as Auth from './auth'
 
-import type * as Resource from './resource'
 import { SharedFunction } from '@delta-comic/core'
+
+import type * as Resource from './resource'
 export type * as Resource from './resource'
 
-export interface DefineConfig {
+export interface PluginConfig {
   name: string
   content?: Content.Config
   resource?: Resource.Content
@@ -57,17 +58,17 @@ export interface DefineConfig {
 
 export type DefineResult = { api?: Record<string, string | undefined | false> }
 
-
-
-export const definePlugin = async <T extends DefineConfig>(config: T | ((safe: boolean) => T)) => {
+export const definePlugin = async <T extends PluginConfig>(
+  config: T | ((safe: boolean) => T)
+): Promise<T> => {
   if (isFunction(config)) var cfg = config(window.$$safe$$)
   else var cfg = config
   console.log('[definePlugin] new plugin defining...', cfg)
   await SharedFunction.call('addPlugin', cfg)
   return cfg
 }
-export type PluginExpose<T extends ReturnType<typeof definePlugin>> = Awaited<
-  ReturnType<NonNullable<Awaited<T>['onBooted']>>
+export type PluginExpose<T extends () => Promise<PluginConfig>> = Awaited<
+  ReturnType<NonNullable<Awaited<ReturnType<T>>['onBooted']>>
 >
 
 export interface RawPluginMeta {

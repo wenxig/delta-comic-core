@@ -47,7 +47,7 @@ jobs:
           UI: ${{ steps.filter.outputs.ui }}
           UTILS: ${{ steps.filter.outputs.utils }}
           VITE: ${{ steps.filter.outputs.vite }}
-          VDBE: ${{ steps.filter.outputs.vite }}
+          DB: ${{ steps.filter.outputs.vite }}
         run: |
           node -e '
           const map = [
