@@ -88,15 +88,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup pnpm & node
-        uses: pnpm/action-setup@v4.2.0
-        with:
-          version: 10.27.0
-      - uses: actions/setup-node@v6.2.0
-        with:
-          node-version: 24
-          cache: pnpm
-
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
@@ -146,6 +137,15 @@ jobs:
             tar -xzf "$f" -C "$pkg_dir"
             echo "Restored $f -> $pkg_dir"
           done
+
+      - name: Setup pnpm & node
+        uses: pnpm/action-setup@v4.2.0
+        with:
+          version: 10.27.0
+      - uses: actions/setup-node@v6.2.0
+        with:
+          node-version: 24
+          cache: pnpm
 
       - name: Run semantic-release for package
         working-directory: ${{ matrix.path }}
