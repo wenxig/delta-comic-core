@@ -100,31 +100,14 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Build changed packages and their local deps only
-        # 读取 needs.detect.outputs.matrix（它是 JSON 数组），拼接出 pnpm 的 filter 参数
-        run: |
-          echo "matrix json: ${{ needs.detect.outputs.matrix }}"
-          node -e '
-          const m = JSON.parse(process.env.MATRIX_JSON || "[]");
-          if (m.length === 0) {
-            console.log("No changed packages detected — building whole workspace as fallback");
-            require("child_process").execSync("pnpm -w -r --parallel build", { stdio: "inherit" });
-            process.exit(0);
-          }
-          // 生成 filter 形式：--filter ./packages/core...  并加上 --recursive 以构建依赖
-          const filters = m.map(p => `--filter=${p.path}`).join(" ");
-          const cmd = `pnpm -w -r --parallel ${filters} build`;
-          console.log("Running:", cmd);
-          require("child_process").execSync(cmd, { stdio: "inherit" });
-          '
-        env:
-          MATRIX_JSON: ${{ needs.detect.outputs.matrix }}
+      - name: Build all packages (workspace)
+        run: pnpm -r build
 
       - name: Upload built packages artifact
         uses: actions/upload-artifact@v4
         with:
           name: built-packages
-          path: packages
+          path: packages/*/dist/pack.tgz
 
   release:
     needs:
@@ -146,24 +129,23 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4.2.0
+      - name: Download built packages artifact
+        uses: actions/download-artifact@v4
         with:
-          version: 10.27.0
+          name: built-packages
+          path: ./built
 
-      - name: Node setup
-        uses: actions/setup-node@v6.2.0
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - name: Install deps
+      - name: Restore all built packs (no checks, no cleanup)
         run: |
-          pnpm --filter ${{ matrix.name }} i
-
-      - name: Build
-        run: |
-          pnpm --filter ${{ matrix.name }} build
+          set -euo pipefail
+          for f in ./built/packages/*/dist/pack.tgz; do
+            [ -e "$f" ] || continue
+            pkg=$(basename "$(dirname "$(dirname "$f")")")  # packages/<pkg>/dist/pack.tgz -> <pkg>
+            pkg_dir="packages/$pkg"
+            mkdir -p "$pkg_dir"
+            tar -xzf "$f" -C "$pkg_dir"
+            echo "Restored $f -> $pkg_dir"
+          done
 
       - name: Run semantic-release for package
         working-directory: ${{ matrix.path }}
