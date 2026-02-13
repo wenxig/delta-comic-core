@@ -79,7 +79,7 @@ jobs:
   release:
     needs: detect
     runs-on: ubuntu-latest
-    # 使用 detect job 输出的 matrix（只有发生变更的包会出现在数组里）
+    
     strategy:
       matrix:
         include: ${{ fromJson(needs.detect.outputs.matrix) }}
