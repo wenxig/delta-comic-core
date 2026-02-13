@@ -165,29 +165,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pnpm exec semantic-release --config "${{ github.workspace }}/release.config.mjs"
-
-  finalize-changelog:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Setup pnpm & node
-        uses: pnpm/action-setup@v4.2.0
-        with:
-          version: 10.27.0
-      - uses: actions/setup-node@v6.2.0
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - name: Install deps
-        run: pnpm install --dev --frozen-lockfile
-
-      - name: Run semantic-release to update changelog (single-run)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SEMREL_CHANGES: '1'
-        run: pnpm exec semantic-release --config "${{ github.workspace }}/release.config.js"
