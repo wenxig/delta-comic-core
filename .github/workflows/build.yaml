@@ -106,10 +106,14 @@ jobs:
           cache: pnpm
 
       - name: Install deps
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm --filter utils i
+          pnpm --filter ${{ matrix.name }} i
 
       - name: Build
-        run: pnpm --filter ${{ matrix.name }} build
+        run: |
+          pnpm --filter utils build
+          pnpm --filter ${{ matrix.name }} build
 
       - name: Run semantic-release for package
         working-directory: ${{ matrix.path }}
