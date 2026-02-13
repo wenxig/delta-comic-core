@@ -12,7 +12,6 @@ r"""
 ```
 
 [![GitHub](https://img.shields.io/github/license/delta-comic/delta-comic-core)](https://raw.githubusercontent.com/delta-comic/delta-comic-core/main/LICENSE)
-[![NPM Downloads](https://img.shields.io/npm/dm/delta-comic-core)](https://www.npmjs.com/package/delta-comic-core)
 
 - 工具库
 
@@ -24,7 +23,7 @@ r"""
 ## 如何使用
 
 ```sh
-pnpm add delta-comic-core
+pnpm add @delta-comic/...
 ```
 
 ## 为谁编写插件?
