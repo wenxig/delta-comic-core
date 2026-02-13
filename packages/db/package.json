@@ -32,9 +32,6 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
-    "@delta-comic/model": "workspace:*",
-    "@delta-comic/plugin": "workspace:*",
-    "@delta-comic/utils": "workspace:*",
     "@tauri-apps/plugin-sql": "^2.3.2",
     "@tauri-apps/plugin-store": "^2.4.2",
     "@vueuse/core": "catalog:",
@@ -43,12 +40,14 @@
     "mitt": "catalog:"
   },
   "peerDependencies": {
+    "@delta-comic/model": "workspace:*",
+    "@delta-comic/plugin": "workspace:*",
+    "@delta-comic/utils": "workspace:*",
     "kysely": "^0.28",
     "vue": "^3.5"
   },
   "release": {
-    "extends": "../../release.config.js",
-    "tagFormat": "model-${version}"
+    "tagFormat": "db-${version}"
   },
   "dist": {
     "tarball": "./dist/pack.tgz"

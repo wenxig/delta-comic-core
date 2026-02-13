@@ -37,14 +37,13 @@
     "mitt": "catalog:"
   },
   "devDependencies": {
-    "@delta-comic/utils": "workspace:*",
     "axios": "catalog:"
   },
   "peerDependencies": {
+    "@delta-comic/utils": "workspace:*",
     "axios": "^1.13"
   },
   "release": {
-    "extends": "../../release.config.js",
     "tagFormat": "request-${version}"
   },
   "dist": {

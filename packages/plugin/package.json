@@ -55,7 +55,6 @@
     "vue-router": "^5.0"
   },
   "release": {
-    "extends": "../../release.config.js",
     "tagFormat": "plugin-${version}"
   },
   "dist": {

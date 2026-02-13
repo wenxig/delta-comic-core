@@ -33,18 +33,17 @@
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
   "dependencies": {
-    "@delta-comic/request": "workspace:*",
-    "@delta-comic/utils": "workspace:*",
     "@vueuse/core": "catalog:",
     "dayjs": "catalog:",
     "mitt": "catalog:",
     "vidstack": "^1.12.13"
   },
   "peerDependencies": {
+    "@delta-comic/request": "workspace:*",
+    "@delta-comic/utils": "workspace:*",
     "vue": "^3.5"
   },
   "release": {
-    "extends": "../../release.config.js",
     "tagFormat": "model-${version}"
   },
   "dist": {

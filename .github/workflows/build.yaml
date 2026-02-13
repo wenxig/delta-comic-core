@@ -120,4 +120,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pnpm exec semantic-release
+          pnpm exec semantic-release --config "${{ github.workspace }}/release.config.js"

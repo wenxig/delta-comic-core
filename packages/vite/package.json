@@ -32,19 +32,16 @@
   "scripts": {
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
-  "dependencies": {
-    "@delta-comic/plugin": "workspace:*",
-    "@delta-comic/utils": "workspace:*"
-  },
   "devDependencies": {
     "lightningcss": "^1.30.2"
   },
   "peerDependencies": {
+    "@delta-comic/plugin": "workspace:*",
+    "@delta-comic/utils": "workspace:*",
     "vite-plugin-external": "^6.2.2",
     "vite-plugin-monkey": "^7.1.8"
   },
   "release": {
-    "extends": "../../release.config.js",
     "tagFormat": "vite-${version}"
   },
   "dist": {

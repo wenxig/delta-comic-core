@@ -228,6 +228,9 @@ importers:
 
   packages/request:
     dependencies:
+      '@delta-comic/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@vueuse/core':
         specifier: 'catalog:'
         version: 14.2.1(vue@3.5.28(typescript@5.8.2))
@@ -235,15 +238,21 @@ importers:
         specifier: 'catalog:'
         version: 3.0.1
     devDependencies:
-      '@delta-comic/utils':
-        specifier: workspace:*
-        version: link:../utils
       axios:
         specifier: 'catalog:'
         version: 1.13.5
 
   packages/ui:
     dependencies:
+      '@delta-comic/core':
+        specifier: workspace:*
+        version: link:../core
+      '@delta-comic/model':
+        specifier: workspace:*
+        version: link:../model
+      '@delta-comic/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@lhlyu/vue-virtual-waterfall':
         specifier: 1.0.8
         version: 1.0.8(vue@3.5.28(typescript@5.8.2))
@@ -281,15 +290,6 @@ importers:
         specifier: ^5.0
         version: 5.0.2(@vue/compiler-sfc@3.5.28)(pinia@3.0.4(typescript@5.8.2)(vue@3.5.28(typescript@5.8.2)))(vue@3.5.28(typescript@5.8.2))
     devDependencies:
-      '@delta-comic/core':
-        specifier: workspace:*
-        version: link:../core
-      '@delta-comic/model':
-        specifier: workspace:*
-        version: link:../model
-      '@delta-comic/utils':
-        specifier: workspace:*
-        version: link:../utils
       '@tailwindcss/vite':
         specifier: ^4.1.18
         version: 4.1.18(vite@8.0.0-beta.13(@types/node@25.0.6)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.44.0)(yaml@2.8.2))

@@ -32,17 +32,14 @@
   "scripts": {
     "build": "vite build && pnpm pack --out ./dist/pack.tgz"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@delta-comic/model": "workspace:*",
     "@delta-comic/plugin": "workspace:*",
-    "@delta-comic/utils": "workspace:*"
-  },
-  "peerDependencies": {
+    "@delta-comic/utils": "workspace:*",
     "pinia": "^3.0",
     "vue": "^3.5"
   },
   "release": {
-    "extends": "../../release.config.js",
     "tagFormat": "core-${version}"
   },
   "dist": {
