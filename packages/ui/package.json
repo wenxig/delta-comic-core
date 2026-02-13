@@ -1,6 +1,6 @@
 {
   "name": "@delta-comic/ui",
-  "version": "0.0.0-semantically-released",
+  "version": "0.0.1",
   "description": "空阙虱楼",
   "homepage": "https://github.com/delta-comic/delta-comic-core",
   "license": "AGPL-3.0-only",
@@ -36,7 +36,10 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vite build && pnpm pack --out ./dist/pack.tgz"
+    "build": "vite build && pnpm pack --out ./dist/pack.tgz",
+    "version:major": "pnpm version major --no-git-tag-version",
+    "version:minor": "pnpm version minor --no-git-tag-version",
+    "version:patch": "pnpm version patch --no-git-tag-version"
   },
   "dependencies": {
     "@lhlyu/vue-virtual-waterfall": "1.0.8",
