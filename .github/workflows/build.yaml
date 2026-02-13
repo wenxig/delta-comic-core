@@ -40,6 +40,7 @@ jobs:
       - name: Build matrix JSON
         id: set-matrix
         env:
+          IS_FORCE: ${{ contains(github.event.head_commit.message, '[f]') }}
           CORE: ${{ steps.filter.outputs.core }}
           MODEL: ${{ steps.filter.outputs.model }}
           PLUGIN: ${{ steps.filter.outputs.plugin }}
@@ -61,6 +62,12 @@ jobs:
             ["db","packages/db"]
           ];
           const out = [];
+          if (process.env.IS_FORCE) {
+            const json = JSON.stringify(map.map(v => ({ name: v[0], path: v[1] })));
+            require("fs").writeFileSync(process.env.GITHUB_OUTPUT, `matrix=${json}\n`);
+            console.log("matrix:", json);
+            process.exit(0);
+          }
           for (const [name, path] of map) {
             const flag = process.env[name.toUpperCase()] === "true";
             if (flag) out.push({ name, path });
