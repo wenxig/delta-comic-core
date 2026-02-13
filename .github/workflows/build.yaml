@@ -79,8 +79,57 @@ jobs:
           require("fs").writeFileSync(process.env.GITHUB_OUTPUT, `matrix=${json}\n`);
           console.log("matrix:", json);
           '
-  release:
+
+  build-workspace:
     needs: detect
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm & node
+        uses: pnpm/action-setup@v4.2.0
+        with:
+          version: 10.27.0
+      - uses: actions/setup-node@v6.2.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Build changed packages and their local deps only
+        # 读取 needs.detect.outputs.matrix（它是 JSON 数组），拼接出 pnpm 的 filter 参数
+        run: |
+          echo "matrix json: ${{ needs.detect.outputs.matrix }}"
+          node -e '
+          const m = JSON.parse(process.env.MATRIX_JSON || "[]");
+          if (m.length === 0) {
+            console.log("No changed packages detected — building whole workspace as fallback");
+            require("child_process").execSync("pnpm -w -r --parallel build", { stdio: "inherit" });
+            process.exit(0);
+          }
+          // 生成 filter 形式：--filter ./packages/core...  并加上 --recursive 以构建依赖
+          const filters = m.map(p => `--filter=${p.path}`).join(" ");
+          const cmd = `pnpm -w -r --parallel ${filters} build`;
+          console.log("Running:", cmd);
+          require("child_process").execSync(cmd, { stdio: "inherit" });
+          '
+        env:
+          MATRIX_JSON: ${{ needs.detect.outputs.matrix }}
+
+      - name: Upload built packages artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-packages
+          path: packages
+
+  release:
+    needs:
+      - detect
+      - build-workspace
     runs-on: ubuntu-latest
 
     strategy:
@@ -110,12 +159,10 @@ jobs:
 
       - name: Install deps
         run: |
-          pnpm --filter utils i
           pnpm --filter ${{ matrix.name }} i
 
       - name: Build
         run: |
-          pnpm --filter utils build
           pnpm --filter ${{ matrix.name }} build
 
       - name: Run semantic-release for package
