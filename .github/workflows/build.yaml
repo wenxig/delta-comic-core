@@ -48,7 +48,7 @@ jobs:
           UI: ${{ steps.filter.outputs.ui }}
           UTILS: ${{ steps.filter.outputs.utils }}
           VITE: ${{ steps.filter.outputs.vite }}
-          DB: ${{ steps.filter.outputs.vite }}
+          DB: ${{ steps.filter.outputs.db }}
         run: |
           node -e '
           const map = [
@@ -76,14 +76,14 @@ jobs:
           require("fs").writeFileSync(process.env.GITHUB_OUTPUT, `matrix=${json}\n`);
           console.log("matrix:", json);
           '
-
   release:
     needs: detect
     runs-on: ubuntu-latest
     # 使用 detect job 输出的 matrix（只有发生变更的包会出现在数组里）
     strategy:
-      matrix: ${{ fromJson(needs.detect.outputs.matrix) }}
-    # 如果 matrix 为空，这个 job 不会产生任何矩阵项 —— 等于跳过发布
+      matrix:
+        include: ${{ fromJson(needs.detect.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v6
         with:
