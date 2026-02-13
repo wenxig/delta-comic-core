@@ -2,7 +2,7 @@ name: Build & Publish
 
 on:
   push:
-    branches: []
+    branches: [non]
 
 permissions:
   contents: write
