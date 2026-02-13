@@ -79,7 +79,7 @@ jobs:
   release:
     needs: detect
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         include: ${{ fromJson(needs.detect.outputs.matrix) }}
@@ -109,7 +109,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm run build
+        run: pnpm --filter ${{ matrix.name }} build
 
       - name: Run semantic-release for package
         working-directory: ${{ matrix.path }}
