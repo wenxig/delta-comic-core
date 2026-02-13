@@ -29,6 +29,7 @@ export interface ExternalLibKey {
   '@delta-comic/plugin': 'DcPlugin'
   '@delta-comic/utils': 'DcUtils'
   '@delta-comic/require': 'DcRequire'
+  '@delta-comic/db': 'DcDb'
 }
 
 export type ExternalLib = {
@@ -47,7 +48,8 @@ export const extendsDepends: ExternalLib = {
   '@delta-comic/core': 'window.$$lib$$.DcCore',
   '@delta-comic/plugin': 'window.$$lib$$.DcPlugin',
   '@delta-comic/utils': 'window.$$lib$$.DcUtils',
-  '@delta-comic/require': 'window.$$lib$$.DcRequire'
+  '@delta-comic/require': 'window.$$lib$$.DcRequire',
+  '@delta-comic/db': 'window.$$lib$$.DcDb'
 }
 
 export const useGlobalVar = <T>(val: T, key: string): T =>
