@@ -12,8 +12,7 @@ export default defineConfig({
   plugins: [
     dtsPlugin({
       include: ['./lib'],
-      tsconfigPath: './tsconfig.json',
-      rollupTypes: true
+      tsconfigPath: './tsconfig.json'
     })
   ],
   build: {

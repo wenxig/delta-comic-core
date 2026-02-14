@@ -15,7 +15,7 @@ import _package from './package.json'
 
 export default defineConfig({
   plugins: [
-    dts({ include: ['./lib', './vite'], tsconfigPath: './tsconfig.json', rollupTypes: true }),
+    dts({ include: ['./lib', './vite'], tsconfigPath: './tsconfig.json' }),
     vue(),
     vueJsx(),
     Components({ dts: true, resolvers: [VantResolver(), MotionResolver(), NaiveUiResolver()] }),

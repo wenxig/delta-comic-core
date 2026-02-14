@@ -5,7 +5,7 @@ import dts from 'vite-plugin-dts'
 import _package from './package.json'
 
 export default defineConfig({
-  plugins: [dts({ include: ['./lib'], tsconfigPath: './tsconfig.json', rollupTypes: true })],
+  plugins: [dts({ include: ['./lib'], tsconfigPath: './tsconfig.json' })],
   base: '/',
   build: {
     lib: { entry: [resolve(__dirname, 'lib/index.ts')], name: 'DcVite', fileName: 'index' },

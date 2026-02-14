@@ -1,11 +1,10 @@
-import { SharedFunction } from '@delta-comic/core'
 import { db, useNativeStore, type PluginArchiveDB } from '@delta-comic/db'
 import { createDownloadMessage, type DownloadMessageBind } from '@delta-comic/ui'
 import { isString, Mutex } from 'es-toolkit'
 import { sortBy } from 'es-toolkit/compat'
 import { markRaw } from 'vue'
 
-import type { PluginConfig, PluginMeta } from '@/plugin'
+import { pluginEmitter, type PluginConfig, type PluginMeta } from '@/plugin'
 
 import type { PluginBooter, PluginInstaller, PluginLoader } from './utils'
 
@@ -226,17 +225,13 @@ export const loadPlugin = async (meta: PluginArchiveDB.Meta) => {
   }
   console.log(`[plugin bootPlugin] boot name done "${meta.pluginName}"`)
 }
-SharedFunction.define(
-  async cfg => {
-    console.log('[plugin addPlugin] new plugin defined', cfg.name, cfg)
-    const lock = getLoadLock(cfg.name)
-    await bootPlugin(cfg)
-    console.log('[plugin addPlugin] done', cfg.name)
-    lock.release()
-  },
-  coreName,
-  'addPlugin'
-)
+pluginEmitter.on('definedPlugin', async cfg => {
+  console.log('[plugin addPlugin] new plugin defined', cfg.name, cfg)
+  const lock = getLoadLock(cfg.name)
+  await bootPlugin(cfg)
+  console.log('[plugin addPlugin] done', cfg.name)
+  lock.release()
+})
 
 export { loaders as pluginLoaders, installers as pluginInstallers }
 window.$api.loaders = loaders

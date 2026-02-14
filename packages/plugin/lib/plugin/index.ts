@@ -27,10 +27,12 @@ export type * as Search from './search'
 import type * as Auth from './auth'
 export type * as Auth from './auth'
 
-import { SharedFunction } from '@delta-comic/core'
+import mitt from 'mitt'
 
 import type * as Resource from './resource'
 export type * as Resource from './resource'
+
+export const pluginEmitter = mitt<{ definedPlugin: PluginConfig }>()
 
 export interface PluginConfig {
   name: string
@@ -64,7 +66,7 @@ export const definePlugin = async <T extends PluginConfig>(
   if (isFunction(config)) var cfg = config(window.$$safe$$)
   else var cfg = config
   console.log('[definePlugin] new plugin defining...', cfg)
-  await SharedFunction.call('addPlugin', cfg)
+  await pluginEmitter.emit('definedPlugin', cfg)
   return cfg
 }
 export type PluginExpose<T extends () => Promise<PluginConfig>> = Awaited<
