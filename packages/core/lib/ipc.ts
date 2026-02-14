@@ -1,13 +1,10 @@
 import type { uni } from '@delta-comic/model'
-import type { DefineConfig } from '@delta-comic/plugin'
 
 import { useGlobalVar } from '@delta-comic/utils'
 import { random } from 'es-toolkit/compat'
 
 export type SharedFunctions = {
   getRandomProvide(signal?: AbortSignal): PromiseLike<uni.item.Item[]>
-
-  addPlugin(ins: DefineConfig): void
 
   addRecent(item: uni.item.Item): PromiseLike<any>
   routeToContent(

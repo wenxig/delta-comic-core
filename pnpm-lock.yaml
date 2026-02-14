@@ -78,9 +78,6 @@ importers:
       '@delta-comic/model':
         specifier: workspace:*
         version: link:../model
-      '@delta-comic/plugin':
-        specifier: workspace:*
-        version: link:../plugin
       '@delta-comic/utils':
         specifier: workspace:*
         version: link:../utils

@@ -1,7 +1,5 @@
-import type { useDialog, useLoadingBar, useMessage } from 'naive-ui'
-import type { Router } from 'vue-router'
-
-import {} from 'axios'
+import type { Router } from "vue-router"
+import type { useDialog, useLoadingBar, useMessage } from "naive-ui"
 
 declare global {
   interface Window {

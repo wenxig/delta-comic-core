@@ -9,7 +9,13 @@ const deps = cloneDeep(extendsDepends) as Partial<ExternalLib>
 delete deps['@delta-comic/utils']
 
 export default defineConfig({
-  plugins: [dtsPlugin({ include: ['./lib'], tsconfigPath: './tsconfig.json', rollupTypes: true })],
+  plugins: [
+    dtsPlugin({
+      include: ['./lib'],
+      tsconfigPath: './tsconfig.json',
+      rollupTypes: true
+    })
+  ],
   build: {
     lib: { entry: './lib/index.ts', name: 'DcUtils', fileName: 'index' },
     sourcemap: true,
