@@ -1,6 +1,6 @@
 {
   "name": "@delta-comic/core",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "空阙虱楼",
   "homepage": "https://github.com/delta-comic/delta-comic-core",
   "license": "AGPL-3.0-only",
@@ -47,5 +47,8 @@
   "dist": {
     "tarball": "./dist/pack.tgz"
   },
-  "readme": "./README.md"
+  "readme": "./README.md",
+  "dependencies": {
+    "@tauri-apps/api": "^2.10.1"
+  }
 }
